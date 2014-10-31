@@ -1,0 +1,22 @@
+Human interaction with the game during their turn. 
+Sequence diagram stuff in it. 
+
+Start off at the beginning of the Human users turn. 
+
+- game sends the new state to all players
+	- human player updates GUI
+- touches the deck to draw card
+- sends a drawAction to the game which is processed to see if it is valid
+- game updates the state and sends the updated state to the players
+	- The human GUI will then be updated to reflect the new state
+- The Human player has the option to touch a card and drag the card to another place in their hand to rearrange cards.
+	- This may be done as many times as the user wishes. 
+- The human player select card to discard by dragging a card to the discard pile. 
+- this sends a discardAction to the game.
+	- the Move action is checked for legality prior to being sent to the game. 
+- Game then processes the moveAction. 
+- Game then updates the state. 
+- Game sends the updated state to the players
+	- The Human player's GUI is updated to reflect the changes in state. 
+- The Human players turn is now over and they will not be allowed to make any further actions until their next turn. 
+
