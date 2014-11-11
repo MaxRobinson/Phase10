@@ -5,12 +5,20 @@ import java.util.ArrayList;
 /**
  *
  * @author Steven R. Vegdahl
- * @version July 2013
+ * @modified Max Robinson
+ * @version 11/11/2014
+ * 
  */
 public enum Rank {
 	
 	// ace
-	ACE,
+	ONE{
+		// override the shortName behavior: the corresponding digit
+		@Override
+		public char shortName(){
+			return '1';
+		}
+	},
 	
 	// deuce
 	TWO {
@@ -85,16 +93,49 @@ public enum Rank {
 	},
 	
 	// ten
-	TEN,
+	TEN {
+		// override the shortName behavior: the corresponding digit
+		@Override
+		public char shortName() {
+			return 'a';
+		}
+	},
 
 	// jack
-	JACK,
+	ELEVEN{
+		// override the shortName behavior: the corresponding digit
+		@Override
+		public char shortName() {
+			return 'b';
+		}
+	},
 
 	// queen
-	QUEEN,
+	TWELVE{
+		// override the shortName behavior: the corresponding digit
+		@Override
+		public char shortName() {
+			return 'c';
+		}
+	},
 
 	// king
-	KING
+	WILD{
+		// override the shortName behavior: the corresponding digit
+		@Override
+		public char shortName() {
+			return 'w';
+		}
+	},
+	
+	SKIP{
+		// override the shortName behavior: the corresponding digit
+		@Override
+		public char shortName() {
+			return 's';
+		}
+	}
+	
 	;
 
 	/**
@@ -119,7 +160,7 @@ public enum Rank {
 	 * 		the given value (typically 1 or 14) for ACE
 	 */
 	public int value(int aceValue) {
-		return this == ACE ? aceValue : ordinal()+1;
+		return this == ONE ? aceValue : ordinal()+1;
 	}
 	
 	/**

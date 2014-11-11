@@ -3,15 +3,16 @@ package edu.up.cs301.card;
 import java.util.ArrayList;
 
 /**
- * Suit the suit of a playing card (e.g., Club).
+ * CardColor the color of a playing card (e.g., red).
  * 
  * @author Steven R. Vegdahl 
- * @version July 2013 
+ * @modified Max Robinson
+ * @version 11/11/2014 
  */
-public enum Suit {
+public enum CardColor {
 	
-	// club
-	Club {
+	// red
+	Red {
 //		// the "long name
 //		@Override
 //		public String longName() {
@@ -19,29 +20,39 @@ public enum Suit {
 //		}
 	},
 	
-	// diamond
-	Diamond {
+	// blue
+	Blue {
 //		@Override
 //		public String longName() {
 //			return "Diamond";
 //		}
 	},
 	
-	// heart
-	Heart {
+	// yellow
+	Yellow {
 //		@Override
 //		public String longName() {
 //			return "Heart";
 //		}
 	},
 	
-	// spade
-	Spade {
+	// green
+	Green {
+//		@Override
+//		public String longName() {
+//			return "Spade";
+//		}
+	},
+	
+	// green
+	Orange {
 //		@Override
 //		public String longName() {
 //			return "Spade";
 //		}
 	};
+	
+	
 
 	/**
 	 * the "short" (one-character) name that represents the suit
@@ -74,7 +85,7 @@ public enum Suit {
 	 * 		the suit that corresponds to that character, or null if the character
 	 * 		does not denote a suit
 	 */
-	public static Suit fromChar(char c) {
+	public static CardColor fromChar(char c) {
 		// if the helper-array is null, create it
 		if (suitChars == null) {
 			initSuitChars();
@@ -84,7 +95,7 @@ public enum Suit {
 		// return null if the character did not denote a rank
 		if (idx < 0) return null;
 		// return the corresponding rank
-		return Suit.values()[idx];
+		return CardColor.values()[idx];
 	}
 	
 	/**
@@ -93,13 +104,13 @@ public enum Suit {
 	private static void initSuitChars() {
 		
 		// the list of suits, in numeric order
-		Suit[] vals = Suit.values();
+		CardColor[] vals = CardColor.values();
 		
 		// create the list of characters
 		suitChars = new ArrayList<Character>();
 		
 		// initialize the list with the characters, in suit-order
-		for (Suit s : vals) {
+		for (CardColor s : vals) {
 			suitChars.add(Character.toLowerCase(s.shortName()));
 		}
 	}

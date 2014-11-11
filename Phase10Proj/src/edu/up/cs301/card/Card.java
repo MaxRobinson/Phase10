@@ -30,19 +30,19 @@ public class Card implements Serializable {
 	// to satisfy the Serializable interface
 	private static final long serialVersionUID = 893542931190030342L;
 	
-	// instance variables: the card's rank and the suit
+	// instance variables: the card's rank and the cardColor
     private Rank rank;
-    private Suit suit;
+    private CardColor cardColor;
 
     /**
      * Constructor for class card
      *
      * @param r the Rank of the card
-     * @param s the Suit of the card
+     * @param s the CardColor of the card
      */
-    public Card(Rank r, Suit s) {
+    public Card(Rank r, CardColor s) {
         rank = r;
-        suit = s;
+        cardColor = s;
     }
 
     /**
@@ -52,7 +52,7 @@ public class Card implements Serializable {
      * @param str
      * 		a two-character string representing the card, which is
      *		of the form "4C", with the first character representing the rank,
-     *		and the second character representing the suit.  Each suit is
+     *		and the second character representing the cardColor.  Each cardColor is
      *		denoted by its first letter.  Each single-digit rank is represented
      *		by its digit.  The letters 'T', 'J', 'Q', 'K' and 'A', represent
      *		the ranks Ten, Jack, Queen, King and Ace, respectively.
@@ -68,12 +68,12 @@ public class Card implements Serializable {
         str = str.trim();
         if (str.length() !=2) return null;
         
-        // get the rank and suit corresponding to the two characters
+        // get the rank and cardColor corresponding to the two characters
         // in the string
         Rank r = Rank.fromChar(str.charAt(0));
-        Suit s = Suit.fromChar(str.charAt(1));
+        CardColor s = CardColor.fromChar(str.charAt(1));
         
-        // if both rank and suit are non-null, create the corresponding
+        // if both rank and cardColor are non-null, create the corresponding
         // card; if either is null, return null
         return r==null || s == null ? null : new Card(r, s);
     }
@@ -85,7 +85,7 @@ public class Card implements Serializable {
 	 *		A string such as "Jack of Spades", which describes the card.
      */
     public String toString() {
-        return rank.longName()+" of "+suit.longName()+"s";
+        return rank.longName()+" of "+cardColor.longName()+"s";
     }
 
     /**
@@ -96,7 +96,7 @@ public class Card implements Serializable {
      *		otherwise.
      */
     public boolean equals(Card other) {
-        return this.rank == other.rank && this.suit == other.suit;
+        return this.rank == other.rank && this.cardColor == other.cardColor;
     }
 
     /**
@@ -144,14 +144,14 @@ public class Card implements Serializable {
     }
 
     /**
-     * Tells the card's suit.
+     * Tells the card's cardColor.
      *
      * @return
-	 *		a Suit object (actually of a subclass) that tells the card's
+	 *		a CardColor object (actually of a subclass) that tells the card's
      *		rank (e.g., heart, club).
      */
-    public Suit getSuit() {
-    	return suit;
+    public CardColor getSuit() {
+    	return cardColor;
     }
  
     // array that contains the android resource indices for the 52 card
