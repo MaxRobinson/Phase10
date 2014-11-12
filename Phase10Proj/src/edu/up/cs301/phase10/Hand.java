@@ -4,44 +4,43 @@ import java.util.ArrayList;
 
 import edu.up.cs301.card.Card;
 
-public class Hand {
+public class Hand extends Deck{
 	
-	//private instance variables. 
-	ArrayList<Card> hand;
+	
 	
 	/**
 	 * Constructor
 	 */
 	public Hand(){
-		hand = new ArrayList<Card>();
+		super();
 	}
 	
 	/**
 	 * Constructor
-	 * @param hand
+	 * @param cards
 	 */
-	public Hand(ArrayList<Card> hand){
-		this.hand = hand;  
+	public Hand(ArrayList<Card> cards){
+		this.cards = cards;  
 	}
 	
 	/**
-	 * Getter for the hand
-	 * @return ArrayList of cards that are in the hand.
+	 * Getter for the cards
+	 * @return ArrayList of cards that are in the cards.
 	 */
-	public ArrayList<Card> getHand(){
-		return this.hand;
+	public ArrayList<Card> getCards(){
+		return this.cards;
 	}
 	
 	/**
-	 * Returns a card in the hand based on the index of the card. 
-	 * If the index is larger than the size of the hand, retrun null. 
+	 * Returns a card in the cards based on the index of the card. 
+	 * If the index is larger than the size of the cards, retrun null. 
 	 * 
 	 * @param index
 	 * @return Card at a given index, or null 
 	 */
 	public Card getCard(int index){
-		if(index < hand.size()-1){
-			return hand.get(index);
+		if(index < cards.size()-1){
+			return cards.get(index);
 		}
 		else{
 			return null;
@@ -50,7 +49,7 @@ public class Hand {
 	}
 	
 	/**
-	 * Given a card, find all occurrences of that card in the users hand, 
+	 * Given a card, find all occurrences of that card in the users cards, 
 	 * and return a list of indices of that card.
 	 * @param card
 	 * @return ArrayList of indices of that card. 
@@ -58,9 +57,9 @@ public class Hand {
 	public ArrayList<Integer> getCardIndices(Card card){
 		ArrayList<Integer> indices = new ArrayList<Integer>();
 		
-		// Find all cards equal to the card passed in, in the users hand
-		for(int i = 0; i < hand.size(); i++ ){
-			if(hand.get(i).equals(card)){
+		// Find all cards equal to the card passed in, in the users cards
+		for(int i = 0; i < cards.size(); i++ ){
+			if(cards.get(i).equals(card)){
 				indices.add(i);
 			}
 		}
@@ -69,22 +68,22 @@ public class Hand {
 	}
 	
 	/**
-	 * Add Card to hand
+	 * Add Card to cards
 	 * @param newCard
 	 */
 	public void addCard(Card newCard){
-		hand.add(newCard);
+		cards.add(newCard);
 	}
 	
 	/**
-	 * Removes a card from a users hand given the index of the
-	 * card in the users hand. 
+	 * Removes a card from a users cards given the index of the
+	 * card in the users cards. 
 	 * @param index
 	 * @return true if the card was successfully removed
 	 */
 	public boolean removeCard(int index){
-		if(hand.size()>0){
-			hand.remove(index);
+		if(cards.size()>0){
+			cards.remove(index);
 			return true;
 		}
 		else{
@@ -93,13 +92,13 @@ public class Hand {
 	}
 	
 	/**
-	 * Removes a card from a users hand given a card object. 
+	 * Removes a card from a users cards given a card object. 
 	 * @param card
 	 * @return true if the card was successfully removed
 	 */
 	public boolean removeCard(Card card){
-		if(hand.size()>0){
-			hand.remove(card);
+		if(cards.size()>0){
+			cards.remove(card);
 			return true;
 		}
 		else{
@@ -109,19 +108,19 @@ public class Hand {
 	
 	/**
 	 * Given an list of Cards, set the list of cards equal to a 
-	 * players hand. 
+	 * players cards. 
 	 * @param cards
 	 */
-	public void setHand(ArrayList<Card> cards){
-		this.hand = cards;
+	public void setcards(ArrayList<Card> cards){
+		this.cards = cards;
 	}
 	
 	/**
-	 * Returns the size of a users hand.
-	 * @return the number of cards in the hand
+	 * Returns the size of a users cards.
+	 * @return the number of cards in the cards
 	 */
 	public int size(){
-		return hand.size();
+		return cards.size();
 	}
 	
 	

@@ -3,6 +3,9 @@ package edu.up.cs301.card;
 import java.util.ArrayList;
 
 /**
+ * Enum of the ranks of the cards. 
+ * Card short names are in HEX. ie. 10 = a, 11 = b...
+ * Wild card short name is 'w', Skip is 's'
  *
  * @author Steven R. Vegdahl
  * @modified Max Robinson

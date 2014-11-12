@@ -19,7 +19,7 @@ public class Deck implements Serializable {
 	
 	// the cards in our deck; the last card in the ArrayList is the top card
 	// in the deck
-	private ArrayList<Card> cards;
+	protected ArrayList<Card> cards;
 	
 	/**
 	 * constructor, creating an empty deck
@@ -47,17 +47,28 @@ public class Deck implements Serializable {
 	
 	/**
 	 * adds one of each card, increasing the size of the deck by 52. Cards are added
-	 * spades first (King to Ace), then similarly with hearts, diamonds and clubs.
+	 * blue first (skip to Ace), then similarly with red, yellow and green.
 	 * 
 	 * @return
 	 * 		the deck
 	 */
-	public Deck add52() {
-		// add the cards
-		for (char s : "SHDC".toCharArray()) {
-			for (char r : "KQJT98765432A".toCharArray()) {
+	public Deck add108() {
+		// add the cards that are not wild or skip cards
+		// add cards twice for each color because 96 numbered cards
+		for (char s : "RBYG".toCharArray()) {
+			for (char r : "cba987654321".toCharArray()) {
+				this.add(Card.fromString(""+r+s));
 				this.add(Card.fromString(""+r+s));
 			}
+		}
+		// add wild cards
+		for (int i = 0; i<8; i++){
+			this.add(Card.fromString(""+'w'+'O'));
+		}
+		
+		// add skip cards
+		for (int i = 0; i<4; i++){
+			this.add(Card.fromString(""+'s'+'O'));
 		}
 		
 		// return the deck
@@ -65,7 +76,7 @@ public class Deck implements Serializable {
 	}
 	
 	/**
-	 * 
+	 * Suffle's the Deck of cards
 	 */
 	public Deck shuffle() {
 		// synchronize so that we don't have someone trying to modify the
