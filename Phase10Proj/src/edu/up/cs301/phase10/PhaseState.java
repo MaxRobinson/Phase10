@@ -18,13 +18,21 @@ import edu.up.cs301.game.infoMsg.GameState;
 public class PhaseState extends GameState {
 	
 	//Private instance variables
-	ArrayList<Card>[] Hands;	
+	private Deck deck;
+	private Deck discardPile;
+	private Hand[] hands;
+	private int turn;
+	private int[] currentPhase;
+	private boolean[] skipped;
+	private int[] score;
+	private int dealer;
+	public ArrayList<Phase> layedPhases;
+	
 	
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
 	
 	/**
 	 * Constructor
