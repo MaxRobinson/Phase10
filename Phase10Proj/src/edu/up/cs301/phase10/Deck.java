@@ -28,6 +28,21 @@ public class Deck implements Serializable {
 		cards = new ArrayList<Card>();
 	}
 	
+	/**
+	 * Constructor, creates a deck with a given 
+	 * list of cards as the cards in the deck
+	 * 
+	 * @param newCards
+	 */
+	public Deck(ArrayList<Card> newCards){
+		this.cards = new ArrayList<Card>();
+		synchronized(newCards){
+			for(Card c: newCards){
+				cards.add(c);
+			}
+		}
+	}
+	
 	/** copy constructor, making an exact copy of a deck
 	 * 
 	 * @param orig
