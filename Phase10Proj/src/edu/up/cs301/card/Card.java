@@ -82,10 +82,14 @@ public class Card implements Serializable {
      * Produces a textual description of a Card.
      *
      * @return
-	 *		A string such as "Jack of Spades", which describes the card.
+	 *		A string such as "Blue 2", which describes the card.
      */
     public String toString() {
-        return rank.longName()+" of "+cardColor.longName()+"s";
+    	if(cardColor.longName().equals("Orange")) //if the card is 
+    	{
+    		return rank.longName() + " Card";
+    	}
+        return cardColor.longName() + " " + rank.longName();
     }
 
     /**
@@ -101,7 +105,7 @@ public class Card implements Serializable {
 
     /**
      * Draws the card on a Graphics object.  The card is drawn as a
-     * white card with a black border.  If the card's rank is numerih, the
+     * white card with a black border.  If the card's rank is numeric, the
      * appropriate number of spots is drawn.  Otherwise the appropriate
      * picture (e.g., of a queen) is included in the card's drawing.
      *
@@ -114,7 +118,7 @@ public class Card implements Serializable {
     	p.setColor(Color.BLACK);
     	
     	// get the bitmap for the card
-    	Bitmap bitmap = cardImages[this.getSuit().ordinal()][this.getRank().ordinal()];
+    	Bitmap bitmap = cardImages[this.getCardColor().ordinal()][this.getRank().ordinal()];
     	
     	// create the source rectangle
     	Rect r = new Rect(0,0,bitmap.getWidth(),bitmap.getHeight());
@@ -129,7 +133,7 @@ public class Card implements Serializable {
      * spades).
      */
     public String shortName() {
-        return "" + getRank().shortName() + getSuit().shortName();
+        return "" + getRank().shortName() + getCardColor().shortName();
     }
 
     /**
@@ -150,7 +154,7 @@ public class Card implements Serializable {
 	 *		a CardColor object (actually of a subclass) that tells the card's
      *		rank (e.g., heart, club).
      */
-    public CardColor getSuit() {
+    public CardColor getCardColor() {
     	return cardColor;
     }
  
@@ -158,32 +162,31 @@ public class Card implements Serializable {
     // images
     private static int[][] resIdx = {
     	{
-    		R.drawable.card_ac, R.drawable.card_2c, R.drawable.card_3c,
-    		R.drawable.card_4c, R.drawable.card_5c, R.drawable.card_6c,
-    		R.drawable.card_7c, R.drawable.card_8c, R.drawable.card_9c,
-    		R.drawable.card_tc, R.drawable.card_jc, R.drawable.card_qc,
-    		R.drawable.card_kc, 
+    		R.drawable.card_blue_one, R.drawable.card_blue_two, R.drawable.card_blue_three,
+    		R.drawable.card_blue_four, R.drawable.card_blue_five, R.drawable.card_blue_six,
+    		R.drawable.card_blue_seven, R.drawable.card_blue_eight, R.drawable.card_blue_nine,
+    		R.drawable.card_blue_ten, R.drawable.card_blue_eleven, R.drawable.card_blue_twelve, 
     	},
     	{
-    		R.drawable.card_ad, R.drawable.card_2d, R.drawable.card_3d,
-    		R.drawable.card_4d, R.drawable.card_5d, R.drawable.card_6d,
-    		R.drawable.card_7d, R.drawable.card_8d, R.drawable.card_9d,
-    		R.drawable.card_td, R.drawable.card_jd, R.drawable.card_qd,
-    		R.drawable.card_kd, 
+    		R.drawable.card_green_one, R.drawable.card_green_two, R.drawable.card_green_three,
+    		R.drawable.card_green_four, R.drawable.card_green_five, R.drawable.card_green_six,
+    		R.drawable.card_green_seven, R.drawable.card_green_eight, R.drawable.card_green_nine,
+    		R.drawable.card_green_ten, R.drawable.card_green_eleven, R.drawable.card_green_twelve,
     	},
     	{
-    		R.drawable.card_ah, R.drawable.card_2h, R.drawable.card_3h,
-    		R.drawable.card_4h, R.drawable.card_5h, R.drawable.card_6h,
-    		R.drawable.card_7h, R.drawable.card_8h, R.drawable.card_9h,
-    		R.drawable.card_th, R.drawable.card_jh, R.drawable.card_qh,
-    		R.drawable.card_kh, 
+    		R.drawable.card_red_one, R.drawable.card_red_two, R.drawable.card_red_three,
+    		R.drawable.card_red_four, R.drawable.card_red_five, R.drawable.card_red_six,
+    		R.drawable.card_red_seven, R.drawable.card_red_eight, R.drawable.card_red_nine,
+    		R.drawable.card_red_ten, R.drawable.card_red_eleven, R.drawable.card_red_twelve,
     	},
     	{
-    		R.drawable.card_as, R.drawable.card_2s, R.drawable.card_3s,
-    		R.drawable.card_4s, R.drawable.card_5s, R.drawable.card_6s,
-    		R.drawable.card_7s, R.drawable.card_8s, R.drawable.card_9s,
-    		R.drawable.card_ts, R.drawable.card_js, R.drawable.card_qs,
-    		R.drawable.card_ks, 
+    		R.drawable.card_yellow_one, R.drawable.card_yellow_two, R.drawable.card_yellow_three,
+    		R.drawable.card_yellow_four, R.drawable.card_yellow_five, R.drawable.card_yellow_six,
+    		R.drawable.card_yellow_seven, R.drawable.card_yellow_eight, R.drawable.card_yellow_nine,
+    		R.drawable.card_yellow_ten, R.drawable.card_yellow_eleven, R.drawable.card_yellow_twelve,
+    	},
+    	{
+    		R.drawable.card_wild, R.drawable.card_skip, R.drawable.card_back,
     	},
     };
     

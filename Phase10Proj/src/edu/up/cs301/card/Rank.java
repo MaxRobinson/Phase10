@@ -122,7 +122,7 @@ public enum Rank {
 		}
 	},
 
-	// king
+	/*
 	WILD{
 		// override the shortName behavior: the corresponding digit
 		@Override
@@ -138,6 +138,7 @@ public enum Rank {
 			return 's';
 		}
 	}
+	*/
 	
 	;
 
