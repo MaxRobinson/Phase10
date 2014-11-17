@@ -6,6 +6,25 @@ import edu.up.cs301.game.actionMsg.GameAction;
 
 public class PhaseLocalGame extends LocalGame implements PhaseGame{
 
+	protected PhaseState state;
+	protected int numPlayers;
+	
+	public PhaseLocalGame(){
+		super();
+	}
+	
+	public void start(GamePlayer[] players){
+		super.start(players);
+		numPlayers = players.length;
+		state = new PhaseState(numPlayers);
+	}
+	
+	protected boolean canMove(){
+		return true;
+	}
+	
+	
+	
 	@Override
 	protected void sendUpdatedStateTo(GamePlayer p) {
 		// TODO Auto-generated method stub
@@ -20,7 +39,17 @@ public class PhaseLocalGame extends LocalGame implements PhaseGame{
 
 	@Override
 	protected String checkIfGameOver() {
-		// TODO Auto-generated method stub
+		if(state.dealer == state.turn){
+			for(int i = 0; i < currentPhase.length; i ++){
+				if(currentPhase == 10){
+					if(hands[i].length == 0){
+						return players.name;
+					}
+				}
+			}
+		}
+		
+		
 		return null;
 	}
 
@@ -29,5 +58,7 @@ public class PhaseLocalGame extends LocalGame implements PhaseGame{
 		// TODO Auto-generated method stub
 		return false;
 	}
+	
+	
 
 }
