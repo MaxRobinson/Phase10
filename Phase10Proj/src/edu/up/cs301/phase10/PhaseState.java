@@ -12,7 +12,7 @@ import edu.up.cs301.game.infoMsg.GameState;
  * it, or to help figure out its next move.)
  * 
  * @author Max
- * @version 11/10/14
+ * @version 11/17/14
  *
  */
 
@@ -23,17 +23,63 @@ public class PhaseState extends GameState {
 	private final int MAXHANDSIZE = 11;
 	
 	//Private instance variables
+	
+	/**
+     * Cards that are currently in the deck
+     */
 	private Deck deck;
+	
+	/**
+     * Cards that are currently in the discard pile
+     */
 	private Deck discardPile;
+	
+	/**
+     * Contains each players current hand
+     */
 	private Hand[] hands;
+	
+	/**
+     * ID of player who is current round's dealer
+     */
 	private int dealer;
+	
+	/**
+     * Current player whose turn it is
+     */
 	private int turn;
+	
+	/**
+     * Contains the phase each player is currently on
+     * Indexed by player ID
+     */
 	private int[] currentPhase;
+	
+	/**
+     * Which players are skipped.Indexed by ID and if ID
+     * Is true, player is skipped
+     */
 	private boolean[] skipped;
+	
+	/**
+     * Each players current score indexed by ID
+     */
 	private int[] score;
+	
+	/**
+	 * List of players in the game
+	 */
 	private GamePlayer[] players;
+	
+	/**
+	 * Number of Players in the game
+	 */
 	private int numPlayers;
-	public ArrayList<Phase> layedPhases;
+	
+	/**
+	 * Indexed by ID, the laid phases that each player has 
+	 */
+	public Phase[] laidPhases;
 	
 	
 	/**
@@ -84,6 +130,9 @@ public class PhaseState extends GameState {
 		// init score
 		score = new int[numPlayers];
 		
+		//init laid Phases
+		laidPhases = new Phase[numPlayers];
+		
 		
 		
 		
@@ -93,11 +142,12 @@ public class PhaseState extends GameState {
 	 * Constructor
 	 * @param numPlayers
 	 */
+	/*
 	public PhaseState(int numPlayers){
 		
 		
 		
-	}
+	}*/
 	
 	/**
 	 * Copy constructor
@@ -107,12 +157,106 @@ public class PhaseState extends GameState {
 		
 	}
 	
+	
+	///////////////// SETTER AND GETTERS //////////////////////////////////////
+	
+	public Deck getDeck(){
+		return this.deck;
+	}
+	
+	public void setDeck(Deck deck){
+		this.deck = deck;
+	}
+	
+	public Deck getDiscardPile(){
+		return this.discardPile;
+	}
+	
+	public void setDiscardPile(Deck discardPile){
+		this.discardPile = discardPile;
+	}
+	
+	public Hand[] getHands(){
+		return this.hands;
+	}
+	
+	public void setHands(Hand[] hands){
+		this.hands = hands;
+	}
+	
+	public int getDealer(){
+		return this.dealer;
+	}
+	
 	/**
 	 * Set who the dealer is
 	 * @param id
 	 */
 	public void setDealer(int id){
-		dealer = id;
+		this.dealer = id;
+	}
+	
+	/**
+	 * Tells which player's turn it is.
+	 * 
+	 * @return the index of the player whose turn it is.
+	 */
+	public int getTurn(){
+		return this.turn;
+	}
+	
+	/**
+     * change whose move it is
+     * 
+     * @param idx
+     * 		the index of the player whose move it now is
+     */
+	public void setTurn(int idx){
+		this.turn = idx;
+	}
+	
+	public int[] getCurrentPhase(){
+		return this.currentPhase;
+	}
+	
+	public void setCurrentPhase(int[] currentPhase){
+		this.currentPhase = currentPhase;
+	}
+	
+	public boolean[] getSkipped(){
+		return this.skipped;
+	}
+	
+	public void setSkipped(boolean[] skipped){
+		this.skipped = skipped;
+	}
+	
+	public int[] getScore(){
+		return this.score;
+	}
+	
+	public void setScore(int[] scores){
+		this.score = scores;
+	}
+	
+	public Phase[] getLaidPhases(){
+		return this.laidPhases;
+	}
+	
+	public void setLaidPhases(Phase[] laidPhases){
+		this.laidPhases = laidPhases;
+	}
+
+	
+	///////////////// HELPER METHODS ///////////////////////////////////////////
+	
+	/**
+	 * Returns if a player is currently skipped or not.
+	 * @param playerId
+	 * @return true or false if a player is skipped.
+	 */
+	public boolean isSkipped(int playerId){
+		return this.skipped[playerId];
 	}
 	
 	/**
@@ -160,6 +304,34 @@ public class PhaseState extends GameState {
 		this.skipped = new boolean[numPlayers];
 		for(int i = 0; i < numPlayers; i++){
 			this.skipped[i] = false;
+		}
+	}
+	
+	public void nullAllButHandOf(int playerId){
+		// Save the hand of the player.
+		Hand keeper = this.hands[playerId];
+		
+		// null all other hands and deck
+		
+		// Save top Card of deck
+		Card tempTopCard = this.deck.removeTopCard();
+		// Null out Deck
+		this.deck.nullifyDeck();
+		this.deck.add(tempTopCard);
+		
+		// Save top card of discard pile
+		Card tempDiscardCard = this.discardPile.removeTopCard();
+		// Null out Deck
+		this.discardPile.nullifyDeck();
+		this.discardPile.add(tempDiscardCard);
+		
+		// Null all the Hands
+		synchronized(this.hands){
+			for(Hand h : hands){
+				h.nullifyDeck();
+			}
+			// add back this users Hand
+			hands[playerId] = keeper;
 		}
 	}
 }
