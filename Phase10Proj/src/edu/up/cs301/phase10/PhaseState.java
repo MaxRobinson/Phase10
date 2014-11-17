@@ -23,6 +23,7 @@ public class PhaseState extends GameState {
 	private final int MAXHANDSIZE = 11;
 	
 	//Private instance variables
+	private static final long serialVersionUID = -189266841850951064L;
 	
 	/**
      * Cards that are currently in the deck
@@ -80,12 +81,7 @@ public class PhaseState extends GameState {
 	 * Indexed by ID, the laid phases that each player has 
 	 */
 	public Phase[] laidPhases;
-	
-	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+	///////////////////////////////////////////////////////////
 	
 	/**
 	 * Constructor
