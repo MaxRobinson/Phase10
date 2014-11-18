@@ -11,28 +11,11 @@ import java.util.ArrayList;
  */
 public enum CardColor {
 	
-	// red
-	Red {
-//		// the "long name
-//		@Override
-//		public String longName() {
-//			return "Club";
-//		}
-	},
-	
 	// blue
 	Blue {
 //		@Override
 //		public String longName() {
 //			return "Diamond";
-//		}
-	},
-	
-	// yellow
-	Yellow {
-//		@Override
-//		public String longName() {
-//			return "Heart";
 //		}
 	},
 	
@@ -43,6 +26,25 @@ public enum CardColor {
 //			return "Spade";
 //		}
 	},
+	
+	// red
+	Red {
+//		// the "long name
+//		@Override
+//		public String longName() {
+//			return "Club";
+//		}
+	},
+	
+
+	// yellow
+	Yellow {
+//		@Override
+//		public String longName() {
+//			return "Heart";
+//		}
+	},
+
 	
 	// green
 	Orange {

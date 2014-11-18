@@ -199,7 +199,8 @@ public class SJHumanPlayer extends GameHumanPlayer implements Animator {
 		// draw my cards, face down
 		RectF thisTopLocation = thisPlayerTopCardLocation(); // drawing size/location
 		drawCardBacks(g, thisTopLocation,
-				0.0025f*width, -0.01f*height, state.getDeck(this.playerNum).size());
+				0.0025f*width, -0.01f*height, 
+				state.getDeck(this.playerNum).size());
 		
 		// draw a red bar to denote which player is to play (flip) a card
 		RectF currentPlayerRect =

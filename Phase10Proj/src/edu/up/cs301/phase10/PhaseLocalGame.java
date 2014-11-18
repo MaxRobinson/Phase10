@@ -1,5 +1,6 @@
 package edu.up.cs301.phase10;
 
+import android.util.Log;
 import edu.up.cs301.game.GamePlayer;
 import edu.up.cs301.game.LocalGame;
 import edu.up.cs301.game.actionMsg.GameAction;
@@ -38,9 +39,6 @@ public class PhaseLocalGame extends LocalGame implements PhaseGame{
 		
 		return true;
 	}
-	
-	
-	
 	@Override
 	protected void sendUpdatedStateTo(GamePlayer p) {
 		// TODO Auto-generated method stub
