@@ -12,77 +12,78 @@ import edu.up.cs301.game.infoMsg.GameState;
  * it, or to help figure out its next move.)
  * 
  * @author Max
+ * @author Dan Nelson
  * @version 11/17/14
  *
  */
 
 public class PhaseState extends GameState {
-	
+
 	//CONSTANTS
 	private final int INITHANDSIZE = 10;
 	private final int MAXHANDSIZE = 11;
-	
+
 	//Private instance variables
 	private static final long serialVersionUID = -189266841850951064L;
-	
+
 	/**
-     * Cards that are currently in the deck
-     */
+	 * Cards that are currently in the deck
+	 */
 	private Deck deck;
-	
+
 	/**
-     * Cards that are currently in the discard pile
-     */
+	 * Cards that are currently in the discard pile
+	 */
 	private Deck discardPile;
-	
+
 	/**
-     * Contains each players current hand
-     */
+	 * Contains each players current hand
+	 */
 	private Hand[] hands;
-	
+
 	/**
-     * ID of player who is current round's dealer
-     */
+	 * ID of player who is current round's dealer
+	 */
 	private int dealer;
-	
+
 	/**
-     * Current player whose turn it is
-     */
+	 * Current player whose turn it is
+	 */
 	private int turn;
-	
+
 	/**
-     * Contains the phase each player is currently on
-     * Indexed by player ID
-     */
+	 * Contains the phase each player is currently on
+	 * Indexed by player ID
+	 */
 	private int[] currentPhase;
-	
+
 	/**
-     * Which players are skipped.Indexed by ID and if ID
-     * Is true, player is skipped
-     */
+	 * Which players are skipped.Indexed by ID and if ID
+	 * Is true, player is skipped
+	 */
 	private boolean[] skipped;
-	
+
 	/**
-     * Each players current score indexed by ID
-     */
+	 * Each players current score indexed by ID
+	 */
 	private int[] score;
-	
+
 	/**
 	 * List of players in the game
 	 */
 	private GamePlayer[] players;
-	
+
 	/**
 	 * Number of Players in the game
 	 */
 	private int numPlayers;
-	
+
 	/**
 	 * Indexed by ID, the laid phases that each player has 
 	 */
 	public Phase[] laidPhases;
 	///////////////////////////////////////////////////////////
-	
+
 	/**
 	 * Constructor
 	 * NOTE This players, parameter should be a COPY of the actually list of players
@@ -97,93 +98,128 @@ public class PhaseState extends GameState {
 		}
 		//setNumber of players
 		numPlayers = this.players.length;
-		
+
 		// init Deck
 		deck = new Deck();
 		deck.add108();
 		deck.shuffle();
-		
+
 		// init Discard pile with top card from Deck
 		discardPile = new Deck();
 		discardPile.add(deck.removeTopCard());
-		
+
 		hands = new Hand[numPlayers];
 		// deal hands for players from deck
 		dealHands(this.deck);
-		
+
 		// init the dealer to random player
 		dealer = (int) Math.random()*(numPlayers);
-		
+
 		// init who goes first
 		initTurn(dealer);
-		
+
 		// init starting Phases
 		initCurrentPhase(this.numPlayers);
-		
+
 		// init Skipped array
 		initSkipped();
-		
+
 		// init score
 		score = new int[numPlayers];
-		
+
 		//init laid Phases
-		laidPhases = new Phase[numPlayers];
-		
-		
-		
-		
+		laidPhases = new Phase[numPlayers];	
 	}
-	
+
 	/**
 	 * Constructor
 	 * @param numPlayers
 	 */
 	/*
 	public PhaseState(int numPlayers){
-		
-		
-		
+
+
+
 	}*/
-	
+
 	/**
 	 * Copy constructor
 	 * @param state
 	 */
-	public PhaseState(PhaseState state){
-		
+	public PhaseState PhaseState(PhaseState state){
+		PhaseState newState = new PhaseState(state.players);
+
+		players = new GamePlayer[players.length];
+		//copy the input into the local game list of players. //This is to make sure no reference carry overs.
+		for(int i = 0; i< players.length; i++){
+			players[i] = state.players[i];
+		}
+		//setNumber of players
+		numPlayers = state.players.length;
+
+		// init Deck
+		deck = new Deck(state.deck);
+
+		// init Discard pile with top card from Deck
+		discardPile = new Deck(state.discardPile);
+
+		hands = new Hand[numPlayers];
+		for(int i = 0; i< players.length; i++){
+			hands[i] = state.hands[i];
+		}
+
+		// init the dealer to random player
+		dealer = state.dealer;
+
+		// init who goes first
+		initTurn(dealer);
+
+		// init starting Phases
+		initCurrentPhase(this.numPlayers);
+
+		// init Skipped array
+		initSkipped();
+
+		// init score
+		score = new int[numPlayers];
+
+		//init laid Phases
+		laidPhases = new Phase[numPlayers];
+
+		return newState;
 	}
-	
-	
+
+
 	///////////////// SETTER AND GETTERS //////////////////////////////////////
-	
+
 	public Deck getDeck(){
 		return this.deck;
 	}
-	
+
 	public void setDeck(Deck deck){
 		this.deck = deck;
 	}
-	
+
 	public Deck getDiscardPile(){
 		return this.discardPile;
 	}
-	
+
 	public void setDiscardPile(Deck discardPile){
 		this.discardPile = discardPile;
 	}
-	
+
 	public Hand[] getHands(){
 		return this.hands;
 	}
-	
+
 	public void setHands(Hand[] hands){
 		this.hands = hands;
 	}
-	
+
 	public int getDealer(){
 		return this.dealer;
 	}
-	
+
 	/**
 	 * Set who the dealer is
 	 * @param id
@@ -191,7 +227,7 @@ public class PhaseState extends GameState {
 	public void setDealer(int id){
 		this.dealer = id;
 	}
-	
+
 	/**
 	 * Tells which player's turn it is.
 	 * 
@@ -200,52 +236,51 @@ public class PhaseState extends GameState {
 	public int getTurn(){
 		return this.turn;
 	}
-	
+
 	/**
-     * change whose move it is
-     * 
-     * @param idx
-     * 		the index of the player whose move it now is
-     */
+	 * change whose move it is
+	 * 
+	 * @param idx
+	 * 		the index of the player whose move it now is
+	 */
 	public void setTurn(int idx){
 		this.turn = idx;
 	}
-	
+
 	public int[] getCurrentPhase(){
 		return this.currentPhase;
 	}
-	
+
 	public void setCurrentPhase(int[] currentPhase){
 		this.currentPhase = currentPhase;
 	}
-	
+
 	public boolean[] getSkipped(){
 		return this.skipped;
 	}
-	
+
 	public void setSkipped(boolean[] skipped){
 		this.skipped = skipped;
 	}
-	
+
 	public int[] getScore(){
 		return this.score;
 	}
-	
+
 	public void setScore(int[] scores){
 		this.score = scores;
 	}
-	
+
 	public Phase[] getLaidPhases(){
 		return this.laidPhases;
 	}
-	
+
 	public void setLaidPhases(Phase[] laidPhases){
 		this.laidPhases = laidPhases;
-	}
+	}	
 
-	
 	///////////////// HELPER METHODS ///////////////////////////////////////////
-	
+
 	/**
 	 * Returns if a player is currently skipped or not.
 	 * @param playerId
@@ -254,7 +289,7 @@ public class PhaseState extends GameState {
 	public boolean isSkipped(int playerId){
 		return this.skipped[playerId];
 	}
-	
+
 	/**
 	 * This is to deal all of the hands for all of the players at the 
 	 * start of a game or a round. 
@@ -268,7 +303,7 @@ public class PhaseState extends GameState {
 			}
 		}
 	}
-	
+
 	/**
 	 * Inits which player goes first
 	 * @param dealer
@@ -281,7 +316,7 @@ public class PhaseState extends GameState {
 			turn = dealer + 1;
 		}
 	}
-	
+
 	/**
 	 * Inits the starting Phase for each player
 	 * @param numPlayers
@@ -292,7 +327,7 @@ public class PhaseState extends GameState {
 			currentPhase[i] = 1;
 		}
 	}
-	
+
 	/**
 	 * Inits the skipped array to be all false
 	 */
@@ -302,25 +337,25 @@ public class PhaseState extends GameState {
 			this.skipped[i] = false;
 		}
 	}
-	
+
 	public void nullAllButHandOf(int playerId){
 		// Save the hand of the player.
 		Hand keeper = this.hands[playerId];
-		
+
 		// null all other hands and deck
-		
+
 		// Save top Card of deck
 		Card tempTopCard = this.deck.removeTopCard();
 		// Null out Deck
 		this.deck.nullifyDeck();
 		this.deck.add(tempTopCard);
-		
+
 		// Save top card of discard pile
 		Card tempDiscardCard = this.discardPile.removeTopCard();
 		// Null out Deck
 		this.discardPile.nullifyDeck();
 		this.discardPile.add(tempDiscardCard);
-		
+
 		// Null all the Hands
 		synchronized(this.hands){
 			for(Hand h : hands){
