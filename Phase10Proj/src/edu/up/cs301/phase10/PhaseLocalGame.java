@@ -3,7 +3,6 @@ package edu.up.cs301.phase10;
 import edu.up.cs301.game.GamePlayer;
 import edu.up.cs301.game.LocalGame;
 import edu.up.cs301.game.actionMsg.GameAction;
-import edu.up.cs301.tictactoe.TTTState;
 
 /**
  * The PhaseLocalGame class for a simple Phase10 Game.  Defines and enforces
@@ -49,16 +48,14 @@ public class PhaseLocalGame extends LocalGame implements PhaseGame{
 	
 	@Override
 	protected void sendUpdatedStateTo(GamePlayer p) {
-		PhaseState state = new PhaseState(players);
+		PhaseState sendState = new PhaseState(state);
 		for(int i = 0; i < players.length; i++){
 			if(players[i].equals(p)){
 				state.nullAllButHandOf(i);
 			}
 		}
 
-		p.sendInfo();
-		
-
+		p.sendInfo(sendState);
 	}
 
 	/**

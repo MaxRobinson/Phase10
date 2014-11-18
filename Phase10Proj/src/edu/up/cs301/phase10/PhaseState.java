@@ -146,12 +146,12 @@ public class PhaseState extends GameState {
 	 * Copy constructor
 	 * @param state
 	 */
-	public PhaseState PhaseState(PhaseState state){
+	public PhaseState(PhaseState state){
 		PhaseState newState = new PhaseState(state.players);
 
-		players = new GamePlayer[players.length];
+		players = new GamePlayer[state.players.length];
 		//copy the input into the local game list of players. //This is to make sure no reference carry overs.
-		for(int i = 0; i< players.length; i++){
+		for(int i = 0; i< state.players.length; i++){
 			players[i] = state.players[i];
 		}
 		//setNumber of players
@@ -163,30 +163,34 @@ public class PhaseState extends GameState {
 		// init Discard pile with top card from Deck
 		discardPile = new Deck(state.discardPile);
 
-		hands = new Hand[numPlayers];
-		for(int i = 0; i< players.length; i++){
+		hands = new Hand[state.numPlayers];
+		for(int i = 0; i< state.players.length; i++){
 			hands[i] = state.hands[i];
 		}
 
 		// init the dealer to random player
 		dealer = state.dealer;
-
-		// init who goes first
-		initTurn(dealer);
-
-		// init starting Phases
-		initCurrentPhase(this.numPlayers);
-
-		// init Skipped array
-		initSkipped();
-
-		// init score
-		score = new int[numPlayers];
-
-		//init laid Phases
-		laidPhases = new Phase[numPlayers];
-
-		return newState;
+		turn = state.turn;
+		
+		currentPhase = new int[state.numPlayers];
+		for(int i = 0; i< state.players.length; i++){
+			currentPhase[i] = state.currentPhase[i];
+		}
+		
+		skipped = new boolean[state.numPlayers];
+		for(int i = 0; i< state.players.length; i++){
+			skipped[i] = state.skipped[i];
+		}
+		
+		score = new int[state.numPlayers];
+		for(int i = 0; i< state.players.length; i++){
+			score[i] = state.score[i];
+		}
+		
+		laidPhases = new Phase[state.numPlayers];
+		for(int i = 0; i< state.players.length; i++){
+			laidPhases[i] = state.laidPhases[i];
+		}
 	}
 
 
