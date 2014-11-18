@@ -5,21 +5,37 @@ import edu.up.cs301.game.LocalGame;
 import edu.up.cs301.game.actionMsg.GameAction;
 
 public class PhaseLocalGame extends LocalGame implements PhaseGame{
-
-	protected PhaseState state;
-	protected int numPlayers;
+	/**
+	 * Current state of the game
+	 */
+	private PhaseState state;
 	
+	/**
+	 * List of players in the game
+	 */
+	private GamePlayer[] players;
+	
+	/**
+	 * Constructor
+	 */
 	public PhaseLocalGame(){
 		super();
 	}
 	
+	/**
+	 * Overrides the startup method to allow the players to be passed to the PhaseState constructor
+	 * 
+	 * @param players - The players that are currently in the game 
+	 */
+	@Override
 	public void start(GamePlayer[] players){
 		super.start(players);
-		numPlayers = players.length;
-		state = new PhaseState(numPlayers);
+		state = new PhaseState(players);
+		this.players = players;
 	}
 	
 	protected boolean canMove(){
+		
 		return true;
 	}
 	
@@ -31,6 +47,12 @@ public class PhaseLocalGame extends LocalGame implements PhaseGame{
 		
 	}
 
+	/**
+	 * Overrides the can move method and returns a booleans to inidicate if the player can move
+	 * 
+	 * @param playerIdx - The player that is trying to move 
+	 * @return - boolean true if player can move or false if the player cannot move
+	 */
 	@Override
 	protected boolean canMove(int playerIdx) {
 		// TODO Auto-generated method stub
@@ -39,17 +61,16 @@ public class PhaseLocalGame extends LocalGame implements PhaseGame{
 
 	@Override
 	protected String checkIfGameOver() {
-		if(state.dealer == state.turn){
-			for(int i = 0; i < currentPhase.length; i ++){
-				if(currentPhase == 10){
-					if(hands[i].length == 0){
-						return players.name;
+		if(state.getDealer() == state.getTurn()){
+			for(int i = 0; i < state.getCurrentPhase().length; i ++){
+				if(state.getCurrentPhase()[i] == 10){
+					if(state.getHands()[i].size() == 0){
+						//TDOD How do we get string of name?
+						return players[i].toString();
 					}
 				}
 			}
 		}
-		
-		
 		return null;
 	}
 
@@ -58,7 +79,4 @@ public class PhaseLocalGame extends LocalGame implements PhaseGame{
 		// TODO Auto-generated method stub
 		return false;
 	}
-	
-	
-
 }
