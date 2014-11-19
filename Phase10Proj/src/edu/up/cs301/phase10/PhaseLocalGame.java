@@ -1,9 +1,18 @@
 package edu.up.cs301.phase10;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
+import android.util.Pair;
 import edu.up.cs301.game.GamePlayer;
 import edu.up.cs301.game.LocalGame;
 import edu.up.cs301.game.actionMsg.GameAction;
-
+import edu.up.cs301.card.*;
 /**
  * The PhaseLocalGame class for a simple Phase10 Game.  Defines and enforces
  * the game rules; handles interactions with players.
@@ -45,16 +54,16 @@ public class PhaseLocalGame extends LocalGame implements PhaseGame{
 			this.players[i] = players[i];
 		}
 	}
-	
+
 	@Override
 	protected void sendUpdatedStateTo(GamePlayer p) {
 		PhaseState sendState = new PhaseState(state);
 		for(int i = 0; i < players.length; i++){
 			if(players[i].equals(p)){
 				state.nullAllButHandOf(i);
+				break;
 			}
 		}
-
 		p.sendInfo(sendState);
 	}
 
@@ -89,9 +98,111 @@ public class PhaseLocalGame extends LocalGame implements PhaseGame{
 	@Override
 	protected boolean makeMove(GameAction action) {
 		PhaseMoveAction move = (PhaseMoveAction)action;
-		
-		
-		
+
+		if(move.isDiscardAction()){
+
+		}
+		else if(move.isDrawCardAction()){
+
+		}
+		else if(move.isLayOnPhaseAction()){
+
+		}
+		else if(move.isLayPhaseAction()){
+			// Get player ID
+			int playerId = 0;
+			for(int i = 0; i < players.length; i++){
+				if(((PhaseLayPhaseAction)move).getPlayer().equals(players[i])){
+					playerId = i;
+				}
+
+			}
+
+			// Get current phase and number of cards in current phase
+			int currPhase = state.getCurrentPhase()[playerId];
+			int numCardsForPhase = Phase.numberPhases[state.getCurrentPhase()[playerId]];
+
+			// Get the phase the player is trying to lay and sort it
+			Phase layedPhaseP = ((PhaseLayPhaseAction)move).getPhaseToLay();
+			ArrayList<Card> layedPhase = new ArrayList<Card>();
+			layedPhase = layedPhaseP.getPhase();
+			Collections.sort(layedPhase, new Comparator<Card>(){
+				public int compare(Card c1, Card c2){
+					return c1.getRank().compareTo(c2.getRank());
+				}
+			});
+
+			// Check to ensure the number of cards is correct for the phase
+			if(numCardsForPhase != layedPhase.size()){
+				return false;
+			}
+
+			// Get the objective of the phase
+			List<String> phaseObjectives = Arrays.asList(Phase.phases[currPhase].split(","));
+
+			// If there is only one objective for the phase
+			if(phaseObjectives.size() == 2){
+				// Get number of cards for current stage
+				int numCards = Integer.parseInt(phaseObjectives.get(1));
+				try {
+					// Setup reflection
+					Method method = Phase.class.getMethod(phaseObjectives.get(0), Integer.class, ArrayList.class);
+					Object obj = method.invoke(this, numCards, layedPhase);
+					// Set method
+					if(obj instanceof Pair<?,?>){
+						return ((Pair<Boolean,ArrayList<Card>>)obj).first;
+					}
+					// Color or run
+					else{
+						return ((Boolean)obj);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			else{
+				int numCards = Integer.parseInt(phaseObjectives.get(1));
+				ArrayList<Card> leftOver = new ArrayList<Card>();
+				try {
+					// Setup reflection
+					Method method = Phase.class.getMethod(phaseObjectives.get(0), Integer.class, ArrayList.class);
+					Object obj = method.invoke(this,  numCards, layedPhase);
+					// Set method
+					if(obj instanceof Pair<?,?>){
+						// If the first set failed, the seonc dset will too
+						if(!((Pair<Boolean,ArrayList<Card>>)obj).first)
+							return false;
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
+				numCards = Integer.parseInt(phaseObjectives.get(3));
+				try {
+					// Setup reflection
+					Method method = Phase.class.getMethod(phaseObjectives.get(0), Integer.class, ArrayList.class);
+					Object obj = method.invoke(this,  numCards, layedPhase);
+					// Set method
+					if(obj instanceof Pair<?,?>){
+						return ((Pair<Boolean,ArrayList<Card>>)obj).first;
+					}
+					// Color or run
+					else{
+						return ((Boolean)obj);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		else if(move.isSkipAction()){
+			// The current player is not skipped, they will now be skipped
+			if(!state.getSkipped()[((PhaseSkipAction)action).getWhoSkipped()]){
+				state.setSkipped(((PhaseSkipAction)action).getWhoSkipped());
+				return true;
+			}
+		}
+
 		return false;
 	}
 }

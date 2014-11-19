@@ -22,6 +22,7 @@ import android.graphics.RectF;
  * method during initialization; the 52 image files need to be placed in the
  * res/drawable-hdpi project area.
  * 
+ * @author Dan Nelson
  * @author Steven R. Vegdahl
  * @version July 2013
  */
@@ -145,6 +146,17 @@ public class Card implements Serializable {
      */
     public Rank getRank() {
     	return rank;
+    }
+    
+    /**
+     * Tells the card's rank.
+     *
+     * @return
+	 *		a Rank object (actually of a subclass) that tells the card's
+     *		rank (e.g., Jack, three).
+     */
+    public int getIntRank() {
+    	return getRank().value(1);
     }
 
     /**

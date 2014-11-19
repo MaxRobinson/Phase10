@@ -147,8 +147,6 @@ public class PhaseState extends GameState {
 	 * @param state
 	 */
 	public PhaseState(PhaseState state){
-		PhaseState newState = new PhaseState(state.players);
-
 		players = new GamePlayer[state.players.length];
 		//copy the input into the local game list of players. //This is to make sure no reference carry overs.
 		for(int i = 0; i< state.players.length; i++){
@@ -263,8 +261,8 @@ public class PhaseState extends GameState {
 		return this.skipped;
 	}
 
-	public void setSkipped(boolean[] skipped){
-		this.skipped = skipped;
+	public void setSkipped(int skipped){
+		this.skipped[skipped] = true;
 	}
 
 	public int[] getScore(){
