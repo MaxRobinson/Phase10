@@ -109,6 +109,7 @@ public class PhaseState extends GameState {
 		discardPile.add(deck.removeTopCard());
 
 		hands = new Hand[numPlayers];
+		initHands();
 		// deal hands for players from deck
 		dealHands(this.deck);
 
@@ -164,6 +165,7 @@ public class PhaseState extends GameState {
 		discardPile = new Deck(state.discardPile);
 
 		hands = new Hand[state.numPlayers];
+		initHands();
 		for(int i = 0; i< state.players.length; i++){
 			hands[i] = state.hands[i];
 		}
@@ -307,7 +309,16 @@ public class PhaseState extends GameState {
 			}
 		}
 	}
-
+	
+	/**
+	 * This initiallizes the array of hands for all players in the game.
+	 */
+	private void initHands(){
+		for(int i = 0; i<this.numPlayers; i++){
+			this.hands[i] = new Hand();
+		}
+	}
+	
 	/**
 	 * Inits which player goes first
 	 * @param dealer
