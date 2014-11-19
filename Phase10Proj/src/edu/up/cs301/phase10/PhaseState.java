@@ -165,7 +165,6 @@ public class PhaseState extends GameState {
 		discardPile = new Deck(state.discardPile);
 
 		hands = new Hand[state.numPlayers];
-		initHands();
 		for(int i = 0; i< state.players.length; i++){
 			hands[i] = state.hands[i];
 		}
