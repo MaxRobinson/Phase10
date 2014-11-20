@@ -185,12 +185,12 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 				nOPD++;
 				if(state.getLaidPhases()[i] != null)
 				{
-					if(null != state.getLaidPhases()[i].getPhasePart())
+					if(null != state.getLaidPhases()[i].getPhase())
 					{
-						if(state.getLaidPhases()[i].getPhasePart()[0]!= null)
-							for(int j= 0; j < state.getLaidPhases()[i].getPhasePart()[0].size(); j++)
+						if(state.getLaidPhases()[i].getPhase().get(0)!= null)
+							for(int j= 0; j < state.getLaidPhases()[i].getPhase().size(); j++)
 							{
-								drawCard(g, new RectF(25+52f*nOPD,50f,75f+52f*nOPD,125f),  state.getLaidPhases()[i].getPhasePart()[0].getCard(nOPD));
+								drawCard(g, new RectF(25+52f*nOPD,50f,75f+52f*nOPD,125f),  state.getLaidPhases()[i].getPhase().get(0));
 							}
 					}
 				}
