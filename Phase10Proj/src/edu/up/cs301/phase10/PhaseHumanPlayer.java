@@ -16,6 +16,7 @@ import edu.up.cs301.game.GameHumanPlayer;
 import edu.up.cs301.game.GameMainActivity;
 import edu.up.cs301.game.R;
 import edu.up.cs301.game.infoMsg.GameInfo;
+import edu.up.cs301.phase10.Deck;
 /**
  * A GUI that allows a human to play Phase 10. Moves are made by clicking
  * regions on a surface. It is laid out for landscape orientation.
@@ -53,6 +54,18 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 	//the screen Height
 	private int screenHeight;
 	
+	//The rectangles for hit selection
+	private RectF handLocation;
+	
+	private RectF drawPileLocation;
+	
+	private RectF discardPileLocation;
+	
+	private RectF oppenentPhaseLocations;
+	
+	private RectF phaseLocation;
+	
+
 	
 	public PhaseHumanPlayer(String name) {
 		super(name);
@@ -86,7 +99,11 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 		screenWidth = surface.getWidth();
 		screenWidth = surface.getHeight();
 		Card.initImages(activity);
-
+		
+		handLocation = new RectF(50f,500f,150f+105f*11,650f);
+		drawPileLocation = new RectF(50f,450f,150f,150f);
+		discardPileLocation = new RectF(155f,450f,255f,150f);
+		oppenentPhaseLocations = new RectF(50f,50f,150f+105f*11,125f);
 		
 	}
 
@@ -112,7 +129,14 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 
 	//Most work needs to be here but modularized 
 	public void tick(Canvas canvas) {
+		if(state == null)
+		{
+			return;
+		}
 		drawPlayerHand(canvas);
+		drawDrawPile(canvas);
+		drawDiscardPile(canvas);
+
 	}
 
 	//Draw player hand on screen used in tick
@@ -120,10 +144,57 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 		//RectF cardLocation = new RectF(50.0f,4*screenHeight/5f,50.0f+50.0f,19*screenHeight/20f);
 		
 		//Log.w("draw", Integer.toString(screenWidth));
-		for(int i = 0; i < 11; i++)
+
+		Hand tempHand = state.getHands()[this.playerNum];
+	
+		for(int i = 0; i < tempHand.size(); i++)
 		{
 			RectF cardLocation = new RectF(50f+105f*i,500f,150f+105f*i,650f);
-			drawCard(g, cardLocation, new Card(Rank.ONE, CardColor.Blue));
+			drawCard(g, cardLocation, tempHand.getCard(i));
+		}
+		
+	}
+	
+	private void drawDrawPile(Canvas g)
+	{
+		if(state.getDeck().size()>0)
+		{
+			drawCard(g, drawPileLocation, null);
+		}
+	}
+	
+	private void drawDiscardPile(Canvas g)
+	{
+		if(state.getDiscardPile()!= null)//should never be null
+		{
+			drawCard(g,discardPileLocation,state.getDiscardPile().peekAtTopCard());
+		}
+	}
+	
+	private void drawOpponentsPhases(Canvas g)
+	{
+		if (state.getLaidPhases() == null)
+		{
+			return;
+		}
+		int nOPD = 0;
+		for (int i = 0; i < state.getLaidPhases().length; i++)
+		{
+			if(i != this.playerNum)
+			{
+				nOPD++;
+				if(state.getLaidPhases()[i] != null)
+				{
+					if(null != state.getLaidPhases()[i].getPhasePart())
+					{
+						if(state.getLaidPhases()[i].getPhasePart()[0]!= null)
+							for(int j= 0; j < state.getLaidPhases()[i].getPhasePart()[0].size(); j++)
+							{
+								drawCard(g, new RectF(25+52f*nOPD,50f,75f+52f*nOPD,125f),  state.getLaidPhases()[i].getPhasePart()[0].getCard(nOPD));
+							}
+					}
+				}
+			}
 		}
 	}
 	
@@ -149,9 +220,15 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 	
 	
 	
+	
 	public void onTouch(MotionEvent event) {
-		// TODO Auto-generated method stub
-		
+	// ignore everything except down-touch events
+			if (event.getAction() != MotionEvent.ACTION_DOWN) return;
+
+			// get the location of the touch on the surface
+			int x = (int) event.getX();
+			int y = (int) event.getY();		
+			
 	}
 
 	@Override

@@ -6,9 +6,9 @@ import edu.up.cs301.card.Card;
 
 public class Phase {
 	//instnace variables
-	private Deck part1;
-	private Deck part2;
-	private Deck[] phasePart;
+	private Hand part1;
+	private Hand part2;
+	private Hand[] phasePart;
 	private int phase;
 	
 	/**
@@ -17,9 +17,9 @@ public class Phase {
 	 * @param secondPart
 	 */
 	public Phase(ArrayList<Card> firstPart, ArrayList<Card> secondPart){
-		part1 = new Deck(firstPart);
-		part2 = new Deck(secondPart);
-		phasePart = new Deck[2];
+		part1 = new Hand(firstPart);
+		part2 = new Hand(secondPart);
+		phasePart = new Hand[2];
 		phasePart[0] = part1;
 		phasePart[1] = part2;
 	}
@@ -28,8 +28,8 @@ public class Phase {
 	 * Creates a phase with empty phase parts
 	 */
 	public Phase(){
-		part1 = new Deck();
-		part2 = new Deck();
+		part1 = new Hand();
+		part2 = new Hand();
 	}
 	
 	/**
@@ -37,6 +37,8 @@ public class Phase {
 	 * @param part
 	 * @param cards
 	 */
+	
+	
 	public void setPart(int part, ArrayList<Card> cards){
 		// if part passed in is not a valid Phase
 		if(!(part < 2)){
@@ -47,6 +49,11 @@ public class Phase {
 				phasePart[part].add(c);
 			}
 		}
+	}
+	
+	public Hand[] getPhasePart()
+	{
+		return phasePart;
 	}
 	
 	
