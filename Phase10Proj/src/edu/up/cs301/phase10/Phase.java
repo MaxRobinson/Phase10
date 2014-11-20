@@ -24,8 +24,8 @@ public class Phase {
 	
 	private int phase;
 	public static String phases[] = {"set,3,set,3", "set,3,run,4", " set,4,run,4", " run,7", "run,8", "run,9",
-							  "set,4,set,4", "color,1", "set,5,set,2"};
-	public static int numberPhases[] = {6,7,8,7,8,9,8,7,7};
+							  "set,4,set,4", "color,7", "set,5,set,2", "set,5,set,3"};
+	public static int numberPhases[] = {6,7,8,7,8,9,8,7,7,8};
 	
 	/**
 	 * Take two lists of cards and set each part as a part of a phase
