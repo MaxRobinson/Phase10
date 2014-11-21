@@ -78,12 +78,12 @@ public class Deck implements Serializable {
 		}
 		// add wild cards
 		for (int i = 0; i<8; i++){
-			this.add(Card.fromString(""+'w'+'O'));
+			this.add(Card.fromString(""+'1'+'O'));
 		}
 		
 		// add skip cards
 		for (int i = 0; i<4; i++){
-			this.add(Card.fromString(""+'s'+'O'));
+			this.add(Card.fromString(""+'2'+'O'));
 		}
 		
 		// return the deck

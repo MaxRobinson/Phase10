@@ -137,10 +137,15 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 			return;
 		}
 		Hand tempHand = state.getHands()[this.playerNum];
+		//draw hand
 		drawPlayerHand(canvas,tempHand,handLocation);
+		//draw deck
 		drawCard(canvas,drawPileLocation,null); 
+		//draw discard
 		drawCard(canvas,discardPileLocation,state.getDiscardPile().peekAtTopCard());
-
+		//draw opponents phases
+		drawOpponentsPhases(canvas,oppenentPhaseLocations,state.getLaidPhases());
+		
 	}
 
 	//Draw player hand on screen used in tick
@@ -164,50 +169,19 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 		
 	}
 	
-	private void drawDrawPile(Canvas g)
-	{
-		if(state.getDeck().size()>0)
-		{
-			drawCard(g, drawPileLocation, null);
-		}
-	}
 	
-	private void drawDiscardPile(Canvas g)
+	private void drawOpponentsPhases(Canvas g, RectF oppenentPhaseLocations2, Phase[] phases)
 	{
-			drawCard(g, discardPileLocation, state.getDiscardPile().peekAtTopCard());
-	}
-	
-	private void drawOpponentsPhases(Canvas g)
-	{
-		if (state.getLaidPhases() == null)
+		for(int i = 0; i<phases.length; i++)
 		{
-			return;
-		}
-		int nOPD = 0;
-		for (int i = 0; i < state.getLaidPhases().length; i++)
-		{
-			if(i != this.playerNum)
-			{
-				nOPD++;
-				if(state.getLaidPhases()[i] != null)
-				{
-					if(null != state.getLaidPhases()[i].getPhase())
-					{
-						if(state.getLaidPhases()[i].getPhase().get(0)!= null)
-							for(int j= 0; j < state.getLaidPhases()[i].getPhase().size(); j++)
-							{
-								drawCard(g, new RectF(25+52f*nOPD,50f,75f+52f*nOPD,125f),  state.getLaidPhases()[i].getPhase().get(0));
-							}
-					}
-				}
-			}
+			
 		}
 	}
 	
 	private void drawNumberCards(Canvas g, RectF totalBox, int numCards)
 	{
 		float width =  totalBox.width();
-		
+		 
 	}
 	
 	private static void drawCard(Canvas g, RectF boundingBox, Card card)

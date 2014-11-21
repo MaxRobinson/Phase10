@@ -39,7 +39,7 @@ public class Hand extends Deck{
 	 * @return Card at a given index, or null 
 	 */
 	public Card getCard(int index){
-		if(index < cards.size()-1){
+		if(index < cards.size()){
 			return cards.get(index);
 		}
 		else{
