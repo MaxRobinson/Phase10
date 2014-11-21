@@ -104,8 +104,8 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 		Card.initImages(activity);
 		
 		handLocation = new RectF(50f,500f,150f+105f*11,650f);
-		drawPileLocation = new RectF(50f,450f,150f,150f);
-		discardPileLocation = new RectF(155f,450f,255f,150f);
+		drawPileLocation = new RectF(50f,300f,150f,450f);
+		discardPileLocation = new RectF(150f,300f,250f,450f);
 		oppenentPhaseLocations = new RectF(50f,50f,150f+105f*11,125f);
 		
 	}
@@ -136,9 +136,10 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 		{
 			return;
 		}
-		drawPlayerHand(canvas,state.getHands()[this.playerNum],handLocation);
-		drawDrawPile(canvas);
-		drawDiscardPile(canvas);
+		Hand tempHand = state.getHands()[this.playerNum];
+		drawPlayerHand(canvas,tempHand,handLocation);
+		drawCard(canvas,drawPileLocation,null); 
+		drawCard(canvas,discardPileLocation,state.getDiscardPile().peekAtTopCard());
 
 	}
 
@@ -173,10 +174,7 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 	
 	private void drawDiscardPile(Canvas g)
 	{
-		if(state.getDiscardPile()!= null)//should never be null
-		{
-			drawCard(g,discardPileLocation,state.getDiscardPile().peekAtTopCard());
-		}
+			drawCard(g, discardPileLocation, state.getDiscardPile().peekAtTopCard());
 	}
 	
 	private void drawOpponentsPhases(Canvas g)

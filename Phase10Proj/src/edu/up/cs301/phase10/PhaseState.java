@@ -163,7 +163,7 @@ public class PhaseState extends GameState {
 		discardPile = new Deck(state.discardPile);
 
 		hands = new Hand[state.numPlayers];
-		for(int i = 0; i< state.players.length; i++){
+		for(int i = 0; i < state.players.length; i++){
 			hands[i] = state.hands[i];
 		}
 
@@ -352,29 +352,29 @@ public class PhaseState extends GameState {
 
 	public void nullAllButHandOf(int playerId){
 		// Save the hand of the player.
-		Hand keeper = this.hands[playerId];
-
-		// null all other hands and deck
-
-		// Save top Card of deck
-		Card tempTopCard = this.deck.removeTopCard();
-		// Null out Deck
-		this.deck.nullifyDeck();
-		this.deck.add(tempTopCard);
-
-		// Save top card of discard pile
-		Card tempDiscardCard = this.discardPile.removeTopCard();
-		// Null out Deck
-		this.discardPile.nullifyDeck();
-		this.discardPile.add(tempDiscardCard);
-
-		// Null all the Hands
-		synchronized(this.hands){
-			for(Hand h : hands){
-				h.nullifyDeck();
-			}
-			// add back this users Hand
-			hands[playerId] = keeper;
-		}
+//		Hand keeper = this.hands[playerId];
+//
+//		// null all other hands and deck
+//
+//		// Save top Card of deck
+//		Card tempTopCard = this.deck.removeTopCard();
+//		// Null out Deck
+//		this.deck.nullifyDeck();
+//		this.deck.add(tempTopCard);
+//
+//		// Save top card of discard pile
+//		Card tempDiscardCard = this.discardPile.removeTopCard();
+//		// Null out Deck
+//		this.discardPile.nullifyDeck();
+//		this.discardPile.add(tempDiscardCard);
+//
+//		// Null all the Hands
+//		synchronized(this.hands){
+//			for(Hand h : hands){
+//				h.nullifyDeck();
+//			}
+//			// add back this users Hand
+//			hands[playerId] = keeper;
+//		}
 	}
 }
