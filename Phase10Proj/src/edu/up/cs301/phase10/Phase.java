@@ -37,11 +37,16 @@ public class Phase {
 		part1 = new Hand(firstPart);
 		part2 = new Hand(secondPart);
 		phasePart = new Hand[2];
+		phaseA = new ArrayList<Card>();
 		phasePart[0] = part1;
 		phasePart[1] = part2;
-		numCards = firstPart.size() + secondPart.size();
+		numCards = firstPart.size();
 		phaseA.addAll(firstPart);
-		phaseA.addAll(secondPart);
+		if(secondPart!=null)
+		{
+			numCards += secondPart.size();
+			phaseA.addAll(secondPart);
+		}
 	}
 	
 	/**

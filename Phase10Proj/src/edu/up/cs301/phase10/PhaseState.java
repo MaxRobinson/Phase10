@@ -83,7 +83,7 @@ public class PhaseState extends GameState {
 	 */
 	public Phase[] laidPhases;
 	
-	private boolean hasDrawn;
+	public boolean hasDrawn;
 	///////////////////////////////////////////////////////////
 
 	/**
@@ -133,6 +133,7 @@ public class PhaseState extends GameState {
 		//init laid Phases
 		laidPhases = new Phase[numPlayers];	
 		
+		hasDrawn = false;
 		
 	}
 
@@ -194,6 +195,8 @@ public class PhaseState extends GameState {
 		for(int i = 0; i< state.players.length; i++){
 			laidPhases[i] = state.laidPhases[i];
 		}
+		hasDrawn = state.hasDrawn;
+
 	}
 
 	public void swap(int player,int i, int j)
@@ -221,7 +224,7 @@ public class PhaseState extends GameState {
 	public Hand[] getHands(){
 		return this.hands;
 	}
-
+	
 	public void setHands(Hand[] hands){
 		this.hands = hands;
 	}
@@ -255,6 +258,10 @@ public class PhaseState extends GameState {
 	 */
 	public void setTurn(int idx){
 		this.turn = idx;
+	}
+	public void nextTurn()
+	{
+		this.turn = (this.turn+1)%numPlayers;
 	}
 
 	public int[] getCurrentPhase(){

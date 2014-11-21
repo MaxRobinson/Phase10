@@ -1,5 +1,7 @@
 package edu.up.cs301.phase10;
 
+import java.util.ArrayList;
+
 import android.app.Activity;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -169,7 +171,18 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 		//draw deck
 		drawCard(canvas,drawPileLocation,null); 
 		//draw discard
-		drawCard(canvas,discardPileLocation,state.getDiscardPile().peekAtTopCard());
+		if(state.getDiscardPile().peekAtTopCard()!=null)
+		{
+			drawCard(canvas,discardPileLocation,state.getDiscardPile().peekAtTopCard());
+		}
+		else
+		{
+			Paint paint = new Paint();
+			paint.setARGB(150,255,255,0);
+			paint.setStyle(Paint.Style.STROKE);
+			paint.setStrokeWidth(5);
+			canvas.drawRect(discardPileLocation,paint);
+		}
 		//draw opponents phases
 		drawOpponentsPhases(canvas,oppenentPhaseLocations,state.getLaidPhases());
 		//draw currentPhase
@@ -223,8 +236,8 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 		paint.setTextSize(25f);
 		paint.setColor(Color.BLACK);
 		g.drawText("Your Points:                    " + state.getScore()[this.playerNum],phaseTextLoc.left,phaseTextLoc.top+40f, paint);
-		g.drawText("it is player " + state.getTurn()+ "'s turn",phaseTextLoc.left,phaseTextLoc.top+120f, paint);
-		g.drawText("you're player number " + this.playerNum ,phaseTextLoc.left,phaseTextLoc.top+160f, paint);
+		g.drawText("It is player " + state.getTurn()+ "'s turn",phaseTextLoc.left,phaseTextLoc.top+120f, paint);
+		g.drawText("You're player number " + this.playerNum ,phaseTextLoc.left,phaseTextLoc.top+160f, paint);
 
 
 		
@@ -397,13 +410,64 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 				}
 			}
 			else { if(drawPileLocation.contains(x,y))
-			
+			{
 				game.sendAction(new PhaseDrawCardAction(this,true));
 			}
-			
-			
-//			drawPileLocation
-//			discardPileLocation
+			else{ if(discardPileLocation.contains(x, y))
+			{
+				if (state.hasDrawn)
+				{
+					int anySelected = -1;
+					for(int i= 0; i < selected.length; i++)
+					{
+						if(selected[i])
+						{
+							anySelected = i;
+							break;
+						}
+					}
+					if(anySelected != -1 && !hitting && !laying)
+					{
+						game.sendAction(new PhaseDiscardAction(this, state.getHands()[this.playerNum].getCard(anySelected)));
+					}
+				}
+				else
+				{
+					game.sendAction(new PhaseDrawCardAction(this,false));
+
+				}
+			}
+			else{ if (phaseButtonLocation.contains(x, y))
+			{
+				if(laying)
+				{
+					ArrayList<Card> cards = new ArrayList<Card>();
+					for(int i = 0; i < selected.length; i++)
+					{
+						if(selected[i])
+						{
+							cards.add(state.getHands()[this.playerNum].getCard(i));
+						}
+					}
+					if(cards.size() > 0)
+					{
+						Phase tempPhase = new Phase(cards,null);
+						game.sendAction(new PhaseLayPhaseAction(this, tempPhase));
+					}
+				}
+				laying = !laying;
+				hitting = false;
+				resetSelected();
+			}
+			else{ if (hitButtonLocation.contains(x, y))
+			{
+				hitting = !hitting;
+				resetSelected();
+			}
+			}
+			}
+			}
+			}
 //			oppenentPhaseLocations 
 //			phaseTextLocation
 //			phaseButtonLocation

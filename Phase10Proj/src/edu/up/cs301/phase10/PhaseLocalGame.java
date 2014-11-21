@@ -102,15 +102,47 @@ public class PhaseLocalGame extends LocalGame implements PhaseGame{
 		if(move.isDiscardAction()){
 			int playerId = 0;
 			for(int i = 0; i < players.length; i++){
-				if(((PhaseLayPhaseAction)move).getPlayer().equals(players[i])){
+				if(((PhaseDiscardAction)move).getPlayer().equals(players[i])){
 					playerId = i;
 				}
-
 			}
+			if(!state.hasDrawn || state.getTurn()!=playerId || ((PhaseDiscardAction) move).getCard() == null)
+			{
+				return false;
+			}
+			Card tempCard = ((PhaseDiscardAction) move).getCard();
+			if (!state.getHands()[playerId].removeCard(((PhaseDiscardAction) move).getCard()))
+			{
+				return false;
+			}
+			state.getDiscardPile().add(tempCard);
+			state.nextTurn();
+			state.hasDrawn = false;
+			return true;
+			
 			
 		}
 		else if(move.isDrawCardAction()){
-
+				int playerId = 0;
+				for(int i = 0; i < players.length; i++){
+					if(((PhaseDrawCardAction)move).getPlayer().equals(players[i])){
+						playerId = i;
+					}
+				}
+				if(state.hasDrawn || state.getTurn()!=playerId)
+				{
+					return false;
+				}
+				if(((PhaseDrawCardAction) move).getIsDeck())
+				{
+					state.getHands()[playerId].add(state.getDeck().removeTopCard());
+				}
+				else
+				{
+					state.getHands()[playerId].add(state.getDiscardPile().removeTopCard());
+				}
+				state.hasDrawn = true;
+				return true;
 		}
 		else if(move.isLayOnPhaseAction()){
 
