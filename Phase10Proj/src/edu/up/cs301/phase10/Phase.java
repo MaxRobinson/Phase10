@@ -40,8 +40,12 @@ public class Phase {
 		phaseA = new ArrayList<Card>();
 		phasePart[0] = part1;
 		phasePart[1] = part2;
-		numCards = firstPart.size();
-		phaseA.addAll(firstPart);
+		if(firstPart != null)
+		{
+			numCards = firstPart.size();
+			phaseA.addAll(firstPart);
+
+		}
 		if(secondPart!=null)
 		{
 			numCards += secondPart.size();

@@ -33,9 +33,16 @@ public class PhaseMainActivity extends GameMainActivity{
 			public GamePlayer createPlayer(String name) {
 				return new PhaseHumanPlayer(name);
 			}});
-		playerTypes.add(new GamePlayerType("computer player (normal)") {
-			public GamePlayer createPlayer(String name) {
-				return new PhaseComputerPlayer(name);
+//		playerTypes.add(new GamePlayerType("computer player (normal)") {
+//			public GamePlayer createPlayer(String name) {
+//				return new PhaseComputerPlayer(name);
+//			}
+//		});
+		playerTypes.add(new GamePlayerType("Computer Player (PASSIVE BOTS)")
+		{
+			public GamePlayer createPlayer(String name)
+			{
+				return new PhaseComputerPlayer0(name);
 			}
 		});
 		

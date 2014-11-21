@@ -145,7 +145,7 @@ public class PhaseLocalGame extends LocalGame implements PhaseGame{
 				return true;
 		}
 		else if(move.isLayOnPhaseAction()){
-
+			//TODO
 		}
 		else if(move.isLayPhaseAction()){
 			// Get player ID
@@ -236,12 +236,38 @@ public class PhaseLocalGame extends LocalGame implements PhaseGame{
 		}
 		else if(move.isSkipAction()){
 			// The current player is not skipped, they will now be skipped
+			int playerId = 0;
+			for(int i = 0; i < players.length; i++){
+				if(((PhaseDiscardAction)move).getPlayer().equals(players[i])){
+					playerId = i;
+				}
+			}
+			if(!state.hasDrawn || state.getTurn()!=playerId || ((PhaseDiscardAction) move).getCard() == null)
+			{
+				return false;
+			}
+
+			Card tempCard = ((PhaseDiscardAction) move).getCard();
+			if(tempCard.equals(new Card(Rank.TWO,CardColor.Orange)))
+			{
+				return makeMove(new PhaseDiscardAction(((PhaseSkipAction)move).getPlayer(),((PhaseDiscardAction)move).getCard()));
+			}
+			if (!state.getHands()[playerId].removeCard(((PhaseDiscardAction) move).getCard()))
+			{
+				return false;
+			}
 			if(!state.getSkipped()[((PhaseSkipAction)action).getWhoSkipped()]){
 				state.setSkipped(((PhaseSkipAction)action).getWhoSkipped());
-				return true;
 			}
+			else
+			{
+				return false;
+			}
+			state.getDiscardPile().add(tempCard);
+			state.nextTurn();
+			state.hasDrawn = false;
+			return true;
 		}
-
 		return false;
 	}
 }

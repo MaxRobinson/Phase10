@@ -68,7 +68,7 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 	
 	private RectF discardPileLocation;
 	
-	private RectF oppenentPhaseLocations;
+	private RectF opponentPhaseLocations;
 	
 	//private RectF phaseLocation;
 	private RectF phaseTextLocation;
@@ -131,7 +131,7 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 		handLocation = new RectF(50f,500f,150f+105f*11,650f);
 		drawPileLocation = new RectF(50f,300f,150f,450f);
 		discardPileLocation = new RectF(150f,300f,250f,450f);
-		oppenentPhaseLocations = new RectF(50f,0f,1200f,125f);
+		opponentPhaseLocations = new RectF(50f,0f,1200f,125f);
 		phaseTextLocation = new RectF(500f,300f,650f,350f);
 		phaseButtonLocation = new RectF(800f,300f,950f,350f);
 		hitButtonLocation = new RectF(800f,360f,950f,410f);
@@ -140,12 +140,10 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 	}
 
 	public int interval() {
-		// TODO Auto-generated method stub
 		return 50;
 	}
 
 	public int backgroundColor() {
-		// TODO Auto-generated method stub
 		return backgroundColor;
 	}
 
@@ -184,7 +182,7 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 			canvas.drawRect(discardPileLocation,paint);
 		}
 		//draw opponents phases
-		drawOpponentsPhases(canvas,oppenentPhaseLocations,state.getLaidPhases());
+		drawOpponentsPhases(canvas,opponentPhaseLocations,state.getLaidPhases());
 		//draw currentPhase
 		writeCurrentPhase(canvas, phaseTextLocation );
 		//draw points
@@ -237,7 +235,7 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 		paint.setColor(Color.BLACK);
 		g.drawText("Your Points:                    " + state.getScore()[this.playerNum],phaseTextLoc.left,phaseTextLoc.top+40f, paint);
 		g.drawText("It is player " + state.getTurn()+ "'s turn",phaseTextLoc.left,phaseTextLoc.top+120f, paint);
-		g.drawText("You're player number " + this.playerNum ,phaseTextLoc.left,phaseTextLoc.top+160f, paint);
+		g.drawText("You're player " + this.playerNum ,phaseTextLoc.left,phaseTextLoc.top+160f, paint);
 
 
 		
@@ -412,6 +410,7 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 			else { if(drawPileLocation.contains(x,y))
 			{
 				game.sendAction(new PhaseDrawCardAction(this,true));
+				resetSelected();
 			}
 			else{ if(discardPileLocation.contains(x, y))
 			{
@@ -428,12 +427,22 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 					}
 					if(anySelected != -1 && !hitting && !laying)
 					{
-						game.sendAction(new PhaseDiscardAction(this, state.getHands()[this.playerNum].getCard(anySelected)));
+						Card skipCard = new Card(Rank.TWO,CardColor.Orange);
+						if (state.getHands()[this.playerNum].getCard(anySelected).equals(skipCard))
+						{
+							game.sendAction(new PhaseSkipAction(this, skipCard, 0));
+						}
+						else
+						{
+							game.sendAction(new PhaseDiscardAction(this, state.getHands()[this.playerNum].getCard(anySelected)));
+						}
+						resetSelected();
 					}
 				}
 				else
 				{
 					game.sendAction(new PhaseDrawCardAction(this,false));
+					resetSelected();
 
 				}
 			}
@@ -462,7 +471,39 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 			else{ if (hitButtonLocation.contains(x, y))
 			{
 				hitting = !hitting;
+				laying = false;
 				resetSelected();
+			}
+			else{ if(opponentPhaseLocations.contains(x,y))
+			{
+				if(hitting)
+				{
+					ArrayList<Card> cards = new ArrayList<Card>();
+					for(int i = 0; i < selected.length; i++)
+					{
+						if(selected[i])
+						{
+							cards.add(state.getHands()[this.playerNum].getCard(i));
+						}
+					}
+					if(cards.size() > 0)
+					{
+						int idToLayOn = 0;
+						int whichPart = 0;
+						int topOrBottom = 0;
+						float pL = opponentPhaseLocations.left;
+						float pT = opponentPhaseLocations.top;
+						float pW = opponentPhaseLocations.width();
+						float pH = opponentPhaseLocations.height();
+						if(pH / 2f + pT < y)
+						{
+							whichPart = 1;
+						}
+						idToLayOn = (int) ((x-pL)/(pW/state.getPlayers().length));				
+						game.sendAction(new PhaseLayOnPhaseAction(this,cards,idToLayOn,whichPart,topOrBottom));
+					}
+				}
+			}
 			}
 			}
 			}

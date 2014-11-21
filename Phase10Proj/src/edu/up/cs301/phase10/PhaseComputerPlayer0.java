@@ -8,6 +8,7 @@ import edu.up.cs301.game.infoMsg.NotYourTurnInfo;
  * it's so stupid that it sometimes tries to make illegal moves.
  * 
  * @author Dan Nelson
+ * @auther Justice RW Nichols
  * @versio2 11/21/14
  */
 public class PhaseComputerPlayer0 extends PhaseComputerPlayer {
@@ -27,9 +28,19 @@ public class PhaseComputerPlayer0 extends PhaseComputerPlayer {
     protected void receiveInfo(GameInfo info) {
     	// if it was a "not your turn" message, just ignore it
     	if (info instanceof NotYourTurnInfo) return;
-    	
+    	try {
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	if (!(info instanceof PhaseState)) {
+			// otherwise, if it's not a game-state message, ignore
+			return;
+		}
     	PhaseState state = (PhaseState)info;
-    	game.sendAction(new PhaseDrawCardAction(this, true));
+    	boolean drawPile = Math.random()<.5f;
+    	game.sendAction(new PhaseDrawCardAction(this, drawPile));
 		int playerId = 0;
 		for(int i = 0; i < state.getPlayers().length; i++){
 			if(state.getPlayers()[i].equals(this)){
@@ -37,7 +48,14 @@ public class PhaseComputerPlayer0 extends PhaseComputerPlayer {
 			}
 
 		}
-    	game.sendAction(new PhaseDiscardAction(this, state.getHands()[playerId].getCards().get(0)));
+		try {
+			Thread.sleep(1500);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		int toDiscard = (int) (Math.random() * state.getHands()[playerId].size());
+    	game.sendAction(new PhaseDiscardAction(this, state.getHands()[playerId].getCards().get(toDiscard)));
 	}
 
 }
