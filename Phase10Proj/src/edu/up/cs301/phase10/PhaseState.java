@@ -291,6 +291,10 @@ public class PhaseState extends GameState {
 	public Phase[] getLaidPhases(){
 		return this.laidPhases;
 	}
+	
+	public GamePlayer[] getPlayers(){
+		return this.players;
+	}
 
 	public void setLaidPhases(Phase[] laidPhases){
 		this.laidPhases = laidPhases;
