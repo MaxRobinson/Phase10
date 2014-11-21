@@ -2,6 +2,7 @@ package edu.up.cs301.phase10;
 
 import android.app.Activity;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -16,7 +17,10 @@ import edu.up.cs301.game.GameHumanPlayer;
 import edu.up.cs301.game.GameMainActivity;
 import edu.up.cs301.game.R;
 import edu.up.cs301.game.infoMsg.GameInfo;
+import edu.up.cs301.game.infoMsg.IllegalMoveInfo;
+import edu.up.cs301.game.infoMsg.NotYourTurnInfo;
 import edu.up.cs301.phase10.Deck;
+import edu.up.cs301.phase10.PhaseState;
 /**
  * A GUI that allows a human to play Phase 10. Moves are made by clicking
  * regions on a surface. It is laid out for landscape orientation.
@@ -46,7 +50,7 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 	private AnimationSurface surface;
 	
 	//the background color
-	private int backgroundColor;
+	private int backgroundColor = Color.WHITE;
 	
 	//the screen width
 	private int screenWidth;
@@ -69,7 +73,6 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 	
 	public PhaseHumanPlayer(String name) {
 		super(name);
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -109,12 +112,12 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 
 	public int interval() {
 		// TODO Auto-generated method stub
-		return 0;
+		return 50;
 	}
 
 	public int backgroundColor() {
 		// TODO Auto-generated method stub
-		return 0;
+		return backgroundColor;
 	}
 
 	public boolean doPause() {
@@ -133,23 +136,28 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 		{
 			return;
 		}
-		drawPlayerHand(canvas);
+		drawPlayerHand(canvas,state.getHands()[this.playerNum],handLocation);
 		drawDrawPile(canvas);
 		drawDiscardPile(canvas);
 
 	}
 
 	//Draw player hand on screen used in tick
-	private void drawPlayerHand(Canvas g){
+	private void drawPlayerHand(Canvas g, Hand tempHand, RectF location){
 		//RectF cardLocation = new RectF(50.0f,4*screenHeight/5f,50.0f+50.0f,19*screenHeight/20f);
 		
 		//Log.w("draw", Integer.toString(screenWidth));
 
-		Hand tempHand = state.getHands()[this.playerNum];
-	
+
+		float hHeight = location.height();
+		float cardWidth = 2f*hHeight/3f;
+		float hL = location.left;
+		float hT = location.top;
+		float hB = location.bottom;
 		for(int i = 0; i < tempHand.size(); i++)
 		{
-			RectF cardLocation = new RectF(50f+105f*i,500f,150f+105f*i,650f);
+			
+			RectF cardLocation = new RectF(hL+(cardWidth)*i,hT,hL+(cardWidth)*(i+1),hB);
 			drawCard(g, cardLocation, tempHand.getCard(i));
 		}
 		
@@ -198,6 +206,12 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 		}
 	}
 	
+	private void drawNumberCards(Canvas g, RectF totalBox, int numCards)
+	{
+		float width =  totalBox.width();
+		
+	}
+	
 	private static void drawCard(Canvas g, RectF boundingBox, Card card)
 	{
 		//just null checks
@@ -234,13 +248,25 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 	@Override
 	public View getTopView() {
 		// TODO Auto-generated method stub
-		return null;
-	}
+		return myActivity.findViewById(R.id.top_gui_layout);	}
 
 	@Override
 	public void receiveInfo(GameInfo info) {
-		// TODO Auto-generated method stub
-		
+		Log.i("SJComputerPlayer", "receiving updated state ("+info.getClass()+")");
+		if (info instanceof IllegalMoveInfo || info instanceof NotYourTurnInfo) {
+			// if we had an out-of-turn or illegal move, flash the screen
+			surface.flash(Color.RED, 50);
+		}
+		else if (!(info instanceof PhaseState)) {
+			// otherwise, if it's not a game-state message, ignore
+			return;
+		}
+		else {
+			// it's a game-state object: update the state. Since we have an animation
+			// going, there is no need to explicitly display anything. That will happen
+			// at the next animation-tick, which should occur within 1/20 of a second
+			this.state = (PhaseState)info;
+			Log.i("human player", "receiving");
+		}
 	}
-
 }
