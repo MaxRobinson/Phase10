@@ -17,9 +17,9 @@ import edu.up.cs301.card.Rank;
 public class Phase {
 	//instnace variables
 
-	private Deck part1;
-	private Deck part2;
-	private Deck[] phasePart;
+	private Hand part1;
+	private Hand part2;
+	private Hand[] phasePart;
 	private int numCards;
 	private ArrayList<Card> phaseA;
 	
@@ -52,6 +52,10 @@ public class Phase {
 		part2 = new Hand();
 	}
 	
+	public Hand[] getPhasePart()
+	{
+		return phasePart;
+	}
 	/**
 	 * part is an int either 0 or 1 if not
 	 * @param part
@@ -70,6 +74,7 @@ public class Phase {
 			}
 		}
 	}
+	
 	
 
 	public ArrayList<Card> getPhase(){

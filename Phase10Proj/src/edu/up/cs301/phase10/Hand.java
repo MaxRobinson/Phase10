@@ -1,6 +1,7 @@
 package edu.up.cs301.phase10;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import edu.up.cs301.card.Card;
 
@@ -23,8 +24,17 @@ public class Hand extends Deck{
 		this.cards = cards;  
 	}
 	
+	public void swap(int i , int j)
+	{
+		if( i < 0 || j < 0)
+		{
+			return;
+		}
+		Collections.swap(this.cards, i, j);
+	}
 	/**
-	 * Getter for the cards
+
+	 * {Getter for the cards
 	 * @return ArrayList of cards that are in the cards.
 	 */
 	public ArrayList<Card> getCards(){

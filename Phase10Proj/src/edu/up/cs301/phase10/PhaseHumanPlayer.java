@@ -3,6 +3,7 @@ package edu.up.cs301.phase10;
 import android.app.Activity;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -67,12 +68,34 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 	
 	private RectF oppenentPhaseLocations;
 	
-	private RectF phaseLocation;
+	//private RectF phaseLocation;
+	private RectF phaseTextLocation;
 	
+	private RectF phaseButtonLocation;
+	
+	private RectF hitButtonLocation;
+	
+	private boolean hitting;
+	private boolean laying;
+	private boolean[] selected;
 
 	
 	public PhaseHumanPlayer(String name) {
 		super(name);
+		laying = false;
+		hitting = false;
+		selected = new boolean[11];
+		resetSelected();
+		
+		
+	}
+	
+	private void resetSelected()
+	{
+		for(int i = 0; i < selected.length; i++)
+		{
+			selected[i] = false;
+		}
 	}
 
 	/**
@@ -106,8 +129,12 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 		handLocation = new RectF(50f,500f,150f+105f*11,650f);
 		drawPileLocation = new RectF(50f,300f,150f,450f);
 		discardPileLocation = new RectF(150f,300f,250f,450f);
-		oppenentPhaseLocations = new RectF(50f,50f,150f+105f*11,125f);
-		
+		oppenentPhaseLocations = new RectF(50f,0f,1200f,125f);
+		phaseTextLocation = new RectF(500f,300f,650f,350f);
+		phaseButtonLocation = new RectF(800f,300f,950f,350f);
+		hitButtonLocation = new RectF(800f,360f,950f,410f);
+		laying = false;
+		hitting = false;
 	}
 
 	public int interval() {
@@ -145,8 +172,64 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 		drawCard(canvas,discardPileLocation,state.getDiscardPile().peekAtTopCard());
 		//draw opponents phases
 		drawOpponentsPhases(canvas,oppenentPhaseLocations,state.getLaidPhases());
+		//draw currentPhase
+		writeCurrentPhase(canvas, phaseTextLocation );
+		//draw points
+		writePoints(canvas, phaseTextLocation);
+		//draw phaseButton
+		drawLayPhaseButton(canvas, phaseButtonLocation, laying);
+		//draw hitButton
+		drawHitButton(canvas, hitButtonLocation, hitting);
+		//highlight selected cards
+		highlight(canvas,handLocation);
+
 		
 	}
+	
+	private void highlight(Canvas g, RectF r)
+	{
+		float hHeight = r.height();
+		float cardWidth = 2f*hHeight/3f;
+		float hL = r.left;
+		float hT = r.top;
+		float hB = r.bottom;
+		for(int i = 0; i < selected.length; i++)
+		{
+			if(selected[i])
+			{
+				Paint paint = new Paint();
+				paint.setARGB(150,255,255,0);
+				paint.setStyle(Paint.Style.STROKE);
+				paint.setStrokeWidth(5);
+				RectF cardLocation = new RectF(hL+(cardWidth)*i,hT,hL+(cardWidth)*(i+1),hB);
+				g.drawRect(cardLocation,paint);
+			}
+		}
+	}
+
+	private void writeCurrentPhase(Canvas g, RectF phaseTextLoc) 
+	{
+		Paint paint = new Paint();
+		paint.setTextSize(25f);
+		paint.setColor(Color.BLACK);
+		g.drawText("Your Current Phase is: " + state.getCurrentPhase()[this.playerNum],phaseTextLoc.left,phaseTextLoc.top, paint);
+		g.drawText("You Need:   " + Phase.phases[this.playerNum],phaseTextLoc.left,phaseTextLoc.top+80f, paint);
+
+		
+	}
+	private void writePoints(Canvas g, RectF phaseTextLoc) 
+	{
+		Paint paint = new Paint();
+		paint.setTextSize(25f);
+		paint.setColor(Color.BLACK);
+		g.drawText("Your Points:                    " + state.getScore()[this.playerNum],phaseTextLoc.left,phaseTextLoc.top+40f, paint);
+		g.drawText("it is player " + state.getTurn()+ "'s turn",phaseTextLoc.left,phaseTextLoc.top+120f, paint);
+		g.drawText("you're player number " + this.playerNum ,phaseTextLoc.left,phaseTextLoc.top+160f, paint);
+
+
+		
+	}
+	
 
 	//Draw player hand on screen used in tick
 	private void drawPlayerHand(Canvas g, Hand tempHand, RectF location){
@@ -162,28 +245,87 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 		float hB = location.bottom;
 		for(int i = 0; i < tempHand.size(); i++)
 		{
-			
 			RectF cardLocation = new RectF(hL+(cardWidth)*i,hT,hL+(cardWidth)*(i+1),hB);
 			drawCard(g, cardLocation, tempHand.getCard(i));
 		}
-		
 	}
 	
 	
-	private void drawOpponentsPhases(Canvas g, RectF oppenentPhaseLocations2, Phase[] phases)
+	private void drawOpponentsPhases(Canvas g, RectF opponentPhaseLocations2, Phase[] phases)
 	{
-		for(int i = 0; i<phases.length; i++)
+		float cardheight = opponentPhaseLocations2.height()/2f;
+		float phasewidth = opponentPhaseLocations2.width()/phases.length;
+		float sL = opponentPhaseLocations2.left;
+		float sT = opponentPhaseLocations2.top;
+
+		Paint paint = new Paint();
+		paint.setColor(Color.BLUE);
+		g.drawRect(opponentPhaseLocations2, paint);
+
+		for(int i = 0; i < phases.length; i++)
 		{
-			
+			if(state.getLaidPhases()[i] != null)
+			{
+				Hand phase1 = state.getLaidPhases()[i].getPhasePart()[0];
+				if(phase1 != null)
+				{
+					drawPlayerHand(g,phase1,new RectF(sL+phasewidth*i,sT,sL+phasewidth*(i+1),sT+cardheight));
+					Hand phase2 = state.getLaidPhases()[i].getPhasePart()[1];
+					if(phase2 != null)
+					{
+						drawPlayerHand(g,phase1,new RectF(sL+phasewidth*i,sT+cardheight,sL+phasewidth*(i+1),sT+cardheight+cardheight));
+					}
+				}
+			}
+			drawPlayerName(g,opponentPhaseLocations2,i,phasewidth);
 		}
 	}
 	
-	private void drawNumberCards(Canvas g, RectF totalBox, int numCards)
+	private void drawPlayerName(Canvas g, RectF opponentPhaseLoc, int i, float width) 
 	{
-		float width =  totalBox.width();
-		 
+		Paint paint = new Paint();
+		paint.setTextSize(25f);
+		paint.setColor(Color.BLACK);
+		float x = opponentPhaseLoc.left+width*i; 
+		float y = opponentPhaseLoc.bottom+27;
+		g.drawText("Phase: " + state.getCurrentPhase()[this.playerNum],x,y, paint);
+	}
+
+	private void drawLayPhaseButton(Canvas g, RectF loc, boolean pressed)
+	{
+		Paint paint = new Paint();
+		if(!pressed)
+		{	
+			paint.setColor(Color.CYAN);
+		}
+		else
+		{
+			paint.setColor(Color.RED);
+		}
+		g.drawRect(loc, paint);
+		paint.setTextSize(25f);
+		paint.setColor(Color.BLACK);
+		g.drawText("PHASE",loc.left+50f,loc.top+30f, paint);
+	}
+	private void drawHitButton(Canvas g, RectF loc, boolean pressed)
+	{
+		Paint paint = new Paint();
+		if(!pressed)
+		{	
+			paint.setColor(Color.GREEN);
+		}
+		else
+		{
+			paint.setColor(Color.RED);
+		}
+		g.drawRect(loc, paint);
+		paint.setTextSize(25f);
+		paint.setColor(Color.BLACK);
+		g.drawText("HIT",loc.left+50,loc.top+30f, paint);
 	}
 	
+	
+
 	private static void drawCard(Canvas g, RectF boundingBox, Card card)
 	{
 		//just null checks
@@ -215,6 +357,57 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 			int x = (int) event.getX();
 			int y = (int) event.getY();		
 			
+			if(handLocation.contains(x,y))
+			{
+				int cardLoc = (int) ((x-handLocation.left)/(100f)); 
+				if(cardLoc < state.getHands()[this.playerNum].size())
+				{
+					if(laying)
+					{
+						selected[cardLoc] = !selected[cardLoc];
+					}
+					else 
+					{
+						if(hitting)
+						{
+							selected[cardLoc] = !selected[cardLoc];
+						}
+						else
+						{
+							int anySelected = -1;
+							for(int i= 0; i < selected.length; i++)
+							{
+								if(selected[i])
+								{
+									anySelected = i;
+									break;
+								}
+							}
+							if(anySelected != -1)
+							{
+								state.swap(this.playerNum,anySelected,cardLoc);
+								resetSelected();
+							}
+							else
+							{
+								selected[cardLoc] = true;
+							}
+						}
+					}
+				}
+			}
+			else { if(drawPileLocation.contains(x,y))
+			
+				game.sendAction(new PhaseDrawCardAction(this,true));
+			}
+			
+			
+//			drawPileLocation
+//			discardPileLocation
+//			oppenentPhaseLocations 
+//			phaseTextLocation
+//			phaseButtonLocation
+//			hitButtonLocation
 	}
 
 	@Override

@@ -82,6 +82,8 @@ public class PhaseState extends GameState {
 	 * Indexed by ID, the laid phases that each player has 
 	 */
 	public Phase[] laidPhases;
+	
+	private boolean hasDrawn;
 	///////////////////////////////////////////////////////////
 
 	/**
@@ -130,6 +132,8 @@ public class PhaseState extends GameState {
 
 		//init laid Phases
 		laidPhases = new Phase[numPlayers];	
+		
+		
 	}
 
 	/**
@@ -192,7 +196,10 @@ public class PhaseState extends GameState {
 		}
 	}
 
-
+	public void swap(int player,int i, int j)
+	{
+		hands[player].swap(i,j);
+	}
 	///////////////// SETTER AND GETTERS //////////////////////////////////////
 
 	public Deck getDeck(){

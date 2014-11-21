@@ -100,7 +100,14 @@ public class PhaseLocalGame extends LocalGame implements PhaseGame{
 		PhaseMoveAction move = (PhaseMoveAction)action;
 
 		if(move.isDiscardAction()){
+			int playerId = 0;
+			for(int i = 0; i < players.length; i++){
+				if(((PhaseLayPhaseAction)move).getPlayer().equals(players[i])){
+					playerId = i;
+				}
 
+			}
+			
 		}
 		else if(move.isDrawCardAction()){
 
