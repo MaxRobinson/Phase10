@@ -2,7 +2,10 @@ package edu.up.cs301.phase10;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
+import android.content.Entity;
 import android.util.Pair;
 import edu.up.cs301.card.Card;
 import edu.up.cs301.card.CardColor;
@@ -23,7 +26,6 @@ public class Phase {
 	private int numCards;
 	private ArrayList<Card> phaseA;
 	
-	private int phase;
 	public static String phases[] = {"set,3,set,3", "set,3,run,4", " set,4,run,4", " run,7", "run,8", "run,9",
 							  "set,4,set,4", "color,7", "set,5,set,2", "set,5,set,3"};
 	public static int numberPhases[] = {6,7,8,7,8,9,8,7,7,8};
@@ -34,8 +36,8 @@ public class Phase {
 	 * @param secondPart
 	 */
 	public Phase(ArrayList<Card> firstPart, ArrayList<Card> secondPart){
-		part1 = new Hand(firstPart);
-		part2 = new Hand(secondPart);
+		part1 = new Hand();
+		part2 = new Hand();
 		phasePart = new Hand[2];
 		phaseA = new ArrayList<Card>();
 		phasePart[0] = part1;
@@ -94,33 +96,42 @@ public class Phase {
 		return numCards;
 	}
 	
-	public Pair<Boolean,ArrayList<Card>> set(int numCards, ArrayList<Card> cards){
+	public Pair<Boolean,ArrayList<Card>> set(Integer numCards, ArrayList<Card> cards){
 			ArrayList<Card> leftOver = new ArrayList<Card>();
 			HashMap<Rank,Integer> sets = new HashMap<Rank,Integer>();
 			
 			// Add all cards to hashmap to count how many of each rank there is
 			for(int i = 0; i < cards.size(); i++){
-				int temp = sets.get(cards.get(i).getRank());
+				int temp = ( sets.get(cards.get(i).getRank()) == null ? 0 : sets.get(cards.get(i).getRank()) );
 				temp++;
 				sets.put(cards.get(i).getRank(),temp);
 			}
 			
-			// Get all number of each rank out of hashmap
-			for(Integer card : sets.values()){
+			leftOver.addAll(cards);
+			int numRemoved = 0;
+			// Get all numbers of each rank out of hashmap
+			for(Map.Entry<Rank, Integer> entry : sets.entrySet()){
 				// If a rank has the proper number of cards for a set
-				if(card == numCards){
-					for(int i = 0; i < cards.size(); i++){
-						if(!cards.get(i).equals(card)){
-							leftOver.add(cards.get(i));
+				if(entry.getValue() == numCards){
+					// Iterate through leftOver to remove cards that will be used as leftovers
+					Iterator<Card> it = leftOver.iterator();
+					while(it.hasNext()){
+						// If the two ranks are the same, remove card
+						if(it.next().getRank() == entry.getKey()){
+							it.remove();
+							numRemoved++;
 						}
+						// If we have removed enough cards
+						if(numRemoved == numCards){
+							return new Pair<Boolean,ArrayList<Card>>(true,leftOver);
+						}	
 					}
-					return new Pair<Boolean,ArrayList<Card>>(true,leftOver);
 				}
 			}
 			return new Pair<Boolean,ArrayList<Card>>(false,null);
 	}
 	
-	public boolean run(int numCards, ArrayList<Card> cards){
+	public boolean run(ArrayList<Card> cards){
 		int currNum = cards.get(0).getIntRank();
 		currNum++;
 		for(int i = 1; i < cards.size(); i++){
@@ -134,7 +145,7 @@ public class Phase {
 		return true;
 	}
 	
-	public boolean color(int numCards, ArrayList<Card> cards){		
+	public boolean color(ArrayList<Card> cards){		
 		CardColor color = cards.get(0).getCardColor();
 		
 		for(int i = 1; i < cards.size(); i++){

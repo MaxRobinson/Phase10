@@ -9,7 +9,7 @@ public class PhaseLayOnPhaseAction extends PhaseMoveAction {
 
 	// private instance variables
 	private static final long serialVersionUID = 9122955413755544288L;
-	private ArrayList<Card> toLay;
+	private Card toLay;
 	private int idToLayOn;
 	private int whichPart;
 	private int topOrBottom;
@@ -24,7 +24,7 @@ public class PhaseLayOnPhaseAction extends PhaseMoveAction {
 	 * @param whichPart
 	 * @param topOrBottom
 	 */
-	public PhaseLayOnPhaseAction(GamePlayer player, ArrayList<Card> toLay, int idToLayOn, int whichPart, int topOrBottom) {
+	public PhaseLayOnPhaseAction(GamePlayer player, Card toLay, int idToLayOn, int whichPart, int topOrBottom) {
 		super(player);
 		this.toLay = toLay;
 		this.idToLayOn = idToLayOn;
@@ -37,7 +37,7 @@ public class PhaseLayOnPhaseAction extends PhaseMoveAction {
 		return true;
 	}
 	
-	public ArrayList<Card> getToLay(){
+	public Card getToLay(){
 		return this.toLay;
 	}
 	
@@ -45,7 +45,7 @@ public class PhaseLayOnPhaseAction extends PhaseMoveAction {
 		return this.idToLayOn;
 	}
 	
-	public int getWhichPar(){
+	public int getWhichPart(){
 		return this.whichPart;
 	}
 	

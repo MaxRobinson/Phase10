@@ -2,6 +2,7 @@ package edu.up.cs301.phase10;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import edu.up.cs301.card.Card;
 
@@ -96,7 +97,7 @@ public class Deck implements Serializable {
 	public Deck shuffle() {
 		// synchronize so that we don't have someone trying to modify the
 		// deck as we're modifying it
-		synchronized (this.cards) {
+		/*synchronized (this.cards) {
 			// go through a loop that randomly rearranges the cards
 			for (int i = cards.size(); i > 1; i--) {
 				int spot = (int)(i*Math.random());
@@ -105,6 +106,8 @@ public class Deck implements Serializable {
 				cards.set(i-1, temp);
 			}
 		}
+		*/
+		Collections.shuffle(this.cards);
 		
 		// return the deck
 		return this;

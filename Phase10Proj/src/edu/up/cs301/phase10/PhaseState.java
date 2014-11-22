@@ -81,9 +81,9 @@ public class PhaseState extends GameState {
 	/**
 	 * Indexed by ID, the laid phases that each player has 
 	 */
-	public Phase[] laidPhases;
+	private Phase[] laidPhases;
 	
-	public boolean hasDrawn;
+	private boolean hasDrawn;
 	///////////////////////////////////////////////////////////
 
 	/**
@@ -228,6 +228,10 @@ public class PhaseState extends GameState {
 	public void setHands(Hand[] hands){
 		this.hands = hands;
 	}
+	
+	public void setHands(Hand hand, int handNum){
+		this.hands[handNum] = hand;
+	}
 
 	public int getDealer(){
 		return this.dealer;
@@ -272,6 +276,14 @@ public class PhaseState extends GameState {
 		this.currentPhase = currentPhase;
 	}
 
+	public void setCurrentPhase(int phase, int playerId){
+		this.currentPhase[playerId] = phase;
+	}
+	
+	public void setCurrentPhase(Phase phase, int playerId){
+		this.laidPhases[playerId] = phase;
+	}
+	
 	public boolean[] getSkipped(){
 		return this.skipped;
 	}
@@ -295,10 +307,20 @@ public class PhaseState extends GameState {
 	public GamePlayer[] getPlayers(){
 		return this.players;
 	}
+	
+	public boolean getHasDrawn(){
+		return this.hasDrawn;
+	}
+	
+	public void setHasDrawn(boolean hasDrawn){
+		this.hasDrawn = hasDrawn;
+	}
 
 	public void setLaidPhases(Phase[] laidPhases){
 		this.laidPhases = laidPhases;
 	}	
+	
+	
 
 	///////////////// HELPER METHODS ///////////////////////////////////////////
 

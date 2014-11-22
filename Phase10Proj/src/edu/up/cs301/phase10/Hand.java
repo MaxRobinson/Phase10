@@ -2,20 +2,28 @@ package edu.up.cs301.phase10;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 
+import android.util.Pair;
 import edu.up.cs301.card.Card;
-
+/**
+ * The Hand class represents the cards in a player's hand. Alows
+ * players to order hands and hands to maintain order.
+ * 
+ * @author Dan Nelson 
+ * @version 11/17/14
+ */
 public class Hand extends Deck{
-	
-	
-	
+
+
+
 	/**
 	 * Constructor
 	 */
 	public Hand(){
 		super();
 	}
-	
+
 	/**
 	 * Constructor
 	 * @param cards
@@ -23,7 +31,7 @@ public class Hand extends Deck{
 	public Hand(ArrayList<Card> cards){
 		this.cards = cards;  
 	}
-	
+
 	public void swap(int i , int j)
 	{
 		if( i < 0 || j < 0)
@@ -40,7 +48,7 @@ public class Hand extends Deck{
 	public ArrayList<Card> getCards(){
 		return this.cards;
 	}
-	
+
 	/**
 	 * Returns a card in the cards based on the index of the card. 
 	 * If the index is larger than the size of the cards, retrun null. 
@@ -55,9 +63,9 @@ public class Hand extends Deck{
 		else{
 			return null;
 		}
-		
+
 	}
-	
+
 	/**
 	 * Given a card, find all occurrences of that card in the users cards, 
 	 * and return a list of indices of that card.
@@ -66,17 +74,17 @@ public class Hand extends Deck{
 	 */
 	public ArrayList<Integer> getCardIndices(Card card){
 		ArrayList<Integer> indices = new ArrayList<Integer>();
-		
+
 		// Find all cards equal to the card passed in, in the users cards
 		for(int i = 0; i < cards.size(); i++ ){
 			if(cards.get(i).equals(card)){
 				indices.add(i);
 			}
 		}
-		
+
 		return indices; 
 	}
-	
+
 	/**
 	 * Add Card to cards
 	 * @param newCard
@@ -84,7 +92,31 @@ public class Hand extends Deck{
 	public void addCard(Card newCard){
 		cards.add(newCard);
 	}
-	
+
+	/**
+	 * Removes a card from a users cards given the index of the
+	 * card in the users cards. 
+	 * @param index
+	 * @return true if the card was successfully removed
+	 */
+	public void removeCards(ArrayList<Card> cardsToRemove){
+		// Iterate over the cards we need to remove
+		for(int i = 0; i < cardsToRemove.size(); i++){
+			// Iterate over the cards in the players hand
+			Iterator<Card> it = cards.iterator();
+			while(it.hasNext()){
+				Card tempCard = it.next();
+				// If the two ranks and color are the same, remove card
+				if(tempCard.getRank() == cardsToRemove.get(i).getRank()
+				&& tempCard.getCardColor() == cardsToRemove.get(i).getCardColor()){
+					it.remove();
+					break;
+				}	
+			}
+		}
+	}
+
+
 	/**
 	 * Removes a card from a users cards given the index of the
 	 * card in the users cards. 
@@ -100,7 +132,7 @@ public class Hand extends Deck{
 			return false;
 		}
 	}
-	
+
 	/**
 	 * Removes a card from a users cards given a card object. 
 	 * @param card
@@ -115,7 +147,7 @@ public class Hand extends Deck{
 			return false;
 		}
 	}
-	
+
 	/**
 	 * Given an list of Cards, set the list of cards equal to a 
 	 * players cards. 
@@ -124,7 +156,7 @@ public class Hand extends Deck{
 	public void setcards(ArrayList<Card> cards){
 		this.cards = cards;
 	}
-	
+
 	/**
 	 * Returns the size of a users cards.
 	 * @return the number of cards in the cards
@@ -132,6 +164,6 @@ public class Hand extends Deck{
 	public int size(){
 		return cards.size();
 	}
-	
-	
+
+
 }

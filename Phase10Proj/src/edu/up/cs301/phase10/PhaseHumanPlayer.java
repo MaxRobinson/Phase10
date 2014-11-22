@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.graphics.RectF;
-
 import edu.up.cs301.animation.AnimationSurface;
 import edu.up.cs301.animation.Animator;
 import edu.up.cs301.card.Card;
@@ -31,67 +30,68 @@ import edu.up.cs301.phase10.PhaseState;
  * @author Steven R. Vegdahl 
  * @author Justice R W Nichols
  * @author Max Robinson 
+ * @author Dan Nelson
  * @version July 2013
  */
 public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
-	
-	
+
+
 	private final static float CARD_HEIGHT_PERCENT = 50; // height of a card
 	private final static float CARD_WIDTH_PERCENT = 17; // width of a card
 	private final static float LEFT_BORDER_PERCENT = 4; // width of left border
 	private final static float RIGHT_BORDER_PERCENT = 20; // width of right border
 	private final static float VERTICAL_BORDER_PERCENT = 4; // width of top/bottom borders
 	// instance variables
-	
+
 	// Our game state
 	protected PhaseState state;
-	
+
 	// our activity
 	private Activity myActivity;
-	
+
 	//the animation surface
 	private AnimationSurface surface;
-	
+
 	//the background color
 	private int backgroundColor = Color.WHITE;
-	
+
 	//the screen width
 	private int screenWidth;
-	
+
 	//the screen Height
 	private int screenHeight;
-	
+
 	//The rectangles for hit selection
 	private RectF handLocation;
-	
+
 	private RectF drawPileLocation;
-	
+
 	private RectF discardPileLocation;
-	
+
 	private RectF opponentPhaseLocations;
-	
+
 	//private RectF phaseLocation;
 	private RectF phaseTextLocation;
-	
+
 	private RectF phaseButtonLocation;
-	
+
 	private RectF hitButtonLocation;
-	
+
 	private boolean hitting;
 	private boolean laying;
 	private boolean[] selected;
 
-	
+
 	public PhaseHumanPlayer(String name) {
 		super(name);
 		laying = false;
 		hitting = false;
 		selected = new boolean[11];
 		resetSelected();
-		
-		
+
+
 	}
-	
+
 	private void resetSelected()
 	{
 		for(int i = 0; i < selected.length; i++)
@@ -108,17 +108,17 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 	 * 		the current activity
 	 */
 	public void setAsGui(GameMainActivity activity) {
-		
+
 		// remember the activity
 		myActivity = activity;
-		
+
 		//Load the layout resource for the new configuration
 		activity.setContentView(R.layout.phase_human_player);
-		
+
 		// link the animator (this object) to the animation surface
 		surface = (AnimationSurface) myActivity.findViewById(R.id.animation_surface);
 		surface.setAnimator(this);
-		
+
 		// if the state is not null, simulate having just received the state so that 
 		// any state-related processing is done
 		if(state != null) {
@@ -127,7 +127,7 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 		screenWidth = surface.getWidth();
 		screenWidth = surface.getHeight();
 		Card.initImages(activity);
-		
+
 		handLocation = new RectF(50f,500f,150f+105f*11,650f);
 		drawPileLocation = new RectF(50f,300f,150f,450f);
 		discardPileLocation = new RectF(150f,300f,250f,450f);
@@ -194,9 +194,9 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 		//highlight selected cards
 		highlight(canvas,handLocation);
 
-		
+
 	}
-	
+
 	private void highlight(Canvas g, RectF r)
 	{
 		float hHeight = r.height();
@@ -226,7 +226,7 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 		g.drawText("Your Current Phase is: " + state.getCurrentPhase()[this.playerNum],phaseTextLoc.left,phaseTextLoc.top, paint);
 		g.drawText("You Need:   " + Phase.phases[this.playerNum],phaseTextLoc.left,phaseTextLoc.top+80f, paint);
 
-		
+
 	}
 	private void writePoints(Canvas g, RectF phaseTextLoc) 
 	{
@@ -238,14 +238,14 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 		g.drawText("You're player " + this.playerNum ,phaseTextLoc.left,phaseTextLoc.top+160f, paint);
 
 
-		
+
 	}
-	
+
 
 	//Draw player hand on screen used in tick
 	private void drawPlayerHand(Canvas g, Hand tempHand, RectF location){
 		//RectF cardLocation = new RectF(50.0f,4*screenHeight/5f,50.0f+50.0f,19*screenHeight/20f);
-		
+
 		//Log.w("draw", Integer.toString(screenWidth));
 
 
@@ -260,8 +260,8 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 			drawCard(g, cardLocation, tempHand.getCard(i));
 		}
 	}
-	
-	
+
+
 	private void drawOpponentsPhases(Canvas g, RectF opponentPhaseLocations2, Phase[] phases)
 	{
 		float cardheight = opponentPhaseLocations2.height()/2f;
@@ -291,7 +291,7 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 			drawPlayerName(g,opponentPhaseLocations2,i,phasewidth);
 		}
 	}
-	
+
 	private void drawPlayerName(Canvas g, RectF opponentPhaseLoc, int i, float width) 
 	{
 		Paint paint = new Paint();
@@ -334,8 +334,8 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 		paint.setColor(Color.BLACK);
 		g.drawText("HIT",loc.left+50,loc.top+30f, paint);
 	}
-	
-	
+
+
 
 	private static void drawCard(Canvas g, RectF boundingBox, Card card)
 	{
@@ -347,7 +347,7 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 		//pass null for back of card which is mapped to orange 3 
 		if(card == null)
 		{
-			
+
 			new Card(Rank.THREE,CardColor.Orange).drawOn(g, boundingBox);
 			return;
 		}
@@ -355,164 +355,186 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 		card.drawOn(g, boundingBox);
 		return;
 	}
-	
-	
-	
-	
-	
+
+
+
+
+
 	public void onTouch(MotionEvent event) {
-	// ignore everything except down-touch events
-			if (event.getAction() != MotionEvent.ACTION_DOWN) return;
+		// ignore everything except down-touch events
+		if (event.getAction() != MotionEvent.ACTION_DOWN) return;
 
-			// get the location of the touch on the surface
-			int x = (int) event.getX();
-			int y = (int) event.getY();		
-			
-			if(handLocation.contains(x,y))
-			{
-				int cardLoc = (int) ((x-handLocation.left)/(100f)); 
-				if(cardLoc < state.getHands()[this.playerNum].size())
-				{
-					if(laying)
-					{
-						selected[cardLoc] = !selected[cardLoc];
-					}
-					else 
-					{
-						if(hitting)
-						{
-							selected[cardLoc] = !selected[cardLoc];
-						}
-						else
-						{
-							int anySelected = -1;
-							for(int i= 0; i < selected.length; i++)
-							{
-								if(selected[i])
-								{
-									anySelected = i;
-									break;
-								}
-							}
-							if(anySelected != -1)
-							{
-								state.swap(this.playerNum,anySelected,cardLoc);
-								resetSelected();
-							}
-							else
-							{
-								selected[cardLoc] = true;
-							}
-						}
-					}
-				}
-			}
-			else { if(drawPileLocation.contains(x,y))
-			{
-				game.sendAction(new PhaseDrawCardAction(this,true));
-				resetSelected();
-			}
-			else{ if(discardPileLocation.contains(x, y))
-			{
-				if (state.hasDrawn)
-				{
-					int anySelected = -1;
-					for(int i= 0; i < selected.length; i++)
-					{
-						if(selected[i])
-						{
-							anySelected = i;
-							break;
-						}
-					}
-					if(anySelected != -1 && !hitting && !laying)
-					{
-						Card skipCard = new Card(Rank.TWO,CardColor.Orange);
-						if (state.getHands()[this.playerNum].getCard(anySelected).equals(skipCard))
-						{
-							game.sendAction(new PhaseSkipAction(this, skipCard, 0));
-						}
-						else
-						{
-							game.sendAction(new PhaseDiscardAction(this, state.getHands()[this.playerNum].getCard(anySelected)));
-						}
-						resetSelected();
-					}
-				}
-				else
-				{
-					game.sendAction(new PhaseDrawCardAction(this,false));
-					resetSelected();
+		// get the location of the touch on the surface
+		int x = (int) event.getX();
+		int y = (int) event.getY();		
 
-				}
-			}
-			else{ if (phaseButtonLocation.contains(x, y))
+		if(handLocation.contains(x,y))
+		{
+			int cardLoc = (int) ((x-handLocation.left)/(100f)); 
+			if(cardLoc < state.getHands()[this.playerNum].size())
 			{
 				if(laying)
 				{
-					ArrayList<Card> cards = new ArrayList<Card>();
-					for(int i = 0; i < selected.length; i++)
-					{
-						if(selected[i])
-						{
-							cards.add(state.getHands()[this.playerNum].getCard(i));
-						}
-					}
-					if(cards.size() > 0)
-					{
-						Phase tempPhase = new Phase(cards,null);
-						game.sendAction(new PhaseLayPhaseAction(this, tempPhase));
-					}
+					selected[cardLoc] = !selected[cardLoc];
 				}
-				laying = !laying;
-				hitting = false;
-				resetSelected();
-			}
-			else{ if (hitButtonLocation.contains(x, y))
-			{
-				hitting = !hitting;
-				laying = false;
-				resetSelected();
-			}
-			else{ if(opponentPhaseLocations.contains(x,y))
-			{
-				if(hitting)
+				else 
 				{
-					ArrayList<Card> cards = new ArrayList<Card>();
-					for(int i = 0; i < selected.length; i++)
+					if(hitting)
 					{
-						if(selected[i])
-						{
-							cards.add(state.getHands()[this.playerNum].getCard(i));
-						}
+						selected[cardLoc] = !selected[cardLoc];
 					}
-					if(cards.size() > 0)
+					else
 					{
-						int idToLayOn = 0;
-						int whichPart = 0;
-						int topOrBottom = 0;
-						float pL = opponentPhaseLocations.left;
-						float pT = opponentPhaseLocations.top;
-						float pW = opponentPhaseLocations.width();
-						float pH = opponentPhaseLocations.height();
-						if(pH / 2f + pT < y)
+						int anySelected = -1;
+						for(int i= 0; i < selected.length; i++)
 						{
-							whichPart = 1;
+							if(selected[i])
+							{
+								anySelected = i;
+								break;
+							}
 						}
-						idToLayOn = (int) ((x-pL)/(pW/state.getPlayers().length));				
-						game.sendAction(new PhaseLayOnPhaseAction(this,cards,idToLayOn,whichPart,topOrBottom));
+						if(anySelected != -1)
+						{
+							state.swap(this.playerNum,anySelected,cardLoc);
+							resetSelected();
+						}
+						else
+						{
+							selected[cardLoc] = true;
+						}
 					}
 				}
 			}
+		}
+		else { if(drawPileLocation.contains(x,y))
+		{
+			game.sendAction(new PhaseDrawCardAction(this,true));
+			resetSelected();
+		}
+		else{ if(discardPileLocation.contains(x, y))
+		{
+			if (state.getHasDrawn())
+			{
+				int anySelected = -1;
+				for(int i= 0; i < selected.length; i++)
+				{
+					if(selected[i])
+					{
+						anySelected = i;
+						break;
+					}
+				}
+				if(anySelected != -1 && !hitting && !laying)
+				{
+					Card skipCard = new Card(Rank.TWO,CardColor.Orange);
+					if (state.getHands()[this.playerNum].getCard(anySelected).equals(skipCard))
+					{
+						game.sendAction(new PhaseSkipAction(this, skipCard, 0));
+					}
+					else
+					{
+						game.sendAction(new PhaseDiscardAction(this, state.getHands()[this.playerNum].getCard(anySelected)));
+					}
+					resetSelected();
+				}
 			}
+			else
+			{
+				game.sendAction(new PhaseDrawCardAction(this,false));
+				resetSelected();
+
 			}
+		}
+		else{ if (phaseButtonLocation.contains(x, y))
+		{
+			if(laying)
+			{
+				ArrayList<Card> cards = new ArrayList<Card>();
+				for(int i = 0; i < selected.length; i++)
+				{
+					if(selected[i])
+					{
+						cards.add(state.getHands()[this.playerNum].getCard(i));
+					}
+				}
+				
+				//TDO remove...only for testing!////////
+				cards = new ArrayList<Card>();
+				cards.add(new Card(Rank.ONE,CardColor.Blue));
+				cards.add(new Card(Rank.ONE,CardColor.Blue));
+				cards.add(new Card(Rank.ONE,CardColor.Blue));
+				cards.add(new Card(Rank.TWO,CardColor.Blue));
+				cards.add(new Card(Rank.THREE,CardColor.Blue));
+				cards.add(new Card(Rank.FOUR,CardColor.Blue));
+				cards.add(new Card(Rank.FIVE,CardColor.Blue));
+				///////////////
+				if(cards.size() > 0)
+				{
+					Phase tempPhase = new Phase(cards,null);
+					game.sendAction(new PhaseLayPhaseAction(this, tempPhase));
+				}
 			}
+			laying = !laying;
+			hitting = false;
+			resetSelected();
+		}
+		else{ if (hitButtonLocation.contains(x, y))
+		{
+			hitting = !hitting;
+			laying = false;
+			resetSelected();
+		}
+		else{ if(opponentPhaseLocations.contains(x,y))
+		{
+			if(hitting)
+			{
+				/*ArrayList<Card> cards = new ArrayList<Card>();
+				for(int i = 0; i < selected.length; i++)
+				{
+					if(selected[i])
+					{
+						cards.add(state.getHands()[this.playerNum].getCard(i));
+					}
+				}*/
+				// TODO need to make it so when the user is hitting, they can only select one card
+				Card toLay = null;
+				for(int i = 0; i < selected.length; i++)
+				{
+					if(selected[i])
+					{
+						toLay = state.getHands()[this.playerNum].getCard(i);
+						break;
+					}
+				}
+				
+				if(toLay != null)
+				{
+					int idToLayOn = 0;
+					int whichPart = 0;
+					int topOrBottom = 0;
+					float pL = opponentPhaseLocations.left;
+					float pT = opponentPhaseLocations.top;
+					float pW = opponentPhaseLocations.width();
+					float pH = opponentPhaseLocations.height();
+					if(pH / 2f + pT < y)
+					{
+						whichPart = 1;
+					}
+					idToLayOn = (int) ((x-pL)/(pW/state.getPlayers().length));				
+					game.sendAction(new PhaseLayOnPhaseAction(this,toLay,idToLayOn,whichPart,topOrBottom));
+				}
 			}
-			}
-//			oppenentPhaseLocations 
-//			phaseTextLocation
-//			phaseButtonLocation
-//			hitButtonLocation
+		}
+		}
+		}
+		}
+		}
+		}
+		//			oppenentPhaseLocations 
+		//			phaseTextLocation
+		//			phaseButtonLocation
+		//			hitButtonLocation
 	}
 
 	@Override
