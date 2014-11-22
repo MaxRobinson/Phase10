@@ -458,17 +458,7 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 						cards.add(state.getHands()[this.playerNum].getCard(i));
 					}
 				}
-				
-				//TDO remove...only for testing!////////
-				cards = new ArrayList<Card>();
-				cards.add(new Card(Rank.ONE,CardColor.Blue));
-				cards.add(new Card(Rank.ONE,CardColor.Blue));
-				cards.add(new Card(Rank.ONE,CardColor.Blue));
-				cards.add(new Card(Rank.TWO,CardColor.Blue));
-				cards.add(new Card(Rank.THREE,CardColor.Blue));
-				cards.add(new Card(Rank.FOUR,CardColor.Blue));
-				cards.add(new Card(Rank.FIVE,CardColor.Blue));
-				///////////////
+
 				if(cards.size() > 0)
 				{
 					Phase tempPhase = new Phase(cards,null);

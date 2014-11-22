@@ -24,6 +24,8 @@ import edu.up.cs301.card.*;
  */
 //TODO at end of a round, so when all the players cards are picked up, need to set all phases to NULL
 //TODO end of game
+//TODO need to implament details to not allow player to go above phase 10 as well as dealing out
+		// new cards when someone goes out
 public class PhaseLocalGame extends LocalGame implements PhaseGame{
 	/**
 	 * Current state of the game
@@ -229,21 +231,7 @@ public class PhaseLocalGame extends LocalGame implements PhaseGame{
 
 			// Get current phase and number of cards in current phase
 			int currPhase = state.getCurrentPhase()[playerId];
-			//TODO
-			currPhase = 8;
 			int numCardsForPhase = Phase.numberPhases[currPhase-1];
-
-			// TODO
-			Hand tempHand = new Hand();
-			tempHand.add(new Card(Rank.ONE,CardColor.Blue));
-			tempHand.add(new Card(Rank.ONE,CardColor.Blue));
-			tempHand.add(new Card(Rank.ONE,CardColor.Blue));
-			tempHand.add(new Card(Rank.TWO,CardColor.Blue));
-			tempHand.add(new Card(Rank.THREE,CardColor.Blue));
-			tempHand.add(new Card(Rank.FOUR,CardColor.Blue));
-			tempHand.add(new Card(Rank.FIVE,CardColor.Blue));
-			state.setHands(tempHand,playerId);
-
 
 			// Get the phase the player is trying to lay and sort it
 			Phase layedPhaseP = ((PhaseLayPhaseAction)move).getPhaseToLay();

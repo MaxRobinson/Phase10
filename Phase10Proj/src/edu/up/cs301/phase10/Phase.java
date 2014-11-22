@@ -85,8 +85,6 @@ public class Phase {
 			}
 		}
 	}
-	
-	
 
 	public ArrayList<Card> getPhase(){
 		return phaseA;
