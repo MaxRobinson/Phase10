@@ -131,9 +131,10 @@ public class Phase {
 			return new Pair<Boolean,ArrayList<Card>>(false,null);
 	}
 	
-	public boolean run(ArrayList<Card> cards){
+	public boolean run(Integer numCards, ArrayList<Card> cards){
 		int currNum = cards.get(0).getIntRank();
 		currNum++;
+		
 		for(int i = 1; i < cards.size(); i++){
 			if(currNum == cards.get(i).getIntRank()){
 				currNum++;
@@ -145,7 +146,7 @@ public class Phase {
 		return true;
 	}
 	
-	public boolean color(ArrayList<Card> cards){		
+	public boolean color(Integer numCards, ArrayList<Card> cards){		
 		CardColor color = cards.get(0).getCardColor();
 		
 		for(int i = 1; i < cards.size(); i++){
@@ -157,4 +158,14 @@ public class Phase {
 		return true;
 	}
 	
+	public boolean addOnSet(Integer numCards, ArrayList<Card> cards){
+		int setNum = cards.get(0).getIntRank();
+		
+		for(int i = 1; i < cards.size(); i++){
+			if(setNum != cards.get(i).getIntRank()){
+				return false;
+			}
+		}
+		return true;
+	}
 }

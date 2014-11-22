@@ -23,6 +23,7 @@ import edu.up.cs301.card.*;
  * @version 11/17/14
  */
 //TODO at end of a round, so when all the players cards are picked up, need to set all phases to NULL
+//TODO end of game
 public class PhaseLocalGame extends LocalGame implements PhaseGame{
 	/**
 	 * Current state of the game
@@ -160,7 +161,7 @@ public class PhaseLocalGame extends LocalGame implements PhaseGame{
 			int part = ((PhaseLayOnPhaseAction)move).getWhichPart();
 			int currPhase = state.getCurrentPhase()[playerId];
 			List<String> phaseObjectives = Arrays.asList(Phase.phases[currPhase-1].split(","));
-			
+
 			// Check to ensure it is this player's turn and has drawn
 			if(!state.getHasDrawn() || state.getTurn()!=playerId || state.getLaidPhases()[layOnId] == null){
 				return false;
@@ -170,13 +171,13 @@ public class PhaseLocalGame extends LocalGame implements PhaseGame{
 			if(phaseObjectives.size() == 2 && part == 1){
 				return false;
 			}
-			
+
 			// Get all data from action
 			//int numCardsToLay = ((PhaseLayOnPhaseAction)move).getToLay().size();
 			int topBottom = ((PhaseLayOnPhaseAction)move).getTopOrBottom();
 			int methodToCall = 0;
 			Card cardToLay = ((PhaseLayOnPhaseAction)move).getToLay();
-			
+
 			// Call second method in phase
 			if(layOnId == 1){
 				methodToCall = 2;
@@ -184,36 +185,32 @@ public class PhaseLocalGame extends LocalGame implements PhaseGame{
 
 			Phase phase = new Phase();
 			String methodName = phaseObjectives.get(methodToCall);
+			if(methodName.equals("set")){
+				methodName = "addOnSet";
+			}
 			ArrayList<Card> layedPhase = new ArrayList<Card>();
 			layedPhase.addAll(state.getLaidPhases()[layOnId].getPhasePart()[part].getCards());
 			int positionForCard = topBottom == 1 ? (layedPhase.size() - 1) : 0;
 			layedPhase.add(positionForCard, cardToLay);
-			
+
 			// Get number of cards for current stage
 			int numCards = Integer.parseInt(phaseObjectives.get(1));
-			
+
 			try {
 				// Setup reflection
 				Method method = Phase.class.getMethod(methodName, Integer.class, ArrayList.class);
 				Object obj = method.invoke(phase, numCards, layedPhase);
 				// Set method
-				if(obj instanceof Pair<?,?>){
-					if(((Pair<Boolean,ArrayList<Card>>)obj).first){
-						updateHandAndPhase(layedPhase, null, playerId);
-					}
-					return ((Pair<Boolean,ArrayList<Card>>)obj).first;
+				if(((Boolean)obj)){
+					// Player was successfully able to lay down a card on another players phase
+					// Check to see if it was their last card and update state
+					updateHandAndPhaseLayOn(cardToLay, layedPhase, playerId, part, layOnId);
 				}
-				// Color or run
-				else{
-					if(((Boolean)obj)){
-						updateHandAndPhase(layedPhase, null, playerId);
-					}
-					return ((Boolean)obj);
-				}
+				return ((Boolean)obj);
 			} 
 			catch (Exception e) {}
 		}
-		
+
 		else if(move.isLayPhaseAction()){
 
 			// Get player ID
@@ -411,5 +408,46 @@ public class PhaseLocalGame extends LocalGame implements PhaseGame{
 			currPhase.setPart(1, second);
 		}
 		state.setCurrentPhase(currPhase, playerId);
+	}
+
+	private void updateHandAndPhaseLayOn(Card card, ArrayList<Card> cards, int playerId, int part, int layOnId){
+		// Remove the cards the user layed for the 
+		Hand stateCards = state.getHands()[playerId];
+		ArrayList<Card> cardToRemove = new ArrayList<Card>();
+		cardToRemove.add(card);
+		stateCards.removeCards(cardToRemove);
+		state.setHands(stateCards, playerId);
+
+		// Update phase in the state
+		Phase currPhase = state.getLaidPhases()[layOnId];
+		if(part == 0){
+			currPhase.setPart(0, cards);
+		}
+		else{
+			currPhase.setPart(1, cards);
+		}
+		state.setCurrentPhase(currPhase, playerId);
+
+		playerGoneOut(playerId);
+
+	}
+
+	private void playerGoneOut(int playerId){
+		// Player has gone out
+		if(state.getHands()[playerId].size() == 0){
+			// Add points to users for cards left over in their hand
+			// Loop through players
+			for(int i = 0; i < players.length; i++){
+				// If the player still has cards in their hand
+				if(state.getHands()[playerId].size() != 0){
+					// Loop through cards in each player's hand
+					for(int j = 0; j < state.getHands()[playerId].size(); j++){
+						int playerScore = state.getScore()[i];
+						int cardScoreValue = state.getHands()[i].getCard(j).getScoreValue();
+						state.setScore(i,(playerScore + cardScoreValue));
+					}
+				}
+			}
+		}
 	}
 }

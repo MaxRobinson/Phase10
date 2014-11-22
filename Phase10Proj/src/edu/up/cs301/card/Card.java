@@ -104,6 +104,36 @@ public class Card implements Serializable {
         return this.rank == other.rank && this.cardColor == other.cardColor;
     }
 
+    public int getScoreValue(){
+    	if(cardColor.longName().equals("Orange")){
+    		// Wild
+    		if(rank.equals("1")){
+    			return 25;
+    		}
+    		// Skip
+    		else if(rank.equals("2")){
+    			return 15;
+    		}
+    	}
+    	else if(rank.shortName() == '1'
+    		|| rank.shortName() == '2'
+    		|| rank.shortName() == '3'
+    		|| rank.shortName() == '4'
+    		|| rank.shortName() == '5'
+    		|| rank.shortName() == '6'
+    		|| rank.shortName() == '7'
+    		|| rank.shortName() == '8'
+    		|| rank.shortName() == '9'){
+    			return 5;
+    	}
+    	else if(rank.shortName() == 'a'
+        	|| rank.shortName() == 'b'
+        	|| rank.shortName() == 'c'){
+    		return 10;
+    	}
+    	return -1;
+    }
+    
     /**
      * Draws the card on a Graphics object.  The card is drawn as a
      * white card with a black border.  If the card's rank is numeric, the

@@ -299,6 +299,10 @@ public class PhaseState extends GameState {
 	public void setScore(int[] scores){
 		this.score = scores;
 	}
+	
+	public void setScore(int playerId, int score){
+		this.score[playerId] = score;
+	}
 
 	public Phase[] getLaidPhases(){
 		return this.laidPhases;
