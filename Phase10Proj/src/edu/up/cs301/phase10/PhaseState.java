@@ -198,6 +198,54 @@ public class PhaseState extends GameState {
 		hasDrawn = state.hasDrawn;
 
 	}
+	
+	public PhaseState(GamePlayer players[], Deck deck, Deck discard, Hand hand[], int dealer, int turn, 
+					 int currentPhase[], boolean skipped[], int score[],Phase laidPhase[], boolean hasDrawn){
+		this.players = new GamePlayer[players.length];
+		//copy the input into the local game list of players. //This is to make sure no reference carry overs.
+		for(int i = 0; i< players.length; i++){
+			this.players[i] = players[i];
+		}
+		//setNumber of players
+		 this.numPlayers = players.length;
+
+		// init Deck
+		this.deck = new Deck(deck);
+
+		// init Discard pile with top card from Deck
+		this.discardPile = new Deck(discardPile);
+
+		this.hands = new Hand[this.numPlayers];
+		for(int i = 0; i < players.length; i++){
+			this.hands[i] = hands[i];
+		}
+
+		// init the dealer to random player
+		this.dealer = dealer;
+		this.turn = turn;
+		
+		this.currentPhase = new int[this.numPlayers];
+		for(int i = 0; i< currentPhase.length; i++){
+			this.currentPhase[i] = currentPhase[i];
+		}
+		
+		this.skipped = new boolean[this.numPlayers];
+		for(int i = 0; i< skipped.length; i++){
+			this.skipped[i] = skipped[i];
+		}
+		
+		this.score = new int[this.numPlayers];
+		for(int i = 0; i< score.length; i++){
+			this.score[i] = score[i];
+		}
+		
+		this.laidPhases = new Phase[this.numPlayers];
+		for(int i = 0; i< laidPhases.length; i++){
+			this.laidPhases[i] = laidPhases[i];
+		}
+		
+		this.hasDrawn = hasDrawn;
+	}
 
 	public void swap(int player,int i, int j)
 	{
