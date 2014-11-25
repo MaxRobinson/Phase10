@@ -391,7 +391,7 @@ public class PhaseState extends GameState {
 	 * 
 	 * @param deck
 	 */
-	private void dealHands(Deck deck){
+	public void dealHands(Deck deck){
 		for(int i = 0; i < this.INITHANDSIZE; i++){
 			for(int j = 0; j < this.numPlayers; j++){
 				hands[j].add(deck.removeTopCard());
@@ -402,7 +402,7 @@ public class PhaseState extends GameState {
 	/**
 	 * This initiallizes the array of hands for all players in the game.
 	 */
-	private void initHands(){
+	public void initHands(){
 		for(int i = 0; i<this.numPlayers; i++){
 			this.hands[i] = new Hand();
 		}
@@ -412,7 +412,7 @@ public class PhaseState extends GameState {
 	 * Inits which player goes first
 	 * @param dealer
 	 */
-	private void initTurn(int dealer){
+	public void initTurn(int dealer){
 		if(dealer >= numPlayers){
 			turn = dealer-numPlayers;
 		}
