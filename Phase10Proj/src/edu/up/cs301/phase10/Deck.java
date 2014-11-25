@@ -52,13 +52,13 @@ public class Deck implements Serializable {
 	public Deck(Deck orig) {
 		// synchronize to ensure that original is not being modified as we
 		// iterate over it
-		synchronized(orig.cards) {
+		//synchronized(orig.cards) {
 			// create a new arrayList for our new deck; add each card in it
 			cards = new ArrayList<Card>();
 			for (Card c: orig.cards) {
 				cards.add(c);
 			}
-		}
+		//}
 	}
 	
 	/**

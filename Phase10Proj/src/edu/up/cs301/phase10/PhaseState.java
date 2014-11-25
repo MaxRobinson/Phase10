@@ -213,7 +213,7 @@ public class PhaseState extends GameState {
 		this.deck = new Deck(deck);
 
 		// init Discard pile with top card from Deck
-		this.discardPile = new Deck(discardPile);
+		this.discardPile = new Deck(discard);
 
 		this.hands = new Hand[this.numPlayers];
 		for(int i = 0; i < players.length; i++){
