@@ -1,6 +1,5 @@
 package edu.up.cs301.phase10;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -8,8 +7,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import android.graphics.Color;
-import android.util.Log;
 import android.util.Pair;
 import edu.up.cs301.game.GamePlayer;
 import edu.up.cs301.game.LocalGame;
@@ -22,10 +19,6 @@ import edu.up.cs301.card.*;
  * @author Dan Nelson 
  * @version 11/17/14
  */
-//TODO at end of a round, so when all the players cards are picked up, need to set all phases to NULL
-//TODO end of game
-//TODO need to implament details to not allow player to go above phase 10 as well as dealing out
-		// new cards when someone goes out
 public class PhaseLocalGame extends LocalGame implements PhaseGame{
 	/**
 	 * Current state of the game
@@ -89,16 +82,60 @@ public class PhaseLocalGame extends LocalGame implements PhaseGame{
 
 	@Override
 	protected String checkIfGameOver() {
-		if(state.getDealer() == state.getTurn()){
+		/*if(state.getDealer() == state.getTurn()){
 			for(int i = 0; i < state.getCurrentPhase().length; i ++){
 				if(state.getCurrentPhase()[i] == 10){
 					if(state.getHands()[i].size() == 0){
-						return this.playerNames[i];
+
 					}
 				}
 			}
+		}*/
+
+		ArrayList<String> winerNames = new ArrayList<String>();
+		int winerScore = 0;
+		boolean first = true;
+		// Check to see if anyone was out of cards, and if they had no cards, where they on phase 10
+		for(int i = 0; i < players.length; i++){
+			// The player has laid their phase and it was there last phase
+			if(state.getLaidPhases()[i] != null && state.getCurrentPhase()[i] == 10){
+				// If this is the first player to be found that has a laid phase 10
+				if(first){
+					// Add names to winers
+					winerNames.add(this.playerNames[i]);
+					winerScore = state.getScore()[i];
+					first = false;
+				}
+				// Not the first player to be added, but is there score less other player
+				else if(state.getScore()[i] < winerScore){
+					winerNames.clear();
+					winerNames.add(this.playerNames[i]);
+					winerScore = state.getScore()[i]; 
+				}
+				// Two players had the same score
+				else if(state.getScore()[i] == winerScore){
+					winerNames.add(this.playerNames[i]);
+				}
+			}
 		}
-		return null;
+
+		// Game not over
+		if(winerNames.size() == 0){
+			return null;
+		}
+		// Game has a winer
+		else if(winerNames.size() == 1){
+			return winerNames.get(0);
+		}
+		// Game was a tie
+		else{
+			String ret = "";
+			for(String s : winerNames){
+				ret += (s + " ");
+			}
+			ret += "Tied!";
+			return ret;
+		}
 	}
 
 	@Override
@@ -122,12 +159,12 @@ public class PhaseLocalGame extends LocalGame implements PhaseGame{
 				return false;
 			}
 			state.getDiscardPile().add(tempCard);
-			state.nextTurn();
 			state.setHasDrawn(false);
+			state.nextTurn();	
+			playerGoneOut(playerId);
 			return true;
-
-
 		}
+
 		else if(move.isDrawCardAction()){
 			int playerId = 0;
 			for(int i = 0; i < players.length; i++){
@@ -150,6 +187,7 @@ public class PhaseLocalGame extends LocalGame implements PhaseGame{
 			state.setHasDrawn(true);
 			return true;
 		}
+
 		else if(move.isLayOnPhaseAction()){
 			// Get player ID
 			int playerId = 0;
@@ -159,6 +197,13 @@ public class PhaseLocalGame extends LocalGame implements PhaseGame{
 				}
 
 			}
+
+			// Check to make sure it is this players turn
+			if(state.getHasDrawn() || state.getTurn()!=playerId)
+			{
+				return false;
+			}
+
 			int layOnId = ((PhaseLayOnPhaseAction)move).getIdToLayOn();
 			int part = ((PhaseLayOnPhaseAction)move).getWhichPart();
 			int currPhase = state.getCurrentPhase()[playerId];
@@ -372,10 +417,6 @@ public class PhaseLocalGame extends LocalGame implements PhaseGame{
 		stateCards.removeCards(cards);
 		state.setHands(stateCards, playerId);
 
-		// Move user to the next phase since they completed the current one
-		int newPhase = state.getCurrentPhase()[playerId] + 1;
-		state.setCurrentPhase(newPhase, playerId);
-
 		// Multipart phase, need to find out what the first part was
 		ArrayList<Card> first = new ArrayList<Card>();
 		if(second != null){
@@ -417,7 +458,6 @@ public class PhaseLocalGame extends LocalGame implements PhaseGame{
 		state.setCurrentPhase(currPhase, playerId);
 
 		playerGoneOut(playerId);
-
 	}
 
 	private void playerGoneOut(int playerId){
@@ -436,6 +476,44 @@ public class PhaseLocalGame extends LocalGame implements PhaseGame{
 					}
 				}
 			}
-		}
+
+			// Set all laid phases back to null and update player's phases
+			for(int i = 0; i < players.length; i++){
+				if(state.getLaidPhases()[i] != null){
+					// Move user to the next phase since they completed the current one
+					int newPhase = (state.getCurrentPhase()[playerId] + 1 != 11 ? (state.getCurrentPhase()[playerId] + 1) : 10);
+					// Move player to next phase
+					state.setCurrentPhase(newPhase, playerId);
+					// Set players laid phase back to null
+					state.setCurrentPhase(null, i);
+				}
+			}
+
+			// Init new deck
+			Deck deck = new Deck();
+			deck.add108();
+			deck.shuffle();
+
+			// Init Discard pile with top card from Deck
+			Deck discardPile = new Deck();
+			discardPile.add(deck.removeTopCard());
+
+			// Deal hands for players from deck
+			state.initHands();
+			state.dealHands(deck);
+
+			// Set the deck and discard
+			state.setDiscardPile(discardPile);
+			state.setDeck(deck);
+
+			// Init dealer to next player
+			int dealer = (state.getDealer() < players.length ? (state.getDealer() + 1) : 0);
+
+			// Set dealer
+			state.setDealer(dealer);
+
+			// Init first player
+			state.initTurn(dealer);
+		}	
 	}
 }
