@@ -1,0 +1,10 @@
+List of things to do:
+
+- skip gui
+- wild gui
+- Smart computer player
+- hide stuff in phaseState ---- protected vs public?
+- null hands / stuff method ( why broken? )
+- JUnit tests for classes 
+- Someone deal with bugzilla ( must VPN / remote in to school network first)
+- fix infinite skip cards
