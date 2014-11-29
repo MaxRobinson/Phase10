@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 
-import android.util.Pair;
 import edu.up.cs301.card.Card;
 /**
  * The Hand class represents the cards in a player's hand. Alows
@@ -16,6 +15,11 @@ import edu.up.cs301.card.Card;
 public class Hand extends Deck{
 
 
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6654982349516137617L;
 
 	/**
 	 * Constructor

@@ -2,14 +2,11 @@ package edu.up.cs301.phase10;
 
 import java.util.ArrayList;
 
-import android.graphics.Color;
-
 import edu.up.cs301.game.GameMainActivity;
 import edu.up.cs301.game.GamePlayer;
 import edu.up.cs301.game.LocalGame;
 import edu.up.cs301.game.config.GameConfig;
 import edu.up.cs301.game.config.GamePlayerType;
-import edu.up.cs301.phase10.PhaseComputerPlayer;
 import edu.up.cs301.phase10.PhaseHumanPlayer;
 
 /**

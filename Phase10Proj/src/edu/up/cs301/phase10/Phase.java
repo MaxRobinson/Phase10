@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import android.content.Entity;
 import android.util.Pair;
 import edu.up.cs301.card.Card;
 import edu.up.cs301.card.CardColor;

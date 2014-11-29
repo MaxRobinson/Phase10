@@ -1,8 +1,5 @@
 package edu.up.cs301.phase10;
 
-import java.util.ArrayList;
-
-import edu.up.cs301.card.Card;
 import edu.up.cs301.game.GamePlayer;
 import edu.up.cs301.game.infoMsg.GameState;
 
@@ -21,7 +18,6 @@ public class PhaseState extends GameState {
 
 	//CONSTANTS
 	private final int INITHANDSIZE = 10;
-	private final int MAXHANDSIZE = 11;
 
 	//Private instance variables
 	private static final long serialVersionUID = -189266841850951064L;

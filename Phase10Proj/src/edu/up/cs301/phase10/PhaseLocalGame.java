@@ -82,16 +82,6 @@ public class PhaseLocalGame extends LocalGame implements PhaseGame{
 
 	@Override
 	protected String checkIfGameOver() {
-		/*if(state.getDealer() == state.getTurn()){
-			for(int i = 0; i < state.getCurrentPhase().length; i ++){
-				if(state.getCurrentPhase()[i] == 10){
-					if(state.getHands()[i].size() == 0){
-
-					}
-				}
-			}
-		}*/
-
 		ArrayList<String> winerNames = new ArrayList<String>();
 		int winerScore = 0;
 		boolean first = true;
@@ -138,6 +128,7 @@ public class PhaseLocalGame extends LocalGame implements PhaseGame{
 		}
 	}
 
+	@SuppressWarnings({ "unchecked" })
 	@Override
 	protected boolean makeMove(GameAction action) {
 		PhaseMoveAction move = (PhaseMoveAction)action;

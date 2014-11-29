@@ -21,7 +21,6 @@ import edu.up.cs301.game.R;
 import edu.up.cs301.game.infoMsg.GameInfo;
 import edu.up.cs301.game.infoMsg.IllegalMoveInfo;
 import edu.up.cs301.game.infoMsg.NotYourTurnInfo;
-import edu.up.cs301.phase10.Deck;
 import edu.up.cs301.phase10.PhaseState;
 /**
  * A GUI that allows a human to play Phase 10. Moves are made by clicking
@@ -34,13 +33,6 @@ import edu.up.cs301.phase10.PhaseState;
  * @version July 2013
  */
 public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
-
-
-	private final static float CARD_HEIGHT_PERCENT = 50; // height of a card
-	private final static float CARD_WIDTH_PERCENT = 17; // width of a card
-	private final static float LEFT_BORDER_PERCENT = 4; // width of left border
-	private final static float RIGHT_BORDER_PERCENT = 20; // width of right border
-	private final static float VERTICAL_BORDER_PERCENT = 4; // width of top/bottom borders
 	// instance variables
 
 	// Our game state
@@ -56,9 +48,11 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 	private int backgroundColor = Color.WHITE;
 
 	//the screen width
+	@SuppressWarnings("unused")
 	private int screenWidth;
 
 	//the screen Height
+	@SuppressWarnings("unused")
 	private int screenHeight;
 
 	//The rectangles for hit selection
@@ -148,12 +142,10 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 	}
 
 	public boolean doPause() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	public boolean doQuit() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -529,7 +521,6 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 
 	@Override
 	public View getTopView() {
-		// TODO Auto-generated method stub
 		return myActivity.findViewById(R.id.top_gui_layout);	}
 
 	@Override

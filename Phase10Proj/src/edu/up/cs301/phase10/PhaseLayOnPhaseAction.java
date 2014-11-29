@@ -1,7 +1,5 @@
 package edu.up.cs301.phase10;
 
-import java.util.ArrayList;
-
 import edu.up.cs301.card.Card;
 import edu.up.cs301.game.GamePlayer;
 
