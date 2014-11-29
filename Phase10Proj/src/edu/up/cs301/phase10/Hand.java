@@ -35,6 +35,10 @@ public class Hand extends Deck{
 	public Hand(ArrayList<Card> cards){
 		this.cards = cards;  
 	}
+	
+	public Hand(Hand hand){
+		super(hand);
+	}
 
 	public void swap(int i , int j)
 	{

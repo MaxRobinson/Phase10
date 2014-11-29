@@ -1,5 +1,6 @@
 package edu.up.cs301.phase10;
 
+import edu.up.cs301.card.Card;
 import edu.up.cs301.game.GamePlayer;
 import edu.up.cs301.game.infoMsg.GameState;
 
@@ -78,7 +79,7 @@ public class PhaseState extends GameState {
 	 * Indexed by ID, the laid phases that each player has 
 	 */
 	private Phase[] laidPhases;
-	
+
 	private boolean hasDrawn;
 	///////////////////////////////////////////////////////////
 
@@ -128,9 +129,9 @@ public class PhaseState extends GameState {
 
 		//init laid Phases
 		laidPhases = new Phase[numPlayers];	
-		
+
 		hasDrawn = false;
-		
+
 	}
 
 	/**
@@ -149,61 +150,61 @@ public class PhaseState extends GameState {
 	 * @param state
 	 */
 	public PhaseState(PhaseState state){
-		players = new GamePlayer[state.players.length];
+		this.players = new GamePlayer[state.players.length];
 		//copy the input into the local game list of players. //This is to make sure no reference carry overs.
 		for(int i = 0; i< state.players.length; i++){
-			players[i] = state.players[i];
+			this.players[i] = state.players[i];
 		}
 		//setNumber of players
-		numPlayers = state.players.length;
+		this.numPlayers = state.players.length;
 
 		// init Deck
-		deck = new Deck(state.deck);
+		this.deck = new Deck(state.deck);
 
 		// init Discard pile with top card from Deck
-		discardPile = new Deck(state.discardPile);
+		this.discardPile = new Deck(state.discardPile);
 
-		hands = new Hand[state.numPlayers];
+		this.hands = new Hand[state.numPlayers];
 		for(int i = 0; i < state.players.length; i++){
-			hands[i] = state.hands[i];
+			this.hands[i] = new Hand(state.hands[i]);
 		}
 
 		// init the dealer to random player
-		dealer = state.dealer;
-		turn = state.turn;
-		
+		this.dealer = state.dealer;
+		this.turn = state.turn;
+
 		currentPhase = new int[state.numPlayers];
 		for(int i = 0; i< state.players.length; i++){
-			currentPhase[i] = state.currentPhase[i];
+			this.currentPhase[i] = state.currentPhase[i];
 		}
-		
+
 		skipped = new boolean[state.numPlayers];
 		for(int i = 0; i< state.players.length; i++){
-			skipped[i] = state.skipped[i];
+			this.skipped[i] = state.skipped[i];
 		}
-		
-		score = new int[state.numPlayers];
+
+		this.score = new int[state.numPlayers];
 		for(int i = 0; i< state.players.length; i++){
-			score[i] = state.score[i];
+			this.score[i] = state.score[i];
 		}
-		
-		laidPhases = new Phase[state.numPlayers];
+
+		this.laidPhases = new Phase[state.numPlayers];
 		for(int i = 0; i< state.players.length; i++){
-			laidPhases[i] = state.laidPhases[i];
+			this.laidPhases[i] = state.laidPhases[i];
 		}
-		hasDrawn = state.hasDrawn;
+		this.hasDrawn = state.hasDrawn;
 
 	}
-	
+
 	public PhaseState(GamePlayer players[], Deck deck, Deck discard, Hand hand[], int dealer, int turn, 
-					 int currentPhase[], boolean skipped[], int score[],Phase laidPhase[], boolean hasDrawn){
+			int currentPhase[], boolean skipped[], int score[],Phase laidPhase[], boolean hasDrawn){
 		this.players = new GamePlayer[players.length];
 		//copy the input into the local game list of players. //This is to make sure no reference carry overs.
 		for(int i = 0; i< players.length; i++){
 			this.players[i] = players[i];
 		}
 		//setNumber of players
-		 this.numPlayers = players.length;
+		this.numPlayers = players.length;
 
 		// init Deck
 		this.deck = new Deck(deck);
@@ -219,27 +220,27 @@ public class PhaseState extends GameState {
 		// init the dealer to random player
 		this.dealer = dealer;
 		this.turn = turn;
-		
+
 		this.currentPhase = new int[this.numPlayers];
 		for(int i = 0; i< currentPhase.length; i++){
 			this.currentPhase[i] = currentPhase[i];
 		}
-		
+
 		this.skipped = new boolean[this.numPlayers];
 		for(int i = 0; i< skipped.length; i++){
 			this.skipped[i] = skipped[i];
 		}
-		
+
 		this.score = new int[this.numPlayers];
 		for(int i = 0; i< score.length; i++){
 			this.score[i] = score[i];
 		}
-		
+
 		this.laidPhases = new Phase[this.numPlayers];
 		for(int i = 0; i< laidPhases.length; i++){
 			this.laidPhases[i] = laidPhases[i];
 		}
-		
+
 		this.hasDrawn = hasDrawn;
 	}
 
@@ -268,11 +269,11 @@ public class PhaseState extends GameState {
 	public Hand[] getHands(){
 		return this.hands;
 	}
-	
+
 	public void setHands(Hand[] hands){
 		this.hands = hands;
 	}
-	
+
 	public void setHands(Hand hand, int handNum){
 		this.hands[handNum] = hand;
 	}
@@ -323,11 +324,11 @@ public class PhaseState extends GameState {
 	public void setCurrentPhase(int phase, int playerId){
 		this.currentPhase[playerId] = phase;
 	}
-	
+
 	public void setCurrentPhase(Phase phase, int playerId){
 		this.laidPhases[playerId] = phase;
 	}
-	
+
 	public boolean[] getSkipped(){
 		return this.skipped;
 	}
@@ -343,7 +344,7 @@ public class PhaseState extends GameState {
 	public void setScore(int[] scores){
 		this.score = scores;
 	}
-	
+
 	public void setScore(int playerId, int score){
 		this.score[playerId] = score;
 	}
@@ -351,15 +352,15 @@ public class PhaseState extends GameState {
 	public Phase[] getLaidPhases(){
 		return this.laidPhases;
 	}
-	
+
 	public GamePlayer[] getPlayers(){
 		return this.players;
 	}
-	
+
 	public boolean getHasDrawn(){
 		return this.hasDrawn;
 	}
-	
+
 	public void setHasDrawn(boolean hasDrawn){
 		this.hasDrawn = hasDrawn;
 	}
@@ -367,8 +368,8 @@ public class PhaseState extends GameState {
 	public void setLaidPhases(Phase[] laidPhases){
 		this.laidPhases = laidPhases;
 	}	
-	
-	
+
+
 
 	///////////////// HELPER METHODS ///////////////////////////////////////////
 
@@ -394,7 +395,7 @@ public class PhaseState extends GameState {
 			}
 		}
 	}
-	
+
 	/**
 	 * This initiallizes the array of hands for all players in the game.
 	 */
@@ -403,7 +404,7 @@ public class PhaseState extends GameState {
 			this.hands[i] = new Hand();
 		}
 	}
-	
+
 	/**
 	 * Inits which player goes first
 	 * @param dealer
@@ -440,29 +441,40 @@ public class PhaseState extends GameState {
 
 	public void nullAllButHandOf(int playerId){
 		// Save the hand of the player.
-//		Hand keeper = this.hands[playerId];
-//
-//		// null all other hands and deck
-//
-//		// Save top Card of deck
-//		Card tempTopCard = this.deck.removeTopCard();
-//		// Null out Deck
-//		this.deck.nullifyDeck();
-//		this.deck.add(tempTopCard);
-//
-//		// Save top card of discard pile
-//		Card tempDiscardCard = this.discardPile.removeTopCard();
-//		// Null out Deck
-//		this.discardPile.nullifyDeck();
-//		this.discardPile.add(tempDiscardCard);
-//
+	//	Hand keeper = this.hands[playerId];
+
+		// null all other hands and deck
+
+		// Save top Card of deck
+		Card tempCard = this.deck.removeTopCard();
+		Card tempTopCard = null;
+		if(tempCard != null){
+			tempTopCard = new Card(tempCard.getRank(),tempCard.getCardColor());
+		}
+		// Null out Deck
+		this.deck.nullifyDeck();
+		this.deck.add(tempTopCard);
+
+		// Save top card of discard pile
+		tempCard = this.discardPile.removeTopCard();
+		Card tempDiscardCard = null;
+		if(tempCard != null){
+			tempDiscardCard = new Card(tempCard.getRank(),tempCard.getCardColor());	
+		}
+		// Null out Deck
+		this.discardPile.nullifyDeck();
+		this.discardPile.add(tempDiscardCard);
+
+		for(int i = 0; i < hands.length; i++){
+			if(i != playerId){
+				hands[i].nullifyDeck();
+			}
+		}
 //		// Null all the Hands
-//		synchronized(this.hands){
-//			for(Hand h : hands){
-//				h.nullifyDeck();
-//			}
-//			// add back this users Hand
-//			hands[playerId] = keeper;
+//		for(Hand h : hands){
+//			h.nullifyDeck();
 //		}
+//		// add back this users Hand
+//		hands[playerId] = keeper;
 	}
 }

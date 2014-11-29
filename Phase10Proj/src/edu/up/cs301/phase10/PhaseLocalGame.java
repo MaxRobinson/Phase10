@@ -59,7 +59,7 @@ public class PhaseLocalGame extends LocalGame implements PhaseGame{
 		PhaseState sendState = new PhaseState(state);
 		for(int i = 0; i < players.length; i++){
 			if(players[i].equals(p)){
-				state.nullAllButHandOf(i);
+				sendState.nullAllButHandOf(i);
 				break;
 			}
 		}

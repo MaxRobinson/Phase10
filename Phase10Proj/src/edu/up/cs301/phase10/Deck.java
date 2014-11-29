@@ -17,18 +17,18 @@ public class Deck implements Serializable {
 
 	// to satisfy Serializable interface
 	private static final long serialVersionUID = 3216223171210121485L;
-	
+
 	// the cards in our deck; the last card in the ArrayList is the top card
 	// in the deck
 	protected ArrayList<Card> cards;
-	
+
 	/**
 	 * constructor, creating an empty deck
 	 */
 	public Deck() {
 		cards = new ArrayList<Card>();
 	}
-	
+
 	/**
 	 * Constructor, creates a deck with a given 
 	 * list of cards as the cards in the deck
@@ -43,7 +43,7 @@ public class Deck implements Serializable {
 			}
 		}
 	}
-	
+
 	/** copy constructor, making an exact copy of a deck
 	 * 
 	 * @param orig
@@ -53,14 +53,16 @@ public class Deck implements Serializable {
 		// synchronize to ensure that original is not being modified as we
 		// iterate over it
 		//synchronized(orig.cards) {
-			// create a new arrayList for our new deck; add each card in it
-			cards = new ArrayList<Card>();
-			for (Card c: orig.cards) {
-				cards.add(c);
+		// create a new arrayList for our new deck; add each card in it
+		cards = new ArrayList<Card>();
+		for (Card c: orig.cards) {
+			if(c != null){
+				cards.add(new Card(c.getRank(),c.getCardColor()));
 			}
+		}
 		//}
 	}
-	
+
 	/**
 	 * adds one of each card, increasing the size of the deck by 52. Cards are added
 	 * blue first (skip to Ace), then similarly with red, yellow and green.
@@ -81,16 +83,16 @@ public class Deck implements Serializable {
 		for (int i = 0; i<8; i++){
 			this.add(Card.fromString(""+'1'+'O'));
 		}
-		
+
 		// add skip cards
 		for (int i = 0; i<4; i++){
 			this.add(Card.fromString(""+'2'+'O'));
 		}
-		
+
 		// return the deck
 		return this;
 	}
-	
+
 	/**
 	 * Suffle's the Deck of cards
 	 */
@@ -106,9 +108,9 @@ public class Deck implements Serializable {
 				cards.set(i-1, temp);
 			}
 		}
-		*/
+		 */
 		Collections.shuffle(this.cards);
-		
+
 		// return the deck
 		return this;
 	}
@@ -121,13 +123,13 @@ public class Deck implements Serializable {
 	 * 		the deck to which the card should be moved
 	 */
 	public void moveTopCardTo(Deck targetDeck) {
-		
+
 		// will hold the card
 		Card c = null;
-		
+
 		// size of the first deck
 		int size;
-		
+
 		// indivisibly check the deck for empty, and remove the card, to
 		// avoid a race condition
 		synchronized(this.cards) {
@@ -136,14 +138,14 @@ public class Deck implements Serializable {
 				c = cards.remove(cards.size()-1);
 			}
 		}
-		
+
 		// if the original size was non-zero, add the card to the top of the
 		// target deck
 		if (size > 0) {
 			targetDeck.add(c);
 		}
 	}
-	
+
 	/**
 	 * move all cards in the current deck to a another deck by repeated moving
 	 * a single card from top to top
@@ -156,13 +158,13 @@ public class Deck implements Serializable {
 		if (this == target) {
 			return;
 		}
-		
+
 		// keep moving cards until the current deck is empty
 		while (size() > 0) {
 			moveTopCardTo(target);
 		}
 	}
-	
+
 	/**
 	 * add a card to the top of a deck
 	 * 
@@ -176,7 +178,7 @@ public class Deck implements Serializable {
 			cards.add(c);
 		}
 	}
-	
+
 	/**
 	 * @return
 	 * 		the number of cards in the deck
@@ -184,7 +186,7 @@ public class Deck implements Serializable {
 	public int size() {
 		return cards.size();
 	}
-	
+
 	/**
 	 * replace each element in the deck with a null card; does not change
 	 * the size of the deck, but rather causes the deck to yield null for
@@ -195,9 +197,14 @@ public class Deck implements Serializable {
 		// synchronize so that we don't get any race conditions (e.g., with
 		// shuffle()
 		synchronized (this.cards) {
-			// null out each card
-			for (int i = 0; i < cards.size(); i++) {
-				cards.set(i, null);
+			try{
+				// null out each card
+				for (int i = 0; i < cards.size(); i++) {
+					cards.set(i, null);
+				}
+			}
+			catch (Exception e){
+				System.out.print("FA");
 			}
 		}
 	}
@@ -215,7 +222,7 @@ public class Deck implements Serializable {
 			return cards.remove(cards.size()-1);
 		}
 	}
-	
+
 	/**
 	 * @return
 	 * 		the top card in the deck, without removing it; null
@@ -227,7 +234,7 @@ public class Deck implements Serializable {
 			return cards.get(cards.size()-1);
 		}
 	}
-	
+
 	/**
 	 * creates a printable version of the object, a list
 	 * of two-character names for each card in the deck
@@ -241,7 +248,7 @@ public class Deck implements Serializable {
 	public String toString() {
 		// the eventual return value
 		String rtnVal = "";
-		
+
 		// synchronize to avoid iterating while the
 		// deck is being modified
 		synchronized (this.cards) {
@@ -256,7 +263,7 @@ public class Deck implements Serializable {
 				}
 			}
 		}
-		
+
 		// surround by brackets and retuirn
 		rtnVal = "[" + rtnVal + " ]";
 		return rtnVal;
