@@ -148,7 +148,12 @@ public class Hand extends Deck{
 	 */
 	public boolean removeCard(Card card){
 		if(cards.size()>0){
-			cards.remove(card);
+			for(Card c: cards){
+				if(c.getRank().equals(card.getRank()) && c.getCardColor().equals(card.getCardColor())){
+					cards.remove(c);
+					break;
+				}
+			}
 			return true;
 		}
 		else{
