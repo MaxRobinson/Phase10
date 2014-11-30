@@ -1,0 +1,24 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="vertical" >
+    
+    <RadioGroup
+          android:id="@+id/topBottomRadioGroup"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content" >
+        <RadioButton
+            android:id="@+id/topRadioButton"
+          	android:layout_width="wrap_content"
+          	android:layout_height="wrap_content"
+            android:text="Top"
+            android:checked="true"/>
+        <RadioButton
+            android:id="@+id/bottomRadioButton"
+          	android:layout_width="wrap_content"
+          	android:layout_height="wrap_content"
+            android:text="Bottom"/>
+    </RadioGroup>
+
+</LinearLayout>

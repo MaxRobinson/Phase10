@@ -507,4 +507,7 @@ public class PhaseLocalGame extends LocalGame implements PhaseGame{
 			state.initTurn(dealer);
 		}	
 	}
+	public static String[] getPLayerNames(){
+		return playerNames;
+	}
 }

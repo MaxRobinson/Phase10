@@ -1,14 +1,27 @@
 package edu.up.cs301.phase10;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.graphics.RectF;
 import edu.up.cs301.animation.AnimationSurface;
 import edu.up.cs301.animation.Animator;
@@ -22,6 +35,7 @@ import edu.up.cs301.game.infoMsg.GameInfo;
 import edu.up.cs301.game.infoMsg.IllegalMoveInfo;
 import edu.up.cs301.game.infoMsg.NotYourTurnInfo;
 import edu.up.cs301.phase10.PhaseState;
+import edu.up.cs301.game.*;
 /**
  * A GUI that allows a human to play Phase 10. Moves are made by clicking
  * regions on a surface. It is laid out for landscape orientation.
@@ -75,15 +89,20 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 	private boolean laying;
 	private boolean[] selected;
 
-
+	// Variables for dialogs
+	private Spinner numberSpinner = null;
+	private Spinner colorSpinner = null;
+	private Spinner skipSpinner = null;
+	private int skippedId = -1;
+	private RadioGroup topBottomRadioGroup = null;
+	private int topBottom = -1;
+	
 	public PhaseHumanPlayer(String name) {
 		super(name);
 		laying = false;
 		hitting = false;
 		selected = new boolean[11];
 		resetSelected();
-
-
 	}
 
 	private void resetSelected()
@@ -403,6 +422,7 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 		{
 			game.sendAction(new PhaseDrawCardAction(this,true));
 			resetSelected();
+
 		}
 		else{ if(discardPileLocation.contains(x, y))
 		{
@@ -422,7 +442,8 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 					Card skipCard = new Card(Rank.TWO,CardColor.Orange);
 					if (state.getHands()[this.playerNum].getCard(anySelected).equals(skipCard))
 					{
-						game.sendAction(new PhaseSkipAction(this, skipCard, 0));
+						int toBeSkippedId = selectSkipped();
+						game.sendAction(new PhaseSkipAction(this, skipCard, toBeSkippedId));
 					}
 					else
 					{
@@ -443,16 +464,33 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 			if(laying)
 			{
 				ArrayList<Card> cards = new ArrayList<Card>();
+				// Count number of wildcards in players hand
+				int numWildCards = 0;
+				// Card to compare against for wild
+				Card wildCard = new Card(Rank.ONE,CardColor.Orange);
 				for(int i = 0; i < selected.length; i++)
 				{
 					if(selected[i])
 					{
-						cards.add(state.getHands()[this.playerNum].getCard(i));
+						// If the selected card is wild
+						if (state.getHands()[this.playerNum].getCard(i).equals(wildCard)){
+							numWildCards++;
+						}
+						// Not a wildcard
+						else{
+							cards.add(state.getHands()[this.playerNum].getCard(i));
+						}
 					}
 				}
-
+				// Store wildcards once they have been assigned a value
+				ArrayList<Card> assignedWildCards = new ArrayList<Card>();
+				
+				if(numWildCards > 0){
+					assignedWildCards = selectWildcard(numWildCards);
+				}
 				if(cards.size() > 0)
 				{
+					cards.addAll(assignedWildCards);
 					Phase tempPhase = new Phase(cards,null);
 					game.sendAction(new PhaseLayPhaseAction(this, tempPhase));
 				}
@@ -489,12 +527,20 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 						break;
 					}
 				}
-				
+
 				if(toLay != null)
 				{
+					// Card to compare against for wild
+					Card wildCard = new Card(Rank.ONE,CardColor.Orange);
+					// If the selected card is wild
+					if (toLay.equals(wildCard)){
+						ArrayList<Card> assignedWildCards = new ArrayList<Card>();
+						assignedWildCards = selectWildcard(1);
+						toLay = assignedWildCards.get(0);
+					}
 					int idToLayOn = 0;
 					int whichPart = 0;
-					int topOrBottom = 0;
+					int topOrBottom = topBottom();
 					float pL = opponentPhaseLocations.left;
 					float pT = opponentPhaseLocations.top;
 					float pW = opponentPhaseLocations.width();
@@ -541,5 +587,145 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 			this.state = (PhaseState)info;
 			Log.i("human player", "receiving");
 		}
+	}
+	
+	public ArrayList<Card> selectWildcard (int numWilds){
+		final ArrayList<Card> retCards = new ArrayList<Card>();
+		// Allow users to select values for all wildcards in their hand
+		for(int i = 0; i < numWilds; i++){
+			// Create a light themed AlertDialog
+			AlertDialog.Builder builder = new AlertDialog.Builder(GameMainActivity.activity,AlertDialog.THEME_HOLO_LIGHT);
+			// Configure layout of alert dialog
+			LayoutInflater inflater = GameMainActivity.activity.getLayoutInflater();
+			View view = inflater.inflate(R.layout.wildcard_view, null);
+			// Set layout and titles
+			builder.setTitle("Wildcard Number and Color Selection")
+			.setMessage("Use dropdowns to select the number and color of the wildcard!")
+			.setView(view).setCancelable(false);
+			// Set up OK button to update values
+			builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					Card c = new Card(Rank.valueOf(numberSpinner.getSelectedItem().toString().toUpperCase(Locale.ENGLISH)),
+							          CardColor.valueOf(colorSpinner.getSelectedItem().toString()));
+					retCards.add(c);
+				}
+			});
+
+			// Create new alert dialog from builder
+			AlertDialog dialog = builder.create();
+
+			/* Number Spinner */
+			TextView numberTextView = (TextView)view.findViewById(R.id.numberTextField);
+			numberTextView.setText("Select the number for the card");
+			// Get spinner
+			numberSpinner = (Spinner) view.findViewById(R.id.numberSpinner);
+			// Create list of possible number values
+			List<String> numberList= new ArrayList<String>();
+			numberList.add("One");
+			numberList.add("Two");
+			numberList.add("Three");
+			numberList.add("Four");
+			numberList.add("Five");
+			numberList.add("Six");
+			numberList.add("Seven");
+			numberList.add("Eight");
+			numberList.add("Nine");
+			numberList.add("Ten");
+			numberList.add("Eleven");
+			numberList.add("Twelve");
+			// Set spinner to use number values
+			ArrayAdapter<String> numberDataAdapter = new ArrayAdapter<String> (GameMainActivity.activity, android.R.layout.simple_spinner_item, numberList);
+			numberDataAdapter.setDropDownViewResource (android.R.layout.simple_spinner_dropdown_item);
+			numberSpinner.setAdapter(numberDataAdapter);
+
+			/* Color Spinner */
+			TextView colorTextView = (TextView)view.findViewById(R.id.colorTextField);
+			colorTextView.setText("Select the color for the card");
+			// Get spinner
+			colorSpinner = (Spinner) view.findViewById(R.id.colorSpinner);
+			// Create list of possible number values
+			List<String> colorList= new ArrayList<String>();
+			colorList.add("Blue");
+			colorList.add("Green");
+			colorList.add("Red");
+			colorList.add("Yellow");
+			// Set spinner to use number values
+			ArrayAdapter<String> colorDataAdapter = new ArrayAdapter<String> (GameMainActivity.activity, android.R.layout.simple_spinner_item, colorList);
+			colorDataAdapter.setDropDownViewResource (android.R.layout.simple_spinner_dropdown_item);
+			colorSpinner.setAdapter(colorDataAdapter);
+
+			dialog.show();
+		}
+
+		return retCards;
+	}
+	
+	public int selectSkipped(){
+		// Create a light themed AlertDialog
+		AlertDialog.Builder builder = new AlertDialog.Builder(GameMainActivity.activity,AlertDialog.THEME_HOLO_LIGHT);
+		// Configure layout of alert dialog
+		LayoutInflater inflater = GameMainActivity.activity.getLayoutInflater();
+		View view = inflater.inflate(R.layout.skip_view, null);
+		// Set layout and titles
+		builder.setTitle("Select player to skip")
+		.setMessage("Use dropdown to select the player to be skipped!")
+		.setView(view).setCancelable(false);
+		// Set up OK button to update values
+		builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {
+				skippedId = skipSpinner.getSelectedItemPosition();
+			}
+		});
+
+		// Create new alert dialog from builder
+		AlertDialog dialog = builder.create();
+
+		/* Skipped Spinner */
+		TextView skippedTextView = (TextView)view.findViewById(R.id.skipTextField);
+		skippedTextView.setText("Select the player to be skipped");
+		// Get spinner
+		skipSpinner = (Spinner) view.findViewById(R.id.skipSpinner);
+		// Create list of possible player values
+		List<String> skipList= new ArrayList<String>();
+		String players[] = PhaseLocalGame.getPLayerNames();
+		skipList = Arrays.asList(players);
+		// Set spinner to use player values
+		ArrayAdapter<String> skipDataAdapter = new ArrayAdapter<String> (GameMainActivity.activity, android.R.layout.simple_spinner_item, skipList);
+		skipDataAdapter.setDropDownViewResource (android.R.layout.simple_spinner_dropdown_item);
+		skipSpinner.setAdapter(skipDataAdapter);
+
+		dialog.show();
+		
+		return skippedId;
+	}
+	
+	public int topBottom(){
+		// Create a light themed AlertDialog
+		AlertDialog.Builder builder = new AlertDialog.Builder(GameMainActivity.activity,AlertDialog.THEME_HOLO_LIGHT);
+		// Configure layout of alert dialog
+		LayoutInflater inflater = GameMainActivity.activity.getLayoutInflater();
+		final View view = inflater.inflate(R.layout.top_bottom_view, null);
+		// Set layout and titles
+		builder.setTitle("Select top of bottom of phase")
+		.setMessage("Use radio buttons to select if card should be on top of bottom of laid phase!")
+		.setView(view).setCancelable(false);
+		// Set up OK button to update values
+		builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {
+				int selectedId = topBottomRadioGroup.getCheckedRadioButtonId();
+				RadioButton button = (RadioButton)view.findViewById(selectedId);
+				topBottom = (button.getText().equals("Top") ? 1 :0); 
+			}
+		});
+
+		// Create new alert dialog from builder
+		AlertDialog dialog = builder.create();
+
+		// Get Radio Group
+		topBottomRadioGroup = (RadioGroup) view.findViewById(R.id.topBottomRadioGroup);
+
+		dialog.show();
+		
+		return topBottom;
 	}
 }

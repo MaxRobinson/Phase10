@@ -71,6 +71,7 @@ View.OnClickListener {
 	// has started
 	private boolean doingConfiguration = true;
 
+	public static Activity activity = null;
 	/**
 	 * contains the game configuration this activity will be used to initialize
 	 */
@@ -139,6 +140,7 @@ View.OnClickListener {
 	@Override
 	public final void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		activity = this;
 
 		// Initialize the layout
 		setContentView(R.layout.game_config_main);
