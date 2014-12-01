@@ -616,7 +616,7 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 						if(action.equals("lay")){
 							cards.addAll(retCards);
 							Phase tempPhase = new Phase(cards,null);
-							game.sendAction(new PhaseLayPhaseAction(player, tempPhase));
+							game.sendAction(new PhaseLayPhaseAction(player, tempPhase, numWilds));
 						}
 						else{
 							topBottom(player,idToLayOn,whichPart,topOrBottom,c);
