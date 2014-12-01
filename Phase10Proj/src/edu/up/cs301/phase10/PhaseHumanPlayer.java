@@ -280,9 +280,9 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 		float sL = opponentPhaseLocations2.left;
 		float sT = opponentPhaseLocations2.top;
 
-		Paint paint = new Paint();
-		paint.setColor(Color.BLUE);
-		g.drawRect(opponentPhaseLocations2, paint);
+		//Paint paint = new Paint();
+		//paint.setColor(Color.BLUE);
+		//g.drawRect(opponentPhaseLocations2, paint);
 
 		for(int i = 0; i < phases.length; i++)
 		{
@@ -442,8 +442,8 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 					Card skipCard = new Card(Rank.TWO,CardColor.Orange);
 					if (state.getHands()[this.playerNum].getCard(anySelected).equals(skipCard))
 					{
-						int toBeSkippedId = selectSkipped();
-						game.sendAction(new PhaseSkipAction(this, skipCard, toBeSkippedId));
+						int toBeSkippedId = selectSkipped(this);
+						//game.sendAction(new PhaseSkipAction(this, skipCard, toBeSkippedId));
 					}
 					else
 					{
@@ -660,7 +660,7 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 		return retCards;
 	}
 	
-	public int selectSkipped(){
+	public int selectSkipped(final GamePlayer player){
 		// Create a light themed AlertDialog
 		AlertDialog.Builder builder = new AlertDialog.Builder(GameMainActivity.activity,AlertDialog.THEME_HOLO_LIGHT);
 		// Configure layout of alert dialog
@@ -674,6 +674,8 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 		builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
 				skippedId = skipSpinner.getSelectedItemPosition();
+				Card skipCard = new Card(Rank.TWO,CardColor.Orange);
+				game.sendAction(new PhaseSkipAction(player, skipCard, skippedId));
 			}
 		});
 
