@@ -486,7 +486,7 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 				// Store wildcards once they have been assigned a value
 
 				if(numWildCards > 0){
-					selectWildcard("lay",numWildCards,cards,this,-1,-1,-1,-1);
+					selectWildcard("lay",numWildCards,cards,this,-1,-1,-1);
 				}
 				else if(cards.size() > 0)
 				{
@@ -547,15 +547,7 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 					if (toLay.equals(wildCard)){
 						ArrayList<Card> wildCards = new ArrayList<Card>();
 						wildCards.add(toLay);
-						//   selectWildcard("lay",1,null,this,-1,-1,-1,-1);
-						int thisId = 0;
-						for(int i = 0; i < state.getPlayers().length; i++){
-							if(state.getPlayers()[i] == this){
-								thisId = i;
-								break;
-							}
-						}
-						selectWildcard("lay",1,null,this,thisId,idToLayOn,whichPart,topOrBottom);
+						selectWildcard("lay",1,null,this,idToLayOn,whichPart,topOrBottom);
 					}
 					else{
 						game.sendAction(new PhaseLayOnPhaseAction(this,toLay,idToLayOn,whichPart,topOrBottom));
@@ -598,8 +590,8 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 		}
 	}
 	
-	public void selectWildcard (final String action, final int numWilds, final ArrayList<Card> cards, final GamePlayer player, 
-								final int playertoLay, final int idToLayOn, final int whichPart,final int topOrBottom){
+	public void selectWildcard (final String action, final int numWilds, final ArrayList<Card> cards, final GamePlayer player,
+								final int idToLayOn, final int whichPart,final int topOrBottom){
 		final ArrayList<Card> retCards = new ArrayList<Card>();
 		// Allow users to select values for all wildcards in their hand
 		for(it = 0; it < numWilds; it++){
@@ -625,7 +617,7 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 							game.sendAction(new PhaseLayPhaseAction(player, tempPhase));
 						}
 						else{
-							game.sendAction(new PhaseLayOnPhaseAction(player,c,idToLayOn,whichPart,topOrBottom));
+							topBottom(player,idToLayOn,whichPart,topOrBottom,c);
 						}
 					}
 				}
@@ -715,7 +707,8 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 		dialog.show();
 	}
 	
-	public int topBottom(){
+	public int topBottom(final GamePlayer player, final int idToLayOn,
+			  			 final int whichPart,final int topOrBottom, final Card c){
 		// Create a light themed AlertDialog
 		AlertDialog.Builder builder = new AlertDialog.Builder(GameMainActivity.activity,AlertDialog.THEME_HOLO_LIGHT);
 		// Configure layout of alert dialog
@@ -730,7 +723,8 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 			public void onClick(DialogInterface dialog, int id) {
 				int selectedId = topBottomRadioGroup.getCheckedRadioButtonId();
 				RadioButton button = (RadioButton)view.findViewById(selectedId);
-				topBottom = (button.getText().equals("Top") ? 1 :0); 
+				int topBot = (button.getText().equals("Top") ? 1 :0);
+				game.sendAction(new PhaseLayOnPhaseAction(player,c,idToLayOn,whichPart,topBot));
 			}
 		});
 
