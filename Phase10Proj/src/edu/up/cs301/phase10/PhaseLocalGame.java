@@ -191,7 +191,7 @@ public class PhaseLocalGame extends LocalGame implements PhaseGame{
 			}
 
 			// Check to make sure it is this players turn
-			if(state.getHasDrawn() || state.getTurn()!=playerId)
+			if(!state.getHasDrawn() || state.getTurn()!=playerId)
 			{
 				return false;
 			}

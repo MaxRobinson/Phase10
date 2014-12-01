@@ -94,6 +94,7 @@ public class Phase {
 			return;
 		}
 		synchronized(cards){
+			phasePart[part].cards.clear();
 			for(Card c : cards){
 				phasePart[part].add(c);
 			}
