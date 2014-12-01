@@ -1,0 +1,8 @@
+Known Bugs, 
+
+Hitting on a run is a no go. 
+Phasing with multiple wild cards in your phase does not work.
+Skipping does not currently work. ( can play skip card, the players turn is just not skipped ) 
+
+unsure about how more than 2 players works. 
+proxy player currently doesn't seem to work correctly. 
