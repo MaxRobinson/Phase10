@@ -36,5 +36,9 @@ public class PhaseLayPhaseAction extends PhaseMoveAction {
 	public Phase getPhaseToLay(){
 		return this.toLay;
 	}
+	
+	public int getNumWilds(){
+		return numWildCards;
+	}
 
 }
