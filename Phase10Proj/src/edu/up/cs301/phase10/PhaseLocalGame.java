@@ -9,6 +9,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import android.util.Pair;
+import edu.up.cs301.game.Game;
 import edu.up.cs301.game.GamePlayer;
 import edu.up.cs301.game.LocalGame;
 import edu.up.cs301.game.actionMsg.GameAction;
@@ -400,6 +401,19 @@ public class PhaseLocalGame extends LocalGame implements PhaseGame{
 			state.getDiscardPile().add(tempCard);
 			state.nextTurn();
 			state.setHasDrawn(false);
+			return true;
+		}
+		else if (move.isSwapAction())
+		{
+			int i = this.getPlayerIdx(((PhaseSwapAction)move).getPlayer());
+			int size = state.getHands()[i].size();
+			int first = ((PhaseSwapAction)move).getFirst();
+			int second = ((PhaseSwapAction)move).getSecond();
+			if(first >= size || second >= size)
+			{
+				return false;
+			}
+			state.getHands()[i].swap(first, second);
 			return true;
 		}
 		return false;
