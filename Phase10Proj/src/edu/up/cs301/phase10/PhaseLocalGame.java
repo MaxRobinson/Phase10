@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 
 import android.util.Pair;
@@ -197,6 +198,7 @@ public class PhaseLocalGame extends LocalGame implements PhaseGame{
 
 			int layOnId = ((PhaseLayOnPhaseAction)move).getIdToLayOn();
 			int part = ((PhaseLayOnPhaseAction)move).getWhichPart();
+			int numWilds = ((PhaseLayOnPhaseAction)move).getNumWilds();
 			int currPhase = state.getCurrentPhase()[playerId];
 			List<String> phaseObjectives = Arrays.asList(Phase.phases[currPhase-1].split(","));
 
@@ -242,7 +244,7 @@ public class PhaseLocalGame extends LocalGame implements PhaseGame{
 				if(((Boolean)obj)){
 					// Player was successfully able to lay down a card on another players phase
 					// Check to see if it was their last card and update state
-					updateHandAndPhaseLayOn(cardToLay, layedPhase, playerId, part, layOnId);
+					updateHandAndPhaseLayOn(cardToLay, layedPhase, playerId, part, layOnId,numWilds);
 				}
 				return ((Boolean)obj);
 			} 
@@ -268,7 +270,8 @@ public class PhaseLocalGame extends LocalGame implements PhaseGame{
 			// Get current phase and number of cards in current phase
 			int currPhase = state.getCurrentPhase()[playerId];
 			int numCardsForPhase = Phase.numberPhases[currPhase-1];
-
+			int numWilds = ((PhaseLayPhaseAction)move).getNumWilds();
+			
 			// Get the phase the player is trying to lay and sort it
 			Phase layedPhaseP = ((PhaseLayPhaseAction)move).getPhaseToLay();
 			ArrayList<Card> layedPhase = new ArrayList<Card>();
@@ -298,14 +301,14 @@ public class PhaseLocalGame extends LocalGame implements PhaseGame{
 					// Set method
 					if(obj instanceof Pair<?,?>){
 						if(((Pair<Boolean,ArrayList<Card>>)obj).first){
-							updateHandAndPhase(layedPhase, null, playerId);
+							updateHandAndPhase(layedPhase, null, playerId,numWilds);
 						}
 						return ((Pair<Boolean,ArrayList<Card>>)obj).first;
 					}
 					// Color or run
 					else{
 						if(((Boolean)obj)){
-							updateHandAndPhase(layedPhase, null, playerId);
+							updateHandAndPhase(layedPhase, null, playerId,numWilds);
 						}
 						return ((Boolean)obj);
 					}
@@ -342,7 +345,7 @@ public class PhaseLocalGame extends LocalGame implements PhaseGame{
 					// Set method
 					if(obj instanceof Pair<?,?>){
 						if(((Pair<Boolean,ArrayList<Card>>)obj).first){
-							updateHandAndPhase(layedPhase, leftOver, playerId);
+							updateHandAndPhase(layedPhase, leftOver, playerId,numWilds);
 							return true;
 						}
 						else{
@@ -352,7 +355,7 @@ public class PhaseLocalGame extends LocalGame implements PhaseGame{
 					// Color or run
 					else{
 						if(((Boolean)obj)){
-							updateHandAndPhase(layedPhase, leftOver, playerId);
+							updateHandAndPhase(layedPhase, leftOver, playerId,numWilds);
 							return true;
 						}
 						else{
@@ -402,10 +405,23 @@ public class PhaseLocalGame extends LocalGame implements PhaseGame{
 		return false;
 	}
 
-	private void updateHandAndPhase(ArrayList<Card> cards, ArrayList<Card> second, int playerId){
+	private void updateHandAndPhase(ArrayList<Card> cards, ArrayList<Card> second, int playerId, int numWilds){
 		// Remove the cards the user layed for the 
 		Hand stateCards = state.getHands()[playerId];
 		stateCards.removeCards(cards);
+		int currNumWildsRemoved = 0;
+		Card wildCard = new Card(Rank.ONE,CardColor.Orange);
+		// Iterate over the cards in the players hand
+		Iterator<Card> it = stateCards.cards.iterator();
+		while(it.hasNext()){
+			Card tempCard = it.next();
+			// If the two ranks and color are the same, remove card
+			// If the selected card is wild
+			if (tempCard.equals(wildCard) && currNumWildsRemoved != numWilds){
+				it.remove();
+				currNumWildsRemoved++;
+			}	
+		}
 		state.setHands(stateCards, playerId);
 
 		// Multipart phase, need to find out what the first part was
@@ -429,12 +445,25 @@ public class PhaseLocalGame extends LocalGame implements PhaseGame{
 		state.setCurrentPhase(currPhase, playerId);
 	}
 
-	private void updateHandAndPhaseLayOn(Card card, ArrayList<Card> cards, int playerId, int part, int layOnId){
+	private void updateHandAndPhaseLayOn(Card card, ArrayList<Card> cards, int playerId, int part, int layOnId, int numWilds){
 		// Remove the cards the user layed for the 
 		Hand stateCards = state.getHands()[playerId];
 		ArrayList<Card> cardToRemove = new ArrayList<Card>();
 		cardToRemove.add(card);
 		stateCards.removeCards(cardToRemove);
+		int currNumWildsRemoved = 0;
+		Card wildCard = new Card(Rank.ONE,CardColor.Orange);
+		// Iterate over the cards in the players hand
+		Iterator<Card> it = stateCards.cards.iterator();
+		while(it.hasNext()){
+			Card tempCard = it.next();
+			// If the two ranks and color are the same, remove card
+			// If the selected card is wild
+			if (tempCard.equals(wildCard) && currNumWildsRemoved != numWilds){
+				it.remove();
+				currNumWildsRemoved++;
+			}	
+		}
 		state.setHands(stateCards, playerId);
 
 		// Update phase in the state
