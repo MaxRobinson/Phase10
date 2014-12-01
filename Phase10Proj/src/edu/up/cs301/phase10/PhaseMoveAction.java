@@ -60,4 +60,12 @@ public class PhaseMoveAction extends GameAction {
 	public boolean isLayOnPhaseAction(){
 		return false;
 	}
+	/**
+	 * @return
+	 * 		whether the move was swapping cards in a hand
+	 */
+	public boolean  isSwapAction(){
+		return false;
+	}
+	
 }

@@ -408,7 +408,7 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 						}
 						if(anySelected != -1)
 						{
-							state.swap(this.playerNum,anySelected,cardLoc);
+							game.sendAction(new PhaseSwapAction(this,anySelected,cardLoc));
 							resetSelected();
 						}
 						else

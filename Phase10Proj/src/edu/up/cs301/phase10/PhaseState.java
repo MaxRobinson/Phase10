@@ -245,10 +245,7 @@ public class PhaseState extends GameState {
 		this.hasDrawn = hasDrawn;
 	}
 
-	public void swap(int player,int i, int j)
-	{
-		hands[player].swap(i,j);
-	}
+
 	///////////////// SETTER AND GETTERS //////////////////////////////////////
 
 	public Deck getDeck(){
