@@ -419,13 +419,12 @@ public class PhaseLocalGame extends LocalGame implements PhaseGame{
 		}
 
 		// Update phase in the state
-		Phase currPhase = new Phase();
+		Phase currPhase = null;
 		if(second == null){
-			currPhase.setPart(0, cards);
+			currPhase = new Phase(first,null);
 		}
 		else{
-			currPhase.setPart(0, first);
-			currPhase.setPart(1, second);
+			currPhase = new Phase(first,second);
 		}
 		state.setCurrentPhase(currPhase, playerId);
 	}
