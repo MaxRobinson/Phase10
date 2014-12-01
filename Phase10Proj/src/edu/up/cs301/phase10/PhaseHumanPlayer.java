@@ -732,7 +732,7 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 				int selectedId = topBottomRadioGroup.getCheckedRadioButtonId();
 				RadioButton button = (RadioButton)view.findViewById(selectedId);
 				int topBot = (button.getText().equals("Top") ? 1 :0);
-				game.sendAction(new PhaseLayOnPhaseAction(player,c,idToLayOn,whichPart,topBot));
+				game.sendAction(new PhaseLayOnPhaseAction(player,c,idToLayOn,whichPart,topBot,numWilds));
 			}
 		});
 
