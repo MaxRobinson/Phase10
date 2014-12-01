@@ -531,7 +531,7 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 				{
 					int idToLayOn = 0;
 					int whichPart = 0;
-					int topOrBottom = topBottom();
+					int topOrBottom = 0;
 					float pL = opponentPhaseLocations.left;
 					float pT = opponentPhaseLocations.top;
 					float pW = opponentPhaseLocations.width();
