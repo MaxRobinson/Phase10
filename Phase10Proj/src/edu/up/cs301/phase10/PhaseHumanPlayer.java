@@ -550,7 +550,8 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 						selectWildcard("lay",1,null,this,idToLayOn,whichPart,topOrBottom);
 					}
 					else{
-						game.sendAction(new PhaseLayOnPhaseAction(this,toLay,idToLayOn,whichPart,topOrBottom));
+						Card c = toLay;
+						topBottom(this,idToLayOn,whichPart,topOrBottom,c);
 					}
 				}
 			}
