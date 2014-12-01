@@ -551,7 +551,7 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 					}
 					else{
 						Card c = toLay;
-						topBottom(this,idToLayOn,whichPart,topOrBottom,c);
+						topBottom(this,idToLayOn,whichPart,topOrBottom,c,0);
 					}
 				}
 			}
@@ -592,7 +592,7 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 	}
 	
 	public void selectWildcard (final String action, final int numWilds, final ArrayList<Card> cards, final GamePlayer player,
-								final int idToLayOn, final int whichPart,final int topOrBottom){
+								final int idToLayOn, final int whichPart, final int topOrBottom){
 		final ArrayList<Card> retCards = new ArrayList<Card>();
 		// Allow users to select values for all wildcards in their hand
 		for(it = 0; it < numWilds; it++){
@@ -619,7 +619,7 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 							game.sendAction(new PhaseLayPhaseAction(player, tempPhase, numWilds));
 						}
 						else{
-							topBottom(player,idToLayOn,whichPart,topOrBottom,c);
+							topBottom(player,idToLayOn,whichPart,topOrBottom,c,1);
 						}
 					}
 				}
@@ -716,7 +716,7 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 	}
 	
 	public int topBottom(final GamePlayer player, final int idToLayOn,
-			  			 final int whichPart,final int topOrBottom, final Card c){
+			  			 final int whichPart,final int topOrBottom, final Card c, final int numWilds){
 		// Create a light themed AlertDialog
 		AlertDialog.Builder builder = new AlertDialog.Builder(GameMainActivity.activity,AlertDialog.THEME_HOLO_LIGHT);
 		// Configure layout of alert dialog
