@@ -547,7 +547,7 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 					if (toLay.equals(wildCard)){
 						ArrayList<Card> wildCards = new ArrayList<Card>();
 						wildCards.add(toLay);
-						selectWildcard("lay",1,null,this,idToLayOn,whichPart,topOrBottom);
+						selectWildcard("layOn",1,null,this,idToLayOn,whichPart,topOrBottom);
 					}
 					else{
 						Card c = toLay;
