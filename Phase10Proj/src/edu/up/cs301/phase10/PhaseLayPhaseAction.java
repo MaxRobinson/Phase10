@@ -14,10 +14,18 @@ public class PhaseLayPhaseAction extends PhaseMoveAction {
 	// private instance variables
 	private static final long serialVersionUID = 3494826443766524896L;
 	private Phase toLay;
+	private int numWildCards;
 	
 	public PhaseLayPhaseAction(GamePlayer player, Phase toLay) {
 		super(player);
 		this.toLay = toLay;
+		this.numWildCards = 0;
+	}
+	
+	public PhaseLayPhaseAction(GamePlayer player, Phase toLay, int numWildCards) {
+		super(player);
+		this.toLay = toLay;
+		this.numWildCards = numWildCards;
 	}
 	
 	@Override
