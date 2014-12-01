@@ -96,6 +96,7 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 	private int skippedId = -1;
 	private RadioGroup topBottomRadioGroup = null;
 	private int topBottom = -1;
+	private int it = 0;
 	
 	public PhaseHumanPlayer(String name) {
 		super(name);
@@ -442,8 +443,8 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 					Card skipCard = new Card(Rank.TWO,CardColor.Orange);
 					if (state.getHands()[this.playerNum].getCard(anySelected).equals(skipCard))
 					{
-						int toBeSkippedId = selectSkipped();
-						game.sendAction(new PhaseSkipAction(this, skipCard, toBeSkippedId));
+						//int toBeSkippedId = selectSkipped();
+					//	game.sendAction(new PhaseSkipAction(this, skipCard, toBeSkippedId));
 					}
 					else
 					{
@@ -483,14 +484,12 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 					}
 				}
 				// Store wildcards once they have been assigned a value
-				ArrayList<Card> assignedWildCards = new ArrayList<Card>();
-				
+
 				if(numWildCards > 0){
-					assignedWildCards = selectWildcard(numWildCards);
+					selectWildcard("lay",numWildCards,cards,this,-1,-1,-1,-1);
 				}
-				if(cards.size() > 0)
+				else if(cards.size() > 0)
 				{
-					cards.addAll(assignedWildCards);
 					Phase tempPhase = new Phase(cards,null);
 					game.sendAction(new PhaseLayPhaseAction(this, tempPhase));
 				}
@@ -530,14 +529,6 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 
 				if(toLay != null)
 				{
-					// Card to compare against for wild
-					Card wildCard = new Card(Rank.ONE,CardColor.Orange);
-					// If the selected card is wild
-					if (toLay.equals(wildCard)){
-						ArrayList<Card> assignedWildCards = new ArrayList<Card>();
-						assignedWildCards = selectWildcard(1);
-						toLay = assignedWildCards.get(0);
-					}
 					int idToLayOn = 0;
 					int whichPart = 0;
 					int topOrBottom = topBottom();
@@ -549,8 +540,26 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 					{
 						whichPart = 1;
 					}
-					idToLayOn = (int) ((x-pL)/(pW/state.getPlayers().length));				
-					game.sendAction(new PhaseLayOnPhaseAction(this,toLay,idToLayOn,whichPart,topOrBottom));
+					idToLayOn = (int) ((x-pL)/(pW/state.getPlayers().length));
+					// Card to compare against for wild
+					Card wildCard = new Card(Rank.ONE,CardColor.Orange);
+					// If the selected card is wild
+					if (toLay.equals(wildCard)){
+						ArrayList<Card> wildCards = new ArrayList<Card>();
+						wildCards.add(toLay);
+						//   selectWildcard("lay",1,null,this,-1,-1,-1,-1);
+						int thisId = 0;
+						for(int i = 0; i < state.getPlayers().length; i++){
+							if(state.getPlayers()[i] == this){
+								thisId = i;
+								break;
+							}
+						}
+						selectWildcard("lay",1,null,this,thisId,idToLayOn,whichPart,topOrBottom);
+					}
+					else{
+						game.sendAction(new PhaseLayOnPhaseAction(this,toLay,idToLayOn,whichPart,topOrBottom));
+					}
 				}
 			}
 		}
@@ -589,10 +598,11 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 		}
 	}
 	
-	public ArrayList<Card> selectWildcard (int numWilds){
+	public void selectWildcard (final String action, final int numWilds, final ArrayList<Card> cards, final GamePlayer player, 
+								final int playertoLay, final int idToLayOn, final int whichPart,final int topOrBottom){
 		final ArrayList<Card> retCards = new ArrayList<Card>();
 		// Allow users to select values for all wildcards in their hand
-		for(int i = 0; i < numWilds; i++){
+		for(it = 0; it < numWilds; it++){
 			// Create a light themed AlertDialog
 			AlertDialog.Builder builder = new AlertDialog.Builder(GameMainActivity.activity,AlertDialog.THEME_HOLO_LIGHT);
 			// Configure layout of alert dialog
@@ -608,6 +618,16 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 					Card c = new Card(Rank.valueOf(numberSpinner.getSelectedItem().toString().toUpperCase(Locale.ENGLISH)),
 							          CardColor.valueOf(colorSpinner.getSelectedItem().toString()));
 					retCards.add(c);
+					if(it == numWilds - 1){
+						if(action.equals("lay")){
+							cards.addAll(retCards);
+							Phase tempPhase = new Phase(cards,null);
+							game.sendAction(new PhaseLayPhaseAction(player, tempPhase));
+						}
+						else{
+							game.sendAction(new PhaseLayOnPhaseAction(player,c,idToLayOn,whichPart,topOrBottom));
+						}
+					}
 				}
 			});
 
@@ -656,11 +676,9 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 
 			dialog.show();
 		}
-
-		return retCards;
 	}
 	
-	public int selectSkipped(){
+	public void selectSkipped(){
 		// Create a light themed AlertDialog
 		AlertDialog.Builder builder = new AlertDialog.Builder(GameMainActivity.activity,AlertDialog.THEME_HOLO_LIGHT);
 		// Configure layout of alert dialog
@@ -695,8 +713,6 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 		skipSpinner.setAdapter(skipDataAdapter);
 
 		dialog.show();
-		
-		return skippedId;
 	}
 	
 	public int topBottom(){
