@@ -106,6 +106,7 @@ public class Phase {
 	}
 	
 	public int getNumCards(){
+		this.numCards = part1.size() + part2.size();
 		return numCards;
 	}
 	

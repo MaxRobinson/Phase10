@@ -417,8 +417,8 @@ public class PhaseState extends GameState {
 	 * @param dealer
 	 */
 	public void initTurn(int dealer){
-		if(dealer >= numPlayers){
-			turn = dealer-numPlayers;
+		if(dealer >= (numPlayers-1)){ // > = numPlayers - 1  this is what it should be
+			turn = dealer-(numPlayers-1); // numPlayers - 1  ""
 		}
 		else{
 			turn = dealer + 1;
