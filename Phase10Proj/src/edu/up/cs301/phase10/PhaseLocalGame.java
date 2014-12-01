@@ -183,7 +183,7 @@ public class PhaseLocalGame extends LocalGame implements PhaseGame{
 			// Get player ID
 			int playerId = 0;
 			for(int i = 0; i < players.length; i++){
-				if(((PhaseLayPhaseAction)move).getPlayer().equals(players[i])){
+				if(((PhaseLayOnPhaseAction)move).getPlayer().equals(players[i])){
 					playerId = i;
 				}
 
