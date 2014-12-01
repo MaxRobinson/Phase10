@@ -608,10 +608,11 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 			// Set up OK button to update values
 			builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
-					Card c = new Card(Rank.valueOf(numberSpinner.getSelectedItem().toString().toUpperCase(Locale.ENGLISH)),
-							          CardColor.valueOf(colorSpinner.getSelectedItem().toString()));
+					Rank r = Rank.valueOf(numberSpinner.getSelectedItem().toString().toUpperCase(Locale.ENGLISH));
+					CardColor col = CardColor.valueOf(colorSpinner.getSelectedItem().toString());
+					Card c = new Card(r,col);
 					retCards.add(c);
-					if(it == numWilds - 1){
+					if(it == numWilds){
 						if(action.equals("lay")){
 							cards.addAll(retCards);
 							Phase tempPhase = new Phase(cards,null);
@@ -649,6 +650,7 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 			// Set spinner to use number values
 			ArrayAdapter<String> numberDataAdapter = new ArrayAdapter<String> (GameMainActivity.activity, android.R.layout.simple_spinner_item, numberList);
 			numberDataAdapter.setDropDownViewResource (android.R.layout.simple_spinner_dropdown_item);
+			numberDataAdapter.notifyDataSetChanged();
 			numberSpinner.setAdapter(numberDataAdapter);
 
 			/* Color Spinner */
@@ -665,6 +667,7 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 			// Set spinner to use number values
 			ArrayAdapter<String> colorDataAdapter = new ArrayAdapter<String> (GameMainActivity.activity, android.R.layout.simple_spinner_item, colorList);
 			colorDataAdapter.setDropDownViewResource (android.R.layout.simple_spinner_dropdown_item);
+			colorDataAdapter.notifyDataSetChanged();
 			colorSpinner.setAdapter(colorDataAdapter);
 
 			dialog.show();
