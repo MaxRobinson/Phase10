@@ -129,6 +129,7 @@ public class PhaseState extends GameState {
 
 		//init laid Phases
 		laidPhases = new Phase[numPlayers];	
+		initLaidPhases();
 
 		hasDrawn = false;
 
@@ -395,7 +396,16 @@ public class PhaseState extends GameState {
 			}
 		}
 	}
-
+	
+	/**
+	 * This initializes the array of laid phases for all players in the game.
+	 */
+	public void initLaidPhases(){
+		for(int i = 0; i< this.numPlayers; i++){
+			this.laidPhases[i] = new Phase();
+		}
+	}
+	
 	/**
 	 * This initiallizes the array of hands for all players in the game.
 	 */

@@ -296,7 +296,7 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 					Hand phase2 = state.getLaidPhases()[i].getPhasePart()[1];
 					if(phase2 != null)
 					{
-						drawPlayerHand(g,phase1,new RectF(sL+phasewidth*i,sT+cardheight,sL+phasewidth*(i+1),sT+cardheight+cardheight));
+						drawPlayerHand(g,phase2,new RectF(sL+phasewidth*i,sT+cardheight,sL+phasewidth*(i+1),sT+cardheight+cardheight));
 					}
 				}
 			}

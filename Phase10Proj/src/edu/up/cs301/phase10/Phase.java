@@ -39,19 +39,30 @@ public class Phase {
 		part2 = new Hand();
 		phasePart = new Hand[2];
 		phaseA = new ArrayList<Card>();
-		phasePart[0] = part1;
-		phasePart[1] = part2;
+		
 		if(firstPart != null)
 		{
 			numCards = firstPart.size();
 			phaseA.addAll(firstPart);
+			//add cards to first part
+			for(int i = 0; i< firstPart.size(); i ++){
+				part1.add(firstPart.get(i));
+			}
 
 		}
 		if(secondPart!=null)
 		{
 			numCards += secondPart.size();
 			phaseA.addAll(secondPart);
+			//add cards to second part
+			for(int i = 0; i< firstPart.size(); i ++){
+				part2.add(secondPart.get(i));
+			}
 		}
+		
+		//after the parts have been initialized add the parts to phasePart
+		phasePart[0] = part1;
+		phasePart[1] = part2;
 	}
 	
 	/**
@@ -60,6 +71,10 @@ public class Phase {
 	public Phase(){
 		part1 = new Hand();
 		part2 = new Hand();
+		phasePart = new Hand[2];
+		phaseA = new ArrayList<Card>();
+		phasePart[0] = part1;
+		phasePart[1] = part2;
 	}
 	
 	public Hand[] getPhasePart()
