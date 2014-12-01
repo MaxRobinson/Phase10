@@ -236,7 +236,7 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 		paint.setTextSize(25f);
 		paint.setColor(Color.BLACK);
 		g.drawText("Your Current Phase is: " + state.getCurrentPhase()[this.playerNum],phaseTextLoc.left,phaseTextLoc.top, paint);
-		g.drawText("You Need:   " + Phase.phases[this.playerNum],phaseTextLoc.left,phaseTextLoc.top+80f, paint);
+		g.drawText("You Need:   " + Phase.phases[(state.getCurrentPhase()[this.playerNum])-1],phaseTextLoc.left,phaseTextLoc.top+80f, paint);
 
 
 	}
@@ -281,9 +281,9 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 		float sL = opponentPhaseLocations2.left;
 		float sT = opponentPhaseLocations2.top;
 
-		//Paint paint = new Paint();
-		//paint.setColor(Color.BLUE);
-		//g.drawRect(opponentPhaseLocations2, paint);
+		Paint paint = new Paint();
+		paint.setColor(Color.BLUE);
+		g.drawRect(opponentPhaseLocations2, paint);
 
 		for(int i = 0; i < phases.length; i++)
 		{
@@ -300,18 +300,18 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 					}
 				}
 			}
-			drawPlayerName(g,opponentPhaseLocations2,i,phasewidth);
+			drawPlayerName(g,opponentPhaseLocations2,i,phasewidth, i);
 		}
 	}
 
-	private void drawPlayerName(Canvas g, RectF opponentPhaseLoc, int i, float width) 
+	private void drawPlayerName(Canvas g, RectF opponentPhaseLoc, int i, float width, int playerId) 
 	{
 		Paint paint = new Paint();
 		paint.setTextSize(25f);
 		paint.setColor(Color.BLACK);
 		float x = opponentPhaseLoc.left+width*i; 
 		float y = opponentPhaseLoc.bottom+27;
-		g.drawText("Phase: " + state.getCurrentPhase()[this.playerNum],x,y, paint);
+		g.drawText("Phase: " + state.getCurrentPhase()[playerId],x,y, paint);
 	}
 
 	private void drawLayPhaseButton(Canvas g, RectF loc, boolean pressed)

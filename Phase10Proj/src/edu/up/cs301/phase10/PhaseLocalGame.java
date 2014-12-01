@@ -500,7 +500,6 @@ public class PhaseLocalGame extends LocalGame implements PhaseGame{
 			// Loop through players
 			for(int i = 0; i < players.length; i++){
 				// If the player still has cards in their hand
-				//if(state.getHands()[playerId].size() != 0){ // needs to be i instead of playerId             -------------------
 				if(state.getHands()[i].size() != 0){
 					// Loop through cards in each player's hand
 					for(int j = 0; j < state.getHands()[i].size(); j++){
@@ -513,11 +512,10 @@ public class PhaseLocalGame extends LocalGame implements PhaseGame{
 
 			// Set all laid phases back to null and update player's phases
 			for(int i = 0; i < players.length; i++){
-				if(state.getLaidPhases()[i] != null){   // Neither of these will usually be null, but null check
+				if(state.getLaidPhases()[i] != null){   //Will not usually be null, but null check
 					//need to check if actually a phase there, not just if null.
 					if(state.getLaidPhases()[i].getNumCards() != 0){
 						// Move user to the next phase since they completed the current one
-						//int newPhase = (state.getCurrentPhase()[playerId] + 1 != 11 ? (state.getCurrentPhase()[playerId] + 1) : 10);  // want i, not playerId
 						int newPhase = (state.getCurrentPhase()[i] + 1 != 11 ? (state.getCurrentPhase()[i] + 1) : 10);  // want i, not playerId
 						// Move player to next phase
 						state.setCurrentPhase(newPhase, playerId);
