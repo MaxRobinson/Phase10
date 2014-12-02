@@ -191,12 +191,6 @@ public class PhaseLocalGame extends LocalGame implements PhaseGame{
 
 			}
 
-			// Check to make sure it is this players turn
-			if(!state.getHasDrawn() || state.getTurn()!=playerId)
-			{
-				return false;
-			}
-
 			int layOnId = ((PhaseLayOnPhaseAction)move).getIdToLayOn();
 			int part = ((PhaseLayOnPhaseAction)move).getWhichPart();
 			int numWilds = ((PhaseLayOnPhaseAction)move).getNumWilds();

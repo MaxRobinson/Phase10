@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
@@ -423,7 +424,6 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 		{
 			game.sendAction(new PhaseDrawCardAction(this,true));
 			resetSelected();
-
 		}
 		else{ if(discardPileLocation.contains(x, y))
 		{
@@ -457,7 +457,6 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 			{
 				game.sendAction(new PhaseDrawCardAction(this,false));
 				resetSelected();
-
 			}
 		}
 		else{ if (phaseButtonLocation.contains(x, y))
@@ -593,85 +592,92 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 	
 	public void selectWildcard (final String action, final int numWilds, final ArrayList<Card> cards, final GamePlayer player,
 								final int idToLayOn, final int whichPart, final int topOrBottom){
+		it = 1;
 		final ArrayList<Card> retCards = new ArrayList<Card>();
-		// Allow users to select values for all wildcards in their hand
-		for(it = 0; it < numWilds; it++){
-			// Create a light themed AlertDialog
-			AlertDialog.Builder builder = new AlertDialog.Builder(GameMainActivity.activity,AlertDialog.THEME_HOLO_LIGHT);
-			// Configure layout of alert dialog
-			LayoutInflater inflater = GameMainActivity.activity.getLayoutInflater();
-			View view = inflater.inflate(R.layout.wildcard_view, null);
-			// Set layout and titles
-			builder.setTitle("Wildcard Number and Color Selection")
-			.setMessage("Use dropdowns to select the number and color of the wildcard!")
-			.setView(view).setCancelable(false);
-			// Set up OK button to update values
-			builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int id) {
-					Rank r = Rank.valueOf(numberSpinner.getSelectedItem().toString().toUpperCase(Locale.ENGLISH));
-					CardColor col = CardColor.valueOf(colorSpinner.getSelectedItem().toString());
-					Card c = new Card(r,col);
-					retCards.add(c);
-					if(it == numWilds){
-						if(action.equals("lay")){
-							cards.addAll(retCards);
-							Phase tempPhase = new Phase(cards,null);
-							game.sendAction(new PhaseLayPhaseAction(player, tempPhase, numWilds));
+		// Create a light themed AlertDialog
+		AlertDialog.Builder builder = new AlertDialog.Builder(GameMainActivity.activity,AlertDialog.THEME_HOLO_LIGHT);
+		// Configure layout of alert dialog
+		LayoutInflater inflater = GameMainActivity.activity.getLayoutInflater();
+		View view = inflater.inflate(R.layout.wildcard_view, null);
+		// Set layout and titles
+		builder.setTitle("Wildcard Number 1 Number and Color Selection")
+		.setMessage("Use dropdowns to select the number and color of the wildcard!")
+		.setView(view).setCancelable(false).setPositiveButton("OK", null);
+		
+		// Create new alert dialog from builder
+		final AlertDialog d = builder.create();
+
+		// OK click listener
+		d.setOnShowListener(new DialogInterface.OnShowListener() {
+			public void onShow(DialogInterface dialog) {
+				Button b = d.getButton(AlertDialog.BUTTON_POSITIVE);
+				b.setOnClickListener(new View.OnClickListener() {
+					public void onClick(View view) {
+						Rank r = Rank.valueOf(numberSpinner.getSelectedItem().toString().toUpperCase(Locale.ENGLISH));
+						CardColor col = CardColor.valueOf(colorSpinner.getSelectedItem().toString());
+						Card c = new Card(r,col);
+						retCards.add(c);
+						if(it == numWilds){
+							if(action.equals("lay")){
+								cards.addAll(retCards);
+								Phase tempPhase = new Phase(cards,null);
+								game.sendAction(new PhaseLayPhaseAction(player, tempPhase, numWilds));
+							}
+							else{
+								topBottom(player,idToLayOn,whichPart,topOrBottom,c,1);
+							}
+							d.dismiss();
 						}
-						else{
-							topBottom(player,idToLayOn,whichPart,topOrBottom,c,1);
-						}
+						it++;
+						d.setTitle("Wildcard Number " + it + " Number and Color Selection");
 					}
-				}
-			});
+				});
+			}
+		});
 
-			// Create new alert dialog from builder
-			AlertDialog dialog = builder.create();
 
-			/* Number Spinner */
-			TextView numberTextView = (TextView)view.findViewById(R.id.numberTextField);
-			numberTextView.setText("Select the number for the card");
-			// Get spinner
-			numberSpinner = (Spinner) view.findViewById(R.id.numberSpinner);
-			// Create list of possible number values
-			List<String> numberList= new ArrayList<String>();
-			numberList.add("One");
-			numberList.add("Two");
-			numberList.add("Three");
-			numberList.add("Four");
-			numberList.add("Five");
-			numberList.add("Six");
-			numberList.add("Seven");
-			numberList.add("Eight");
-			numberList.add("Nine");
-			numberList.add("Ten");
-			numberList.add("Eleven");
-			numberList.add("Twelve");
-			// Set spinner to use number values
-			ArrayAdapter<String> numberDataAdapter = new ArrayAdapter<String> (GameMainActivity.activity, android.R.layout.simple_spinner_item, numberList);
-			numberDataAdapter.setDropDownViewResource (android.R.layout.simple_spinner_dropdown_item);
-			numberDataAdapter.notifyDataSetChanged();
-			numberSpinner.setAdapter(numberDataAdapter);
+		/* Number Spinner */
+		TextView numberTextView = (TextView)view.findViewById(R.id.numberTextField);
+		numberTextView.setText("Select the number for the card");
+		// Get spinner
+		numberSpinner = (Spinner) view.findViewById(R.id.numberSpinner);
+		// Create list of possible number values
+		List<String> numberList= new ArrayList<String>();
+		numberList.add("One");
+		numberList.add("Two");
+		numberList.add("Three");
+		numberList.add("Four");
+		numberList.add("Five");
+		numberList.add("Six");
+		numberList.add("Seven");
+		numberList.add("Eight");
+		numberList.add("Nine");
+		numberList.add("Ten");
+		numberList.add("Eleven");
+		numberList.add("Twelve");
+		// Set spinner to use number values
+		ArrayAdapter<String> numberDataAdapter = new ArrayAdapter<String> (GameMainActivity.activity, android.R.layout.simple_spinner_item, numberList);
+		numberDataAdapter.setDropDownViewResource (android.R.layout.simple_spinner_dropdown_item);
+		numberDataAdapter.notifyDataSetChanged();
+		numberSpinner.setAdapter(numberDataAdapter);
 
-			/* Color Spinner */
-			TextView colorTextView = (TextView)view.findViewById(R.id.colorTextField);
-			colorTextView.setText("Select the color for the card");
-			// Get spinner
-			colorSpinner = (Spinner) view.findViewById(R.id.colorSpinner);
-			// Create list of possible number values
-			List<String> colorList= new ArrayList<String>();
-			colorList.add("Blue");
-			colorList.add("Green");
-			colorList.add("Red");
-			colorList.add("Yellow");
-			// Set spinner to use number values
-			ArrayAdapter<String> colorDataAdapter = new ArrayAdapter<String> (GameMainActivity.activity, android.R.layout.simple_spinner_item, colorList);
-			colorDataAdapter.setDropDownViewResource (android.R.layout.simple_spinner_dropdown_item);
-			colorDataAdapter.notifyDataSetChanged();
-			colorSpinner.setAdapter(colorDataAdapter);
-
-			dialog.show();
-		}
+		/* Color Spinner */
+		TextView colorTextView = (TextView)view.findViewById(R.id.colorTextField);
+		colorTextView.setText("Select the color for the card");
+		// Get spinner
+		colorSpinner = (Spinner) view.findViewById(R.id.colorSpinner);
+		// Create list of possible number values
+		List<String> colorList= new ArrayList<String>();
+		colorList.add("Blue");
+		colorList.add("Green");
+		colorList.add("Red");
+		colorList.add("Yellow");
+		// Set spinner to use number values
+		ArrayAdapter<String> colorDataAdapter = new ArrayAdapter<String> (GameMainActivity.activity, android.R.layout.simple_spinner_item, colorList);
+		colorDataAdapter.setDropDownViewResource (android.R.layout.simple_spinner_dropdown_item);
+		colorDataAdapter.notifyDataSetChanged();
+		colorSpinner.setAdapter(colorDataAdapter);
+		d.show();
 	}
 	
 	public int selectSkipped(final GamePlayer player){
