@@ -1,6 +1,11 @@
 package edu.up.cs301.phase10;
 
+import java.util.ArrayList;
+import java.util.Locale;
+
 import edu.up.cs301.card.Card;
+import edu.up.cs301.card.CardColor;
+import edu.up.cs301.card.Rank;
 import edu.up.cs301.game.GamePlayer;
 import edu.up.cs301.game.infoMsg.GameState;
 
@@ -132,6 +137,40 @@ public class PhaseState extends GameState {
 		initLaidPhases();
 
 		hasDrawn = false;
+		
+		
+		/*Put game in a state I want */
+		ArrayList<Card> cards = new ArrayList<Card>();
+		Rank r = Rank.valueOf("ONE");
+		CardColor col = CardColor.valueOf("Blue");
+		// Set
+		Card c = new Card(r,col);
+		cards.add(c);
+		c = new Card(r,col);
+		cards.add(c);
+		c = new Card(r,col);
+		cards.add(c);
+		
+		r = Rank.valueOf("TWO");
+		c = new Card(r,col);
+		cards.add(c);
+		r = Rank.valueOf("THREE");
+		c = new Card(r,col);
+		cards.add(c);
+		r = Rank.valueOf("FOUR");
+		c = new Card(r,col);
+		cards.add(c);
+		r = Rank.valueOf("FIVE");
+		c = new Card(r,col);
+		cards.add(c);
+		
+		r = Rank.valueOf("SIX");
+		c = new Card(r,col);
+		cards.add(c);
+		
+		hands[0].setcards(cards);
+		
+		currentPhase[0] = 2;
 
 	}
 

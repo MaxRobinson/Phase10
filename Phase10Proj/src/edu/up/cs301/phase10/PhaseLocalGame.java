@@ -214,7 +214,7 @@ public class PhaseLocalGame extends LocalGame implements PhaseGame{
 			Card cardToLay = ((PhaseLayOnPhaseAction)move).getToLay();
 
 			// Call second method in phase
-			if(layOnId == 1){
+			if(part == 1){
 				methodToCall = 2;
 			}
 
@@ -225,7 +225,7 @@ public class PhaseLocalGame extends LocalGame implements PhaseGame{
 			}
 			ArrayList<Card> layedPhase = new ArrayList<Card>();
 			layedPhase.addAll(state.getLaidPhases()[layOnId].getPhasePart()[part].getCards());
-			int positionForCard = topBottom == 1 ? (layedPhase.size() - 1) : 0;
+			int positionForCard = topBottom == 1 ? (layedPhase.size()) : 0;
 			layedPhase.add(positionForCard, cardToLay);
 
 			// Get number of cards for current stage

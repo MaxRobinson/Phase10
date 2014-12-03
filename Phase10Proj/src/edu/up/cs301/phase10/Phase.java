@@ -45,19 +45,14 @@ public class Phase {
 			numCards = firstPart.size();
 			phaseA.addAll(firstPart);
 			//add cards to first part
-			for(int i = 0; i< firstPart.size(); i ++){
-				part1.add(firstPart.get(i));
-			}
-
+			part1.cards.addAll(firstPart);
 		}
 		if(secondPart!=null)
 		{
 			numCards += secondPart.size();
 			phaseA.addAll(secondPart);
 			//add cards to second part
-			for(int i = 0; i< firstPart.size(); i ++){
-				part2.add(secondPart.get(i));
-			}
+			part2.cards.addAll(secondPart);
 		}
 		
 		//after the parts have been initialized add the parts to phasePart
