@@ -237,7 +237,7 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 		paint.setTextSize(25f);
 		paint.setColor(Color.BLACK);
 		g.drawText("Your Current Phase is: " + state.getCurrentPhase()[this.playerNum],phaseTextLoc.left,phaseTextLoc.top, paint);
-		g.drawText("You Need:   " + Phase.phases[(state.getCurrentPhase()[this.playerNum])-1],phaseTextLoc.left,phaseTextLoc.top+80f, paint);
+		g.drawText("You Need:   " + Phase.phases[state.getCurrentPhase()[this.playerNum]-1],phaseTextLoc.left,phaseTextLoc.top+80f, paint);
 
 
 	}

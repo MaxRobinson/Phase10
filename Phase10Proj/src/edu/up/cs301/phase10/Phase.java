@@ -25,7 +25,7 @@ public class Phase {
 	private int numCards;
 	private ArrayList<Card> phaseA;
 	
-	public static String phases[] = {"set,3,set,3", "set,3,run,4", " set,4,run,4", " run,7", "run,8", "run,9",
+	public static String phases[] = {"set,3,set,3", "set,3,run,4", "set,4,run,4", "run,7", "run,8", "run,9",
 							  "set,4,set,4", "color,7", "set,5,set,2", "set,5,set,3"};
 	public static int numberPhases[] = {6,7,8,7,8,9,8,7,7,8};
 	
@@ -45,19 +45,14 @@ public class Phase {
 			numCards = firstPart.size();
 			phaseA.addAll(firstPart);
 			//add cards to first part
-			for(int i = 0; i< firstPart.size(); i ++){
-				part1.add(firstPart.get(i));
-			}
-
+			part1.cards.addAll(firstPart);
 		}
 		if(secondPart!=null)
 		{
 			numCards += secondPart.size();
 			phaseA.addAll(secondPart);
 			//add cards to second part
-			for(int i = 0; i< firstPart.size(); i ++){
-				part2.add(secondPart.get(i));
-			}
+			part2.cards.addAll(secondPart);
 		}
 		
 		//after the parts have been initialized add the parts to phasePart
@@ -126,7 +121,7 @@ public class Phase {
 			// Get all numbers of each rank out of hashmap
 			for(Map.Entry<Rank, Integer> entry : sets.entrySet()){
 				// If a rank has the proper number of cards for a set
-				if(entry.getValue() == numCards){
+				if(entry.getValue() >= numCards){
 					// Iterate through leftOver to remove cards that will be used as leftovers
 					Iterator<Card> it = leftOver.iterator();
 					while(it.hasNext()){
