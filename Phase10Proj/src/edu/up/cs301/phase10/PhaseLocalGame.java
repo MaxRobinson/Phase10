@@ -266,7 +266,7 @@ public class PhaseLocalGame extends LocalGame implements PhaseGame{
 			int currPhase = state.getCurrentPhase()[playerId];
 			int numCardsForPhase = Phase.numberPhases[currPhase-1];
 			int numWilds = ((PhaseLayPhaseAction)move).getNumWilds();
-			
+
 			// Get the phase the player is trying to lay and sort it
 			Phase layedPhaseP = ((PhaseLayPhaseAction)move).getPhaseToLay();
 			ArrayList<Card> layedPhase = new ArrayList<Card>();
@@ -331,7 +331,9 @@ public class PhaseLocalGame extends LocalGame implements PhaseGame{
 						}
 					}
 				} 
-				catch (Exception e) {}
+				catch (Exception e) {
+					e.printStackTrace();
+				}
 				numCards = Integer.parseInt(phaseObjectives.get(3));
 				try {
 					// Setup reflection
@@ -417,18 +419,20 @@ public class PhaseLocalGame extends LocalGame implements PhaseGame{
 		// Remove the cards the user layed for the 
 		Hand stateCards = state.getHands()[playerId];
 		stateCards.removeCards(cards);
-		int currNumWildsRemoved = 0;
-		Card wildCard = new Card(Rank.ONE,CardColor.Orange);
-		// Iterate over the cards in the players hand
-		Iterator<Card> it = stateCards.cards.iterator();
-		while(it.hasNext()){
-			Card tempCard = it.next();
-			// If the two ranks and color are the same, remove card
-			// If the selected card is wild
-			if (tempCard.equals(wildCard) && currNumWildsRemoved != numWilds){
-				it.remove();
-				currNumWildsRemoved++;
-			}	
+		if(numWilds != 0){
+			int currNumWildsRemoved = 0;
+			Card wildCard = new Card(Rank.ONE,CardColor.Orange);
+			// Iterate over the cards in the players hand
+			Iterator<Card> it = stateCards.cards.iterator();
+			while(it.hasNext()){
+				Card tempCard = it.next();
+				// If the two ranks and color are the same, remove card
+				// If the selected card is wild
+				if (tempCard.equals(wildCard) && currNumWildsRemoved != numWilds){
+					it.remove();
+					currNumWildsRemoved++;
+				}	
+			}
 		}
 		state.setHands(stateCards, playerId);
 
@@ -445,7 +449,7 @@ public class PhaseLocalGame extends LocalGame implements PhaseGame{
 		// Update phase in the state
 		Phase currPhase = null;
 		if(second == null){
-			currPhase = new Phase(first,null);
+			currPhase = new Phase(cards,null);
 		}
 		else{
 			currPhase = new Phase(first,second);

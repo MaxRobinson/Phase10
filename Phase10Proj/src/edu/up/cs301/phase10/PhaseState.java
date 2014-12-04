@@ -142,19 +142,25 @@ public class PhaseState extends GameState {
 		/*Put game in a state I want */
 		ArrayList<Card> cards = new ArrayList<Card>();
 		Rank r = Rank.valueOf("ONE");
-		CardColor col = CardColor.valueOf("Blue");
+		CardColor col = CardColor.valueOf("Orange");
 		// Set
 		Card c = new Card(r,col);
-		cards.add(c);
+		/*cards.add(c);
 		c = new Card(r,col);
 		cards.add(c);
 		c = new Card(r,col);
 		cards.add(c);
+		c = new Card(r,col);
+		cards.add(c);*/
 		
-		r = Rank.valueOf("TWO");
+		col = CardColor.valueOf("Blue");
+		r = Rank.valueOf("ONE");
 		c = new Card(r,col);
 		cards.add(c);
 		r = Rank.valueOf("THREE");
+		c = new Card(r,col);
+		cards.add(c);
+		r = Rank.valueOf("TWO");
 		c = new Card(r,col);
 		cards.add(c);
 		r = Rank.valueOf("FOUR");
@@ -163,14 +169,22 @@ public class PhaseState extends GameState {
 		r = Rank.valueOf("FIVE");
 		c = new Card(r,col);
 		cards.add(c);
-		
 		r = Rank.valueOf("SIX");
+		c = new Card(r,col);
+		cards.add(c);
+		r = Rank.valueOf("SEVEN");
+		c = new Card(r,col);
+		cards.add(c);
+		r = Rank.valueOf("FOUR");
+		c = new Card(r,col);
+		cards.add(c);
+		r = Rank.valueOf("NINE");
 		c = new Card(r,col);
 		cards.add(c);
 		
 		hands[0].setcards(cards);
 		
-		currentPhase[0] = 2;
+		currentPhase[0] = 4;
 
 	}
 
