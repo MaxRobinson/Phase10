@@ -7,4 +7,4 @@ List of things to do:
 - null hands / stuff method ( why broken? ) * Complete - DN
 - JUnit tests for classes 
 - Someone deal with bugzilla ( must VPN / remote in to school network first) * Complete DN, JN, MR
-- fix infinite skip cards
+- fix infinite skip cards * Complete - DN
