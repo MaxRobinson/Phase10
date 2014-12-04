@@ -141,14 +141,14 @@ public class PhaseState extends GameState {
 		
 		/*Put game in a state I want */
 		ArrayList<Card> cards = new ArrayList<Card>();
-		Rank r = Rank.valueOf("ONE");
+		Rank r = Rank.valueOf("TWO");
 		CardColor col = CardColor.valueOf("Orange");
 		// Set
 		Card c = new Card(r,col);
-		/*cards.add(c);
-		c = new Card(r,col);
 		cards.add(c);
 		c = new Card(r,col);
+		cards.add(c);
+		/*c = new Card(r,col);
 		cards.add(c);
 		c = new Card(r,col);
 		cards.add(c);*/
@@ -178,9 +178,7 @@ public class PhaseState extends GameState {
 		r = Rank.valueOf("FOUR");
 		c = new Card(r,col);
 		cards.add(c);
-		r = Rank.valueOf("NINE");
-		c = new Card(r,col);
-		cards.add(c);
+
 		
 		hands[0].setcards(cards);
 		
@@ -361,7 +359,25 @@ public class PhaseState extends GameState {
 	}
 	public void nextTurn()
 	{
-		this.turn = (this.turn+1)%numPlayers;
+		// Go to next player
+		if(turn+1 <= (numPlayers-1)){
+			turn++;
+		}
+		else{
+			turn = 0;
+		}
+
+		// Check if next player is skipped, if it is, go to next player
+		if(isSkipped(turn)){
+			// Player will not be skipped next time
+			skipped[turn] = false;
+			if(turn+1 <= (numPlayers-1)){
+				turn++;
+			}
+			else{
+				turn = 0;
+			}
+		}
 	}
 
 	public int[] getCurrentPhase(){

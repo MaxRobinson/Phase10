@@ -134,8 +134,41 @@ public class PhaseLocalGame extends LocalGame implements PhaseGame{
 	@Override
 	protected boolean makeMove(GameAction action) {
 		PhaseMoveAction move = (PhaseMoveAction)action;
+		if(move.isSkipAction()){
+			// The current player is not skipped, they will now be skipped
+			int playerId = 0;
+			for(int i = 0; i < players.length; i++){
+				if(((PhaseDiscardAction)move).getPlayer().equals(players[i])){
+					playerId = i;
+				}
+			}
+			if(!state.getHasDrawn() || state.getTurn()!=playerId || ((PhaseDiscardAction) move).getCard() == null)
+			{
+				return false;
+			}
 
-		if(move.isDiscardAction()){
+			Card tempCard = ((PhaseDiscardAction) move).getCard();
+			if(!tempCard.equals(new Card(Rank.TWO,CardColor.Orange)))
+			{
+				 return false;
+			}
+			if (!state.getHands()[playerId].removeCard(((PhaseDiscardAction) move).getCard()))
+			{
+				return false;
+			}
+			if(!state.getSkipped()[((PhaseSkipAction)action).getWhoSkipped()]){
+				state.setSkipped(((PhaseSkipAction)action).getWhoSkipped());
+			}
+			else
+			{
+				return false;
+			}
+			state.getDiscardPile().add(tempCard);
+			state.nextTurn();
+			state.setHasDrawn(false);
+			return true;
+		}
+		else if(move.isDiscardAction()){
 			int playerId = 0;
 			for(int i = 0; i < players.length; i++){
 				if(((PhaseDiscardAction)move).getPlayer().equals(players[i])){
@@ -175,7 +208,14 @@ public class PhaseLocalGame extends LocalGame implements PhaseGame{
 			}
 			else
 			{
-				state.getHands()[playerId].add(state.getDiscardPile().removeTopCard());
+				Card skip = new Card(Rank.TWO,CardColor.Orange);
+				// Do not allow a skip card to be picked up off the discard pile
+				if (state.getDiscardPile().peekAtTopCard().equals(skip)){
+					return false;
+				}
+				else{
+					state.getHands()[playerId].add(state.getDiscardPile().removeTopCard());
+				}
 			}
 			state.setHasDrawn(true);
 			return true;
@@ -364,40 +404,6 @@ public class PhaseLocalGame extends LocalGame implements PhaseGame{
 					e.printStackTrace();
 				}
 			}
-		}
-		else if(move.isSkipAction()){
-			// The current player is not skipped, they will now be skipped
-			int playerId = 0;
-			for(int i = 0; i < players.length; i++){
-				if(((PhaseDiscardAction)move).getPlayer().equals(players[i])){
-					playerId = i;
-				}
-			}
-			if(!state.getHasDrawn() || state.getTurn()!=playerId || ((PhaseDiscardAction) move).getCard() == null)
-			{
-				return false;
-			}
-
-			Card tempCard = ((PhaseDiscardAction) move).getCard();
-			if(tempCard.equals(new Card(Rank.TWO,CardColor.Orange)))
-			{
-				return makeMove(new PhaseDiscardAction(((PhaseSkipAction)move).getPlayer(),((PhaseDiscardAction)move).getCard()));
-			}
-			if (!state.getHands()[playerId].removeCard(((PhaseDiscardAction) move).getCard()))
-			{
-				return false;
-			}
-			if(!state.getSkipped()[((PhaseSkipAction)action).getWhoSkipped()]){
-				state.setSkipped(((PhaseSkipAction)action).getWhoSkipped());
-			}
-			else
-			{
-				return false;
-			}
-			state.getDiscardPile().add(tempCard);
-			state.nextTurn();
-			state.setHasDrawn(false);
-			return true;
 		}
 		else if (move.isSwapAction())
 		{
