@@ -1,7 +1,7 @@
 Known Bugs, 
 
-Hitting on a run is a no go. 
-Phasing with multiple wild cards in your phase does not work.
+Hitting on a run is a no go. * Complete - DN
+Phasing with multiple wild cards in your phase does not work. * Complete - DN
 Skipping does not currently work. ( can play skip card, the players turn is just not skipped ) 
 
 unsure about how more than 2 players works. 
