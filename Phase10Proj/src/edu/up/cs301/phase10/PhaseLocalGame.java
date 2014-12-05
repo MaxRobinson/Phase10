@@ -90,7 +90,7 @@ public class PhaseLocalGame extends LocalGame implements PhaseGame{
 		// Check to see if anyone was out of cards, and if they had no cards, where they on phase 10
 		for(int i = 0; i < players.length; i++){
 			// The player has laid their phase and it was there last phase
-			if(state.getLaidPhases()[i] != null && state.getCurrentPhase()[i] == 10){
+			if(state.getLaidPhases()[i] != null && state.getCurrentPhase()[i] == 10 && state.getHands()[i].size() == 0){
 				// If this is the first player to be found that has a laid phase 10
 				if(first){
 					// Add names to winers
@@ -117,7 +117,7 @@ public class PhaseLocalGame extends LocalGame implements PhaseGame{
 		}
 		// Game has a winer
 		else if(winerNames.size() == 1){
-			return winerNames.get(0);
+			return new String(winerNames.get(0) + " Has won!");
 		}
 		// Game was a tie
 		else{
@@ -125,7 +125,7 @@ public class PhaseLocalGame extends LocalGame implements PhaseGame{
 			for(String s : winerNames){
 				ret += (s + " ");
 			}
-			ret += "Tied!";
+			ret += " Have Tied!";
 			return ret;
 		}
 	}
@@ -166,6 +166,7 @@ public class PhaseLocalGame extends LocalGame implements PhaseGame{
 			state.getDiscardPile().add(tempCard);
 			state.nextTurn();
 			state.setHasDrawn(false);
+			playerGoneOut(playerId);
 			return true;
 		}
 		else if(move.isDiscardAction()){
@@ -186,8 +187,9 @@ public class PhaseLocalGame extends LocalGame implements PhaseGame{
 			}
 			state.getDiscardPile().add(tempCard);
 			state.setHasDrawn(false);
-			state.nextTurn();	
-			playerGoneOut(playerId);
+			if(playerGoneOut(playerId)){
+				state.nextTurn();	
+			}
 			return true;
 		}
 
@@ -466,22 +468,30 @@ public class PhaseLocalGame extends LocalGame implements PhaseGame{
 	private void updateHandAndPhaseLayOn(Card card, ArrayList<Card> cards, int playerId, int part, int layOnId, int numWilds){
 		// Remove the cards the user layed for the 
 		Hand stateCards = state.getHands()[playerId];
-		ArrayList<Card> cardToRemove = new ArrayList<Card>();
-		cardToRemove.add(card);
-		stateCards.removeCards(cardToRemove);
-		int currNumWildsRemoved = 0;
-		Card wildCard = new Card(Rank.ONE,CardColor.Orange);
-		// Iterate over the cards in the players hand
-		Iterator<Card> it = stateCards.cards.iterator();
-		while(it.hasNext()){
-			Card tempCard = it.next();
-			// If the two ranks and color are the same, remove card
-			// If the selected card is wild
-			if (tempCard.equals(wildCard) && currNumWildsRemoved != numWilds){
-				it.remove();
-				currNumWildsRemoved++;
-			}	
+		// Card we are removing is a wild card
+		if(numWilds != 0){
+			int currNumWildsRemoved = 0;
+			Card wildCard = new Card(Rank.ONE,CardColor.Orange);
+			// Iterate over the cards in the players hand
+			Iterator<Card> it = stateCards.cards.iterator();
+			while(it.hasNext()){
+				Card tempCard = it.next();
+				// If the two ranks and color are the same, remove card
+				// If the selected card is wild
+				if (tempCard.equals(wildCard) && currNumWildsRemoved != numWilds){
+					it.remove();
+					currNumWildsRemoved++;
+				}	
+			}
 		}
+		// Card we are removing is not a wildcard
+		else{
+			ArrayList<Card> cardToRemove = new ArrayList<Card>();
+			cardToRemove.add(card);
+			stateCards.removeCards(cardToRemove);
+		}
+		
+		// Update state
 		state.setHands(stateCards, playerId);
 
 		// Update phase in the state
@@ -497,7 +507,7 @@ public class PhaseLocalGame extends LocalGame implements PhaseGame{
 		playerGoneOut(playerId);
 	}
 
-	private void playerGoneOut(int playerId){
+	private boolean playerGoneOut(int playerId){
 		// Player has gone out
 		if(state.getHands()[playerId].size() == 0){
 			// Add points to users for cards left over in their hand
@@ -514,11 +524,10 @@ public class PhaseLocalGame extends LocalGame implements PhaseGame{
 				}
 			}
 
-			// Set all laid phases back to null and update player's phases
-			for(int i = 0; i < players.length; i++){
-				if(state.getLaidPhases()[i] != null){   //Will not usually be null, but null check
-					//need to check if actually a phase there, not just if null.
-					if(state.getLaidPhases()[i].getNumCards() != 0){
+			if(checkIfGameOver() == null){
+				// Set all laid phases back to null and update player's phases
+				for(int i = 0; i < players.length; i++){
+					if(state.getLaidPhases()[i] != null){   //Will not usually be null, but null check
 						// Move user to the next phase since they completed the current one
 						int newPhase = (state.getCurrentPhase()[i] + 1 != 11 ? (state.getCurrentPhase()[i] + 1) : 10);  // want i, not playerId
 						// Move player to next phase
@@ -527,34 +536,37 @@ public class PhaseLocalGame extends LocalGame implements PhaseGame{
 						state.setCurrentPhase(null, i);
 					}
 				}
+
+				// Init new deck
+				Deck deck = new Deck();
+				deck.add108();
+				deck.shuffle();
+
+				// Init Discard pile with top card from Deck
+				Deck discardPile = new Deck();
+				discardPile.add(deck.removeTopCard());
+
+				// Deal hands for players from deck
+				state.initHands();
+				state.dealHands(deck);
+
+				// Set the deck and discard
+				state.setDiscardPile(discardPile);
+				state.setDeck(deck);
+
+				// Init dealer to next player
+				int dealer = (state.getDealer() < players.length ? (state.getDealer() + 1) : 0);
+
+				// Set dealer
+				state.setDealer(dealer);
+
+				// Init first player
+				state.initTurn(dealer);
 			}
-
-			// Init new deck
-			Deck deck = new Deck();
-			deck.add108();
-			deck.shuffle();
-
-			// Init Discard pile with top card from Deck
-			Deck discardPile = new Deck();
-			discardPile.add(deck.removeTopCard());
-
-			// Deal hands for players from deck
-			state.initHands();
-			state.dealHands(deck);
-
-			// Set the deck and discard
-			state.setDiscardPile(discardPile);
-			state.setDeck(deck);
-
-			// Init dealer to next player
-			int dealer = (state.getDealer() < players.length ? (state.getDealer() + 1) : 0);
-
-			// Set dealer
-			state.setDealer(dealer);
-
-			// Init first player
-			state.initTurn(dealer);
-		}	
+			
+			return false;
+		}
+		return true;
 	}
 	public static String[] getPLayerNames(){
 		return playerNames;

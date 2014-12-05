@@ -141,13 +141,19 @@ public class PhaseState extends GameState {
 		
 		/*Put game in a state I want */
 		ArrayList<Card> cards = new ArrayList<Card>();
-		Rank r = Rank.valueOf("TWO");
-		CardColor col = CardColor.valueOf("Orange");
+		Rank r = Rank.valueOf("ONE");
+		CardColor col = CardColor.valueOf("Blue");
 		// Set
 		Card c = new Card(r,col);
 		cards.add(c);
+		
 		c = new Card(r,col);
 		cards.add(c);
+		
+		col = CardColor.valueOf("Orange");
+		c = new Card(r,col);
+		cards.add(c);
+		
 		/*c = new Card(r,col);
 		cards.add(c);
 		c = new Card(r,col);
@@ -157,32 +163,32 @@ public class PhaseState extends GameState {
 		r = Rank.valueOf("ONE");
 		c = new Card(r,col);
 		cards.add(c);
-		r = Rank.valueOf("THREE");
+		r = Rank.valueOf("ONE");
 		c = new Card(r,col);
 		cards.add(c);
-		r = Rank.valueOf("TWO");
+		r = Rank.valueOf("ONE");
 		c = new Card(r,col);
 		cards.add(c);
-		r = Rank.valueOf("FOUR");
+		r = Rank.valueOf("ONE");
 		c = new Card(r,col);
 		cards.add(c);
-		r = Rank.valueOf("FIVE");
+		r = Rank.valueOf("ONE");
 		c = new Card(r,col);
 		cards.add(c);
 		r = Rank.valueOf("SIX");
 		c = new Card(r,col);
 		cards.add(c);
-		r = Rank.valueOf("SEVEN");
+		r = Rank.valueOf("SIX");
 		c = new Card(r,col);
 		cards.add(c);
-		r = Rank.valueOf("FOUR");
+		r = Rank.valueOf("SIX");
 		c = new Card(r,col);
 		cards.add(c);
 
 		
 		hands[0].setcards(cards);
 		
-		currentPhase[0] = 4;
+		currentPhase[0] = 10;
 
 	}
 
@@ -468,7 +474,7 @@ public class PhaseState extends GameState {
 	 */
 	public void initLaidPhases(){
 		for(int i = 0; i< this.numPlayers; i++){
-			this.laidPhases[i] = new Phase();
+			this.laidPhases[i] = null;
 		}
 	}
 	
