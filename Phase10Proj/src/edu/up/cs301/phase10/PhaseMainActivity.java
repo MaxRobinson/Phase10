@@ -42,15 +42,22 @@ public class PhaseMainActivity extends GameMainActivity{
 				return new PhaseComputerPlayer0(name);
 			}
 		});
+		playerTypes.add(new GamePlayerType("Computer Player (MEDIUM BOTS)")
+		{
+			public GamePlayer createPlayer(String name)
+			{
+				return new PhaseComputerPlayerSmart(name);
+			}
+		});
 		
 		// Create a game configuration class for Phase10
 		GameConfig defaultConfig = new GameConfig(playerTypes, 2, 6, "Phase10", PORT_NUMBER);
 		
-		// Add the defualt players
+		// Add the default players
 		defaultConfig.addPlayer("Human", 0);
 		defaultConfig.addPlayer("Computer", 1);
 		
-		// Set the initial informatino for the remote player
+		// Set the initial information for the remote player
 		defaultConfig.setRemoteData("Guest", "",0);
 		
 		// Done!

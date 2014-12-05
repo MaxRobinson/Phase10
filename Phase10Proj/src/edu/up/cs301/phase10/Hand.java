@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.Iterator;
 
 import edu.up.cs301.card.Card;
+import edu.up.cs301.card.CardColor;
+import edu.up.cs301.card.Rank;
 /**
  * The Hand class represents the cards in a player's hand. Alows
  * players to order hands and hands to maintain order.
@@ -33,7 +35,10 @@ public class Hand extends Deck{
 	 * @param cards
 	 */
 	public Hand(ArrayList<Card> cards){
-		this.cards = cards;  
+		for(Card c: cards)
+		{
+			this.cards.add(c);
+		}
 	}
 	
 	public Hand(Hand hand){
@@ -160,6 +165,8 @@ public class Hand extends Deck{
 			return false;
 		}
 	}
+	
+
 
 	/**
 	 * Given an list of Cards, set the list of cards equal to a 
@@ -176,6 +183,30 @@ public class Hand extends Deck{
 	 */
 	public int size(){
 		return cards.size();
+	}
+	
+	/**
+	 * Returns true if the hand contains card
+	 * @param card
+	 * @return if card is in hand
+	 */
+	public boolean contains(Card card)
+	{
+		return cards.contains(card);
+	}
+	
+	/**
+	 * Returns true if the hand contains card with same rank
+	 * @param card
+	 * @return if rank is in hand
+	 */
+	public boolean containsRank(Card card)
+	{
+		Rank rank = card.getRank();
+		return (cards.contains(new Card(rank,CardColor.Blue)) || 
+				cards.contains(new Card(rank,CardColor.Green)) ||
+				cards.contains(new Card(rank,CardColor.Red)) ||
+				cards.contains(new Card(rank,CardColor.Yellow)));
 	}
 
 
