@@ -140,55 +140,55 @@ public class PhaseState extends GameState {
 		
 		
 		/*Put game in a state I want */
-		ArrayList<Card> cards = new ArrayList<Card>();
-		Rank r = Rank.valueOf("ONE");
-		CardColor col = CardColor.valueOf("Blue");
-		// Set
-		Card c = new Card(r,col);
-		cards.add(c);
-		
-		c = new Card(r,col);
-		cards.add(c);
-		
-		col = CardColor.valueOf("Orange");
-		c = new Card(r,col);
-		cards.add(c);
-		
-		/*c = new Card(r,col);
-		cards.add(c);
-		c = new Card(r,col);
-		cards.add(c);*/
-		
-		col = CardColor.valueOf("Blue");
-		r = Rank.valueOf("ONE");
-		c = new Card(r,col);
-		cards.add(c);
-		r = Rank.valueOf("ONE");
-		c = new Card(r,col);
-		cards.add(c);
-		r = Rank.valueOf("ONE");
-		c = new Card(r,col);
-		cards.add(c);
-		r = Rank.valueOf("ONE");
-		c = new Card(r,col);
-		cards.add(c);
-		r = Rank.valueOf("ONE");
-		c = new Card(r,col);
-		cards.add(c);
-		r = Rank.valueOf("SIX");
-		c = new Card(r,col);
-		cards.add(c);
-		r = Rank.valueOf("SIX");
-		c = new Card(r,col);
-		cards.add(c);
-		r = Rank.valueOf("SIX");
-		c = new Card(r,col);
-		cards.add(c);
-
-		
-		hands[0].setcards(cards);
-		
-		currentPhase[0] = 10;
+//		ArrayList<Card> cards = new ArrayList<Card>();
+//		Rank r = Rank.valueOf("ONE");
+//		CardColor col = CardColor.valueOf("Blue");
+//		// Set
+//		Card c = new Card(r,col);
+//		cards.add(c);
+//		
+//		c = new Card(r,col);
+//		cards.add(c);
+//		
+//		col = CardColor.valueOf("Orange");
+//		c = new Card(r,col);
+//		cards.add(c);
+//		
+//		/*c = new Card(r,col);
+//		cards.add(c);
+//		c = new Card(r,col);
+//		cards.add(c);*/
+//		
+//		col = CardColor.valueOf("Blue");
+//		r = Rank.valueOf("ONE");
+//		c = new Card(r,col);
+//		cards.add(c);
+//		r = Rank.valueOf("ONE");
+//		c = new Card(r,col);
+//		cards.add(c);
+//		r = Rank.valueOf("ONE");
+//		c = new Card(r,col);
+//		cards.add(c);
+//		r = Rank.valueOf("ONE");
+//		c = new Card(r,col);
+//		cards.add(c);
+//		r = Rank.valueOf("ONE");
+//		c = new Card(r,col);
+//		cards.add(c);
+//		r = Rank.valueOf("SIX");
+//		c = new Card(r,col);
+//		cards.add(c);
+//		r = Rank.valueOf("SIX");
+//		c = new Card(r,col);
+//		cards.add(c);
+//		r = Rank.valueOf("SIX");
+//		c = new Card(r,col);
+//		cards.add(c);
+//
+//		
+//		hands[0].setcards(cards);
+//		
+//		currentPhase[0] = 10;
 
 	}
 
