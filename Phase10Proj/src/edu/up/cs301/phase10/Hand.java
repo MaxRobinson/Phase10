@@ -107,10 +107,10 @@ public class Hand extends Deck{
 	}
 
 	/**
-	 * Removes a card from a users cards given the index of the
-	 * card in the users cards. 
-	 * @param index
-	 * @return true if the card was successfully removed
+	 * Removes a list of cards from the users cards
+	 *  
+	 * @param cardsToRemove
+	 * @return void
 	 */
 	public void removeCards(ArrayList<Card> cardsToRemove){
 		// Iterate over the cards we need to remove

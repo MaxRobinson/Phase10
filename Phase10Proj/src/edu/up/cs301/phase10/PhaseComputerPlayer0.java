@@ -1,5 +1,8 @@
 package edu.up.cs301.phase10;
 
+import edu.up.cs301.card.Card;
+import edu.up.cs301.card.CardColor;
+import edu.up.cs301.card.Rank;
 import edu.up.cs301.game.infoMsg.GameInfo;
 import edu.up.cs301.game.infoMsg.NotYourTurnInfo;
 
@@ -42,12 +45,13 @@ public class PhaseComputerPlayer0 extends PhaseComputerPlayer {
     	boolean drawPile = Math.random()<.5f;
     	game.sendAction(new PhaseDrawCardAction(this, drawPile));
 		int playerId = 0;
-		for(int i = 0; i < state.getPlayers().length; i++){
-			if(state.getPlayers()[i].equals(this)){
-				playerId = i;
-			}
-
-		}
+//		for(int i = 0; i < state.getPlayers().length; i++){
+//			if(state.getPlayers()[i].equals(this)){
+//				playerId = i;
+//			}
+//
+//		}
+		playerId = this.playerNum;
 		try {
 			Thread.sleep(1500);
 		} catch (InterruptedException e) {
@@ -55,7 +59,18 @@ public class PhaseComputerPlayer0 extends PhaseComputerPlayer {
 			e.printStackTrace();
 		}
 		int toDiscard = (int) (Math.random() * state.getHands()[playerId].size());
-    	game.sendAction(new PhaseDiscardAction(this, state.getHands()[playerId].getCards().get(toDiscard)));
+		Card tempCard = state.getHands()[playerId].getCards().get(toDiscard);
+		
+		if(tempCard.equals(new Card(Rank.TWO,CardColor.Orange)))
+		{
+			int toSkip = (int)Math.random()*state.getCurrentPhase().length;
+	    	game.sendAction(new PhaseSkipAction(this, state.getHands()[playerId].getCards().get(toDiscard),toSkip));
+
+		}
+		else
+		{
+			game.sendAction(new PhaseDiscardAction(this, state.getHands()[playerId].getCards().get(toDiscard)));
+		}
 	}
 
 }

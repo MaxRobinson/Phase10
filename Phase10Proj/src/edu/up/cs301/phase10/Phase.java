@@ -1,5 +1,6 @@
 package edu.up.cs301.phase10;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -16,9 +17,13 @@ import edu.up.cs301.card.Rank;
  * @author Dan Nelson 
  * @version 11/17/14
  */
-public class Phase {
-	//instnace variables
+public class Phase implements Serializable{
+	//instance variables
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2894488804364546450L;
 	private Hand part1;
 	private Hand part2;
 	private Hand[] phasePart;

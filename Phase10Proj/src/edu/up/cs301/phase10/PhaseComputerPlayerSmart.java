@@ -42,12 +42,13 @@ public class PhaseComputerPlayerSmart extends PhaseComputerPlayer {
     	boolean drawPile = !dicardPile();
     	game.sendAction(new PhaseDrawCardAction(this, drawPile));
 		int playerId = 0;
-		for(int i = 0; i < state.getPlayers().length; i++){
-			if(state.getPlayers()[i].equals(this)){
-				playerId = i;
-			}
-
-		}
+//		for(int i = 0; i < state.getPlayers().length; i++){
+//			if(state.getPlayers()[i].equals(this)){
+//				playerId = i;
+//			}
+//
+//		}
+		playerId = this.playerNum;
 		try {
 			Thread.sleep(1500);
 		} catch (InterruptedException e) {
@@ -123,6 +124,7 @@ public class PhaseComputerPlayerSmart extends PhaseComputerPlayer {
     {
     	Hand copyHand = new Hand(hand);
 		ArrayList<Card> phaseHand;
+		ArrayList<Card> phaseHand2;
     	switch (phaseNum)
     	{
     		
@@ -133,7 +135,12 @@ public class PhaseComputerPlayerSmart extends PhaseComputerPlayer {
     				break;
     			}
     			copyHand.removeCards(phaseHand);
-    			phaseHand.addAll(phaseHasSet(copyHand, 3));
+    			phaseHand2 = phaseHasSet(copyHand, 3);
+    			if (phaseHand2 == null)
+    			{
+    				break;
+    			}
+    			phaseHand.addAll(phaseHand2);
     	    	game.sendAction(new PhaseLayPhaseAction(this,new Phase(phaseHand,null)));
     			break;
     		case 2:

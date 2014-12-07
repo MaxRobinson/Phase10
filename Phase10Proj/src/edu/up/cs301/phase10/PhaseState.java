@@ -73,7 +73,7 @@ public class PhaseState extends GameState {
 	/**
 	 * List of players in the game
 	 */
-	private GamePlayer[] players;
+	//private GamePlayer[] players;
 
 	/**
 	 * Number of Players in the game
@@ -93,15 +93,15 @@ public class PhaseState extends GameState {
 	 * NOTE This players, parameter should be a COPY of the actually list of players
 	 */
 	public PhaseState(GamePlayer[] players){
-		this.players = new GamePlayer[players.length];
-		//copy the input into the local game list of players. //This is to make sure no reference carry overs.
-		synchronized(players){
-			for(int i = 0; i< players.length; i++){
-				this.players[i] = players[i];
-			}
-		}
+//		this.players = new GamePlayer[players.length];
+//		//copy the input into the local game list of players. //This is to make sure no reference carry overs.
+//		synchronized(players){
+//			for(int i = 0; i< players.length; i++){
+//				this.players[i] = players[i];
+//			}
+//		}
 		//setNumber of players
-		numPlayers = this.players.length;
+		numPlayers = players.length;
 
 		// init Deck
 		deck = new Deck();
@@ -189,6 +189,8 @@ public class PhaseState extends GameState {
 //		hands[0].setcards(cards);
 //		
 //		currentPhase[0] = 10;
+		
+		
 
 	}
 
@@ -208,13 +210,13 @@ public class PhaseState extends GameState {
 	 * @param state
 	 */
 	public PhaseState(PhaseState state){
-		this.players = new GamePlayer[state.players.length];
+//		this.players = new GamePlayer[state.players.length];
 		//copy the input into the local game list of players. //This is to make sure no reference carry overs.
-		for(int i = 0; i< state.players.length; i++){
-			this.players[i] = state.players[i];
-		}
+//		for(int i = 0; i< state.players.length; i++){
+//			this.players[i] = state.players[i];
+//		}
 		//setNumber of players
-		this.numPlayers = state.players.length;
+		this.numPlayers = state.numPlayers;
 
 		// init Deck
 		this.deck = new Deck(state.deck);
@@ -223,7 +225,7 @@ public class PhaseState extends GameState {
 		this.discardPile = new Deck(state.discardPile);
 
 		this.hands = new Hand[state.numPlayers];
-		for(int i = 0; i < state.players.length; i++){
+		for(int i = 0; i < state.numPlayers; i++){
 			this.hands[i] = new Hand(state.hands[i]);
 		}
 
@@ -232,22 +234,22 @@ public class PhaseState extends GameState {
 		this.turn = state.turn;
 
 		currentPhase = new int[state.numPlayers];
-		for(int i = 0; i< state.players.length; i++){
+		for(int i = 0; i< state.numPlayers; i++){
 			this.currentPhase[i] = state.currentPhase[i];
 		}
 
 		skipped = new boolean[state.numPlayers];
-		for(int i = 0; i< state.players.length; i++){
+		for(int i = 0; i< state.numPlayers; i++){
 			this.skipped[i] = state.skipped[i];
 		}
 
 		this.score = new int[state.numPlayers];
-		for(int i = 0; i< state.players.length; i++){
+		for(int i = 0; i< state.numPlayers; i++){
 			this.score[i] = state.score[i];
 		}
 
 		this.laidPhases = new Phase[state.numPlayers];
-		for(int i = 0; i< state.players.length; i++){
+		for(int i = 0; i< state.numPlayers; i++){
 			this.laidPhases[i] = state.laidPhases[i];
 		}
 		this.hasDrawn = state.hasDrawn;
@@ -256,11 +258,11 @@ public class PhaseState extends GameState {
 
 	public PhaseState(GamePlayer players[], Deck deck, Deck discard, Hand hand[], int dealer, int turn, 
 			int currentPhase[], boolean skipped[], int score[],Phase laidPhase[], boolean hasDrawn){
-		this.players = new GamePlayer[players.length];
+//		this.players = new GamePlayer[players.length];
 		//copy the input into the local game list of players. //This is to make sure no reference carry overs.
-		for(int i = 0; i< players.length; i++){
-			this.players[i] = players[i];
-		}
+//		for(int i = 0; i< players.length; i++){
+//			this.players[i] = players[i];
+//		}
 		//setNumber of players
 		this.numPlayers = players.length;
 
@@ -426,9 +428,9 @@ public class PhaseState extends GameState {
 		return this.laidPhases;
 	}
 
-	public GamePlayer[] getPlayers(){
-		return this.players;
-	}
+//	public GamePlayer[] getPlayers(){
+//		return this.players;
+//	}
 
 	public boolean getHasDrawn(){
 		return this.hasDrawn;
@@ -442,7 +444,9 @@ public class PhaseState extends GameState {
 		this.laidPhases = laidPhases;
 	}	
 
-
+	public int getNumPlayers(){
+		return this.numPlayers;
+	}
 
 	///////////////// HELPER METHODS ///////////////////////////////////////////
 

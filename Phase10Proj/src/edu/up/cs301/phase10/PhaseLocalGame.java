@@ -138,21 +138,21 @@ public class PhaseLocalGame extends LocalGame implements PhaseGame{
 			// The current player is not skipped, they will now be skipped
 			int playerId = 0;
 			for(int i = 0; i < players.length; i++){
-				if(((PhaseDiscardAction)move).getPlayer().equals(players[i])){
+				if(((PhaseSkipAction)move).getPlayer().equals(players[i])){
 					playerId = i;
 				}
 			}
-			if(!state.getHasDrawn() || state.getTurn()!=playerId || ((PhaseDiscardAction) move).getCard() == null)
+			if(!state.getHasDrawn() || state.getTurn()!=playerId || ((PhaseSkipAction) move).getCard() == null)
 			{
 				return false;
 			}
 
-			Card tempCard = ((PhaseDiscardAction) move).getCard();
+			Card tempCard = ((PhaseSkipAction) move).getCard();
 			if(!tempCard.equals(new Card(Rank.TWO,CardColor.Orange)))
 			{
 				 return false;
 			}
-			if (!state.getHands()[playerId].removeCard(((PhaseDiscardAction) move).getCard()))
+			if (!state.getHands()[playerId].removeCard(((PhaseSkipAction) move).getCard()))
 			{
 				return false;
 			}
@@ -502,7 +502,8 @@ public class PhaseLocalGame extends LocalGame implements PhaseGame{
 		else{
 			currPhase.setPart(1, cards);
 		}
-		state.setCurrentPhase(currPhase, playerId);
+		//state.setCurrentPhase(currPhase, playerId);
+		state.setCurrentPhase(currPhase, layOnId);
 
 		playerGoneOut(playerId);
 	}

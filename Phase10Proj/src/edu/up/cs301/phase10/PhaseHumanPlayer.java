@@ -539,7 +539,7 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 					{
 						whichPart = 1;
 					}
-					idToLayOn = (int) ((x-pL)/(pW/state.getPlayers().length));
+					idToLayOn = (int) ((x-pL)/(pW/state.getNumPlayers()));
 					// Card to compare against for wild
 					Card wildCard = new Card(Rank.ONE,CardColor.Orange);
 					// If the selected card is wild
@@ -709,7 +709,7 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 		skipSpinner = (Spinner) view.findViewById(R.id.skipSpinner);
 		// Create list of possible player values
 		List<String> skipList= new ArrayList<String>();
-		String players[] = PhaseLocalGame.getPLayerNames();
+		String players[] = this.allPlayerNames;
 		skipList = Arrays.asList(players);
 		// Set spinner to use player values
 		ArrayAdapter<String> skipDataAdapter = new ArrayAdapter<String> (GameMainActivity.activity, android.R.layout.simple_spinner_item, skipList);
