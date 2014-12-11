@@ -536,5 +536,170 @@ public class PhaseComputerPlayerSmart extends PhaseComputerPlayer {
     
     private void hitting(){
     	
+    	//check if computer player has phased yet. 
+    	if(state.getLaidPhases()[this.playerNum] == null || 
+    			state.getLaidPhases()[this.playerNum].getNumCards() == 0){
+    		return;
+    	}
+    	
+    	int[] curStateList = state.getCurrentPhase();
+    	
+    	// create an arrayList of arrayLists that will hold the cards that can be used to hit 
+    	// on each person's phase. 
+    	ArrayList<ArrayList<Card>> hitList = new ArrayList<ArrayList<Card>>();
+    	
+    	//init arrayList
+    	for(int i = 0; i < state.getNumPlayers(); i ++){
+    		hitList.add(new ArrayList<Card>());
+    	}
+    	
+    	//get the list of cards that can be used to hit, and where. 
+    	for(int i = 0; i < state.getNumPlayers(); i ++){
+    		// If player has not laid a phase, continue. 
+    		if(state.getLaidPhases()[i] == null || 
+        			state.getLaidPhases()[i].getNumCards() == 0){
+        		continue;
+        	}
+    		
+    		Phase tempPhase = state.getLaidPhases()[i];
+    		Hand[] parts = tempPhase.getPhasePart();
+    		
+    		//after getting the parts of the laid phase for this player
+    		//check if either part is a run or a phase. 
+    		for(int j = 0; i < parts.length; i++){
+    			//check if on all color phase
+    			if(curStateList[i] == 8){
+    				hitList.get(i).add(parts[j].getCard(0));
+    			}
+    			else if(isSet(parts[0])){ //check if is set
+	    			//if it is a set, get the first card out of that part and 
+	    			//add it to that players list of cards to hit with. 
+	    			hitList.get(i).add(parts[j].getCard(0));
+	    		}
+	    		else{
+	    			//Other wise it is a run. This is assuming that it is not 
+	    			//the phase with only color. 
+	    			
+	    			//copy the bottom card -1 ordinality if not at lowest card
+	    			int tempIntRank = parts[j].getCard(0).getRank().ordinal();
+	    			if(tempIntRank > 2){
+		    			Rank tempRank = intToRank(tempIntRank-1);
+		    			Card bottom = new Card(tempRank, parts[j].getCard(0).getCardColor());
+		    			// add card to list
+		    			hitList.get(i).add(bottom);
+	    			}
+	    			
+	    			//copy the top Card +1 ordinality if not at highest card
+	    			tempIntRank = parts[j].getCard(parts[j].size()-1).getRank().ordinal();
+	    			if(tempIntRank <12){
+		    			Rank tempRank = intToRank(tempIntRank+1);
+		    			Card top = new Card(tempRank, parts[j].getCard(0).getCardColor());
+		    			// add card to list
+		    			hitList.get(i).add(top);
+	    			}
+	    		}
+    		}//for
+    		
+    		// ** we now have a list of cards we can hit with for one person **
+    	}
+    	
+    	//now we have a full list of cards we can see if we can hit with. 
+    	//now we see if we can hit. 
+    	for(int i=0; i<hitList.size(); i++){
+    		//get temp list for current player's phase we are looking at. 
+    		ArrayList<Card> shortHitList = hitList.get(i);
+    		
+    		if(shortHitList.size() == 0){
+    			continue;
+    		}
+    		
+    		
+    		//check each card in the hit list for this guy and see if we can hit. 
+    		for(int j = 0; j<shortHitList.size(); j++){
+    			
+    			//get what Phase the current player is on. 
+    			int curState = curStateList[i];
+    			
+    			// if all one color
+    			if(curState == 8){
+    				//search through hand looking for a card with equal color
+    				for(int k = 0; k<this.hand.getCards().size(); k++){
+    					Card tempCompair = this.hand.getCard(k);
+    					boolean sameColor = shortHitList.get(0).getCardColor().equals(tempCompair.getCardColor());
+    					if(sameColor){
+    						game.sendAction(new PhaseLayOnPhaseAction(this,tempCompair, i, 0, 1));
+    						return;
+    					}
+    				}
+    			}
+    			
+    			Card tempCompair = shortHitList.get(i);
+    			//get the card in all different colors
+    			Card tempCompair1 = new Card(tempCompair.getRank(), CardColor.Blue);
+    			Card tempCompair2 = new Card(tempCompair.getRank(), CardColor.Green);
+    			Card tempCompair3 = new Card(tempCompair.getRank(), CardColor.Yellow);
+    			Card tempCompair4 = new Card(tempCompair.getRank(), CardColor.Red);
+    			
+    			//compare the cards to the cards in the hand
+    			boolean temp1In = this.hand.getCards().contains(tempCompair1);
+    			boolean temp2In = this.hand.getCards().contains(tempCompair2);
+    			boolean temp3In = this.hand.getCards().contains(tempCompair3);
+    			boolean temp4In = this.hand.getCards().contains(tempCompair4);
+    			
+    			// see which one is true and make that move
+    			if(temp1In){
+    				//try first part of phase, on top and bottom
+    				game.sendAction(new PhaseLayOnPhaseAction(this,tempCompair1, i, 0, 0));
+    				game.sendAction(new PhaseLayOnPhaseAction(this,tempCompair1, i, 0, 1));
+    				//try second part of Phase, on top and bottom
+    				game.sendAction(new PhaseLayOnPhaseAction(this,tempCompair1, i, 1, 0));
+    				game.sendAction(new PhaseLayOnPhaseAction(this,tempCompair1, i, 1, 1));
+    				return;
+    			}
+    			else if(temp2In){
+    				//try first part of phase, on top and bottom
+    				game.sendAction(new PhaseLayOnPhaseAction(this,tempCompair2, i, 0, 0));
+    				game.sendAction(new PhaseLayOnPhaseAction(this,tempCompair2, i, 0, 1));
+    				//try second part of Phase, on top and bottom
+    				game.sendAction(new PhaseLayOnPhaseAction(this,tempCompair2, i, 1, 0));
+    				game.sendAction(new PhaseLayOnPhaseAction(this,tempCompair2, i, 1, 1));
+    				return;
+    			}
+    			else if(temp3In){
+    				//try first part of phase, on top and bottom
+    				game.sendAction(new PhaseLayOnPhaseAction(this,tempCompair3, i, 0, 0));
+    				game.sendAction(new PhaseLayOnPhaseAction(this,tempCompair3, i, 0, 1));
+    				//try second part of Phase, on top and bottom
+    				game.sendAction(new PhaseLayOnPhaseAction(this,tempCompair3, i, 1, 0));
+    				game.sendAction(new PhaseLayOnPhaseAction(this,tempCompair3, i, 1, 1));
+    				return;
+    			}
+    			else if(temp4In){
+    				//try first part of phase, on top and bottom
+    				game.sendAction(new PhaseLayOnPhaseAction(this,tempCompair4, i, 0, 0));
+    				game.sendAction(new PhaseLayOnPhaseAction(this,tempCompair4, i, 0, 1));
+    				//try second part of Phase, on top and bottom
+    				game.sendAction(new PhaseLayOnPhaseAction(this,tempCompair4, i, 1, 0));
+    				game.sendAction(new PhaseLayOnPhaseAction(this,tempCompair4, i, 1, 1));
+    				return;
+    			}
+    		}
+    		
+    	}
+    	
+    }
+    
+    
+    public boolean isSet(Hand hand){
+    	Hand tempHand = new Hand(hand);
+    	ArrayList<Card> cards = tempHand.getCards();
+    	if(cards.size() >= 3){
+    		Card firstCard = cards.get(0);
+    		Card secondCard = cards.get(1);
+    		if(firstCard.getRank().equals(secondCard.getRank())){
+    			return true;
+    		}
+    	}
+    	return false;
     }
 }
