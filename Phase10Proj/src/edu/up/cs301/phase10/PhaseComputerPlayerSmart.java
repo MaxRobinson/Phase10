@@ -56,7 +56,7 @@ public class PhaseComputerPlayerSmart extends PhaseComputerPlayer {
 		}
 		canPhase();
 		hitting();
-		int toDiscard = (int) (Math.random() * state.getHands()[playerId].size());
+		int toDiscard = discard();
 		Card tempCard = state.getHands()[playerId].getCards().get(toDiscard);
 		
 		if(tempCard.equals(new Card(Rank.TWO,CardColor.Orange)))
@@ -69,16 +69,131 @@ public class PhaseComputerPlayerSmart extends PhaseComputerPlayer {
 			game.sendAction(new PhaseDiscardAction(this, state.getHands()[playerId].getCards().get(toDiscard)));
 		}
 	}
+    
+    private int discard()
+    {
+    	int index = 0;
+    	int value[] = new int[this.hand.size()];
+    	for(int i = 0; i < hand.size(); i++)
+    	{
+    		if(hand.getCard(i).equals(new Card(Rank.ONE,CardColor.Orange)))
+    		{
+    			value[i]=-1;
+    		}
+    		if(hand.getCard(i).equals(new Card(Rank.TWO,CardColor.Orange)))
+    		{
+    			value[i] = Integer.MAX_VALUE;
+    			break;
+    		}
+    		Card toDiscard = hand.getCard(i);
+    		Hand tempHand = new Hand (hand);
+    		tempHand.removeCard(toDiscard);
+        	switch (phaseNum)
+        	{
+        		case 1:
+        			if(! addsToSet(toDiscard, tempHand, 3, false))
+        			{
+        				value[i] = 100 + toDiscard.getRank().ordinal();
+        			}
+        			break;
+        		case 2:
+        			if (! addsToSet(toDiscard, tempHand, 3, false) || addsToRun(toDiscard, tempHand, 4, false ))
+                			{
+        				value[i] = 100 + toDiscard.getRank().ordinal();
+        			}
+        			break;
+
+        		case 3:
+        			if (! addsToSet(toDiscard, tempHand, 4, false) || addsToRun(toDiscard, tempHand, 4, false ))
+        			{
+        				value[i] = 100 + toDiscard.getRank().ordinal();
+        			}
+        			break;
+
+        		case 4:
+        			if (! addsToRun(toDiscard, tempHand, 7, false))
+        			{
+        				value[i] = 100 + toDiscard.getRank().ordinal();
+        			}
+        			break;
+
+        		case 5:
+        			if (! addsToRun(toDiscard, tempHand, 8, false))
+                	{
+        				value[i] = 100 + toDiscard.getRank().ordinal();
+        			}
+        			break;
+
+        		case 6:
+        			if (! addsToRun(toDiscard, tempHand, 9, false))
+        			{
+        				value[i] = 100 + toDiscard.getRank().ordinal();
+        			}
+        			break;
+
+        		case 7:
+        			if (! addsToSet(toDiscard, tempHand, 4, false))
+               		{
+        				value[i] = 100 + toDiscard.getRank().ordinal();
+        			}
+        			break;
+
+        		case 8:
+        			if(! mostCardOfColor(tempHand).contains(toDiscard.getCardColor()))
+                	{
+        				value[i] = 100 + toDiscard.getRank().ordinal();
+        			}
+        			break;
+
+        		case 9:
+        			if(! addsToRun(toDiscard, tempHand, 4, false))
+        			{
+        				value[i] = 100 + toDiscard.getRank().ordinal();
+        			}
+        			break;
+
+        		case 10:
+        			if (! addsToSet(toDiscard, tempHand, 5, false))
+               		{
+        				value[i] = 100 + toDiscard.getRank().ordinal();
+        			}
+        			break;
+
+        	}    		
+    	}
+    	int temp = 0;
+    	for(int i = 0; i < value.length; i++)
+    	{
+    		if(temp < value[i])
+    		{
+    			index = i;
+    		}
+    	}
+		return index;
+    	
+    }
     private int chooseSkip()
     {
     	int max = 0;
     	int maxPerson = 0;
+    	int tiebreakerPoints = 0;
     	for(int i = 0; i < state.getCurrentPhase().length;i++)
     	{
-    		if (state.getCurrentPhase()[i]>max && i != this.playerNum)
+    		if (state.getCurrentPhase()[i]>=max && i != this.playerNum)
     		{
-    			max = state.getCurrentPhase()[i];
-    			maxPerson = i;
+    			if(max == state.getCurrentPhase()[i])
+    			{
+    				if(state.getScore()[i] > tiebreakerPoints);
+    				{
+    					maxPerson = i;
+    					tiebreakerPoints = state.getScore()[i];
+    				}
+    			}
+    			else
+    			{
+    				max = state.getCurrentPhase()[i];
+    				maxPerson = i;
+    			}
     		}
     	}
     	return maxPerson;
