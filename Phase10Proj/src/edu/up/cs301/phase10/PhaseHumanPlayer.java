@@ -333,19 +333,19 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 	}
 	private void drawHitButton(Canvas g, RectF loc, boolean pressed)
 	{
-		Paint paint = new Paint();
-		if(!pressed)
-		{	
-			paint.setColor(Color.GREEN);
-		}
-		else
-		{
-			paint.setColor(Color.RED);
-		}
-		g.drawRect(loc, paint);
-		paint.setTextSize(25f);
-		paint.setColor(Color.BLACK);
-		g.drawText("HIT",loc.left+50,loc.top+30f, paint);
+//		Paint paint = new Paint();
+//		if(!pressed)
+//		{	
+//			paint.setColor(Color.GREEN);
+//		}
+//		else
+//		{
+//			paint.setColor(Color.RED);
+//		}
+//		g.drawRect(loc, paint);
+//		paint.setTextSize(25f);
+//		paint.setColor(Color.BLACK);
+//		g.drawText("HIT",loc.left+50,loc.top+30f, paint);
 	}
 
 
@@ -499,14 +499,14 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 		}
 		else{ if (hitButtonLocation.contains(x, y))
 		{
-			hitting = !hitting;
-			laying = false;
-			resetSelected();
+//			hitting = !hitting;
+//			laying = false;
+//			resetSelected();
 		}
 		else{ if(opponentPhaseLocations.contains(x,y))
 		{
-			if(hitting)
-			{
+//			if(hitting)
+//			{
 				/*ArrayList<Card> cards = new ArrayList<Card>();
 				for(int i = 0; i < selected.length; i++)
 				{
@@ -553,7 +553,7 @@ public class PhaseHumanPlayer extends GameHumanPlayer implements Animator {
 						topBottom(this,idToLayOn,whichPart,topOrBottom,c,0);
 					}
 				}
-			}
+//			}
 		}
 		}
 		}

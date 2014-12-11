@@ -55,6 +55,7 @@ public class PhaseComputerPlayerSmart extends PhaseComputerPlayer {
 			e.printStackTrace();
 		}
 		canPhase();
+		hitting();
 		int toDiscard = (int) (Math.random() * state.getHands()[playerId].size());
 		Card tempCard = state.getHands()[playerId].getCards().get(toDiscard);
 		
@@ -530,6 +531,10 @@ public class PhaseComputerPlayerSmart extends PhaseComputerPlayer {
 				return Rank.TWELVE;
     	}
 		return Rank.ONE;
+    	
+    }
+    
+    private void hitting(){
     	
     }
 }
